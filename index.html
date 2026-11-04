@@ -35,6 +35,7 @@
     .sidebar nav button[aria-current="page"] { background: #1b304a; border-color: #426386; color: var(--text); font-weight: 650; }
     .nav-icon { display:inline-flex;align-items:center;justify-content:center;width:20px;color:var(--cyan); }
     .main-content { min-width: 0; padding: 8px 10px 28px 0; }
+    .main-content > section { width: 100%; min-width: 0; }
     .main-content > header { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(220px, 360px) auto; align-items: center; gap: 16px; margin-bottom: 14px; }
     h1 { margin: 0; font-size: clamp(1.75rem, 2.2vw, 2rem); letter-spacing: -.035em; }
     .subtitle { margin: 5px 0 0; color: var(--muted); font-size: .93rem; }
@@ -50,7 +51,7 @@
     .message { border-color: #76504d; background: #2b1e20; color: #ffd0cc; }
     .hidden { display: none !important; }
     .global-search { width: 100%; }
-    .home-bento { display: grid; grid-template-columns: minmax(0, 1.85fr) minmax(280px, 1fr); gap: var(--space-4); align-items: stretch; }
+    .home-bento { display: grid; min-width: 0; grid-template-columns: minmax(0, 1.85fr) minmax(280px, 1fr); gap: var(--space-4); align-items: stretch; }
     .attention-card, .commitment-panel { min-width: 0; padding: 18px; border: 1px solid #335378; border-radius: var(--radius-card); background: #172a40; }
     .attention-card { border-top: 3px solid var(--cyan); box-shadow: 0 16px 38px #030a174d; }
     .attention-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
@@ -77,8 +78,8 @@
     .commitment-item small { display: block; margin-top: 4px; color: var(--muted); }
     .commitment-empty { padding: 14px 0; color: var(--muted); line-height: 1.5; font-size: .88rem; }
     .section-heading { margin: 20px 0 10px; }
-    .category-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-    .category-card { min-height: 64px; display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 9px; align-items: center; text-align: left; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease; }
+    .category-grid { display: grid; min-width: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+    .category-card { width: 100%; min-width: 0; min-height: 64px; display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 9px; align-items: center; text-align: left; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease; }
     .category-card:hover { background: var(--raised); border-color: #44556d; transform: translateY(-2px); }
     .category-icon { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 10px; background: #1a2a3d; color: var(--cyan); }
     .category-card strong { display: block; margin-bottom: 5px; font-size: 1rem; }
@@ -160,14 +161,14 @@
     .field label { color: #d8e2ed; font-size: .88rem; }
     .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; }
     @media (max-width: 1100px) { .app { grid-template-columns: 184px minmax(0, 1fr); gap: 16px; } .home-bento { grid-template-columns: minmax(0, 1.4fr) minmax(250px, 1fr); } .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 820px) { .app { grid-template-columns: 1fr; gap: 8px; padding: 12px 16px; } .sidebar { position: static; width: 100%; height: auto; padding: 0; border: 0; } .brand { display: none; } .sidebar nav { display: flex; overflow-x: auto; border-bottom: 1px solid var(--line); } .sidebar nav button { justify-content: center; white-space: nowrap; } .main-content { padding: 8px 0 24px; } .main-content > header { grid-template-columns: 1fr minmax(190px, 280px); } .demo-disclosure { grid-column: 1 / -1; justify-self: start; } .home-bento { grid-template-columns: 1fr; } .commitment-panel { display: grid; grid-template-columns: 1fr; } .toolbar { grid-template-columns: 1fr 1fr; } .comm-layout { min-height: 0; } .list-panel { min-height: 55vh; } }
-    @media (max-width: 560px) { .app { padding: 8px 12px; } .main-content > header { grid-template-columns: 1fr; gap: 10px; } h1 { font-size: 1.75rem; } .summary-grid { grid-template-columns: 1fr; } .category-grid, .upcoming-list, .task-grid { grid-template-columns: 1fr; } .toolbar { grid-template-columns: 1fr; } .toolbar select:last-of-type { grid-column: auto; } .field-grid { grid-template-columns: 1fr; } .detail-dl { grid-template-columns: 1fr; gap: 3px; } dialog { width: 100vw; border-radius: 0; padding: 18px; } }
+    @media (max-width: 820px) { .app { grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 12px 16px; } .sidebar { position: static; width: 100%; height: auto; padding: 0; border: 0; } .brand { display: none; } .sidebar nav { display: flex; overflow-x: auto; border-bottom: 1px solid var(--line); } .sidebar nav button { justify-content: center; white-space: nowrap; } .main-content { padding: 8px 0 24px; } .main-content > header { grid-template-columns: 1fr minmax(190px, 280px); } .demo-disclosure { grid-column: 1 / -1; justify-self: start; } .home-bento { grid-template-columns: minmax(0, 1fr); } .commitment-panel { display: grid; grid-template-columns: minmax(0, 1fr); } .toolbar { grid-template-columns: repeat(2, minmax(0, 1fr)); } .comm-layout { min-height: 0; } .list-panel { min-height: 55vh; } }
+    @media (max-width: 560px) { .app { padding: 8px 12px; } .main-content > header { grid-template-columns: 1fr; gap: 10px; } h1 { font-size: 1.75rem; } .summary-grid { grid-template-columns: minmax(0, 1fr); } .category-grid, .upcoming-list, .task-grid { grid-template-columns: minmax(0, 1fr); } .toolbar { grid-template-columns: minmax(0, 1fr); } .toolbar select:last-of-type { grid-column: auto; } .field-grid { grid-template-columns: minmax(0, 1fr); } .detail-dl { grid-template-columns: minmax(0, 1fr); gap: 3px; } dialog { width: 100vw; border-radius: 0; padding: 18px; } }
      @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
     /* The mail shell is a local conceptual simulation, not an Outlook connection. */
     .orgi-backdrop { position:fixed;inset:46px 0 0;background:#18263838;opacity:0;pointer-events:none;transition:opacity .2s ease;z-index:5; }
     .orgi-backdrop.open { opacity:1;pointer-events:auto; }
-     .orgi-panel { position:fixed;z-index:6;top:46px;right:0;width:min(420px,100vw);height:calc(100dvh - 46px);overflow:auto;padding:24px;background:var(--orgi-bg);color:var(--orgi-text);box-shadow:-18px 10px 50px #030711a6;border-left:1px solid var(--orgi-border);transform:translateX(105%);visibility:hidden;transition:transform .24s ease,visibility .24s; }
-     .orgi-panel.open { transform:translateX(0);visibility:visible; }
+      .orgi-panel { position:fixed;z-index:6;top:46px;right:0;width:min(420px,100vw);height:calc(100dvh - 46px);overflow:auto;padding:24px;background:var(--orgi-bg);color:var(--orgi-text);box-shadow:-18px 10px 50px #030711a6;border-left:1px solid var(--orgi-border);display:none; }
+      .orgi-panel.open { display:block;animation:drawer-in .24s ease-out; }
      .orgi-panel-head { display:flex;justify-content:space-between;align-items:center; }
      .orgi-panel-brand { display:flex;align-items:center;gap:10px;font-size:1.15rem;font-weight:750; }
      .orgi-panel-brand .orgi-mark { width:34px;height:34px;background:var(--orgi-sidebar);color:var(--orgi-lavender);box-shadow:0 0 18px #826bff35; }
@@ -247,7 +248,7 @@
     .outlook-mail .outlook-sender-cell .outlook-sender { padding:0; }
     .outlook-preview { display:block;overflow:hidden;color:var(--mail-muted);font-size:.72rem;text-overflow:ellipsis;white-space:nowrap; }
     .inbox-note { flex:none;margin:0;padding:6px 12px;background:var(--mail-bg);color:var(--mail-muted);font-size:.76rem; }
-     @media(prefers-reduced-motion:reduce) { .orgi-panel,.orgi-backdrop,.orgi-launcher { transition:none; }.orgi-avatar { animation:none !important; } }
+      @media(prefers-reduced-motion:reduce) { .orgi-panel,.orgi-backdrop,.orgi-launcher { transition:none; }.orgi-panel.open { animation:none !important; }.orgi-avatar { animation:none !important; } }
     .outlook-search-wrap { display:flex;flex:0 1 356px;align-items:center;gap:8px;min-width:80px;height:32px;padding:0 10px;border:1px solid #63788e;border-radius:4px;background:#29435c;color:#d9e3ee; }
     .outlook-search-wrap:focus-within { outline:2px solid #163653;outline-offset:1px; }
     .outlook-search { width:100%;min-width:0;height:28px;min-height:28px;padding:3px 0;border:0;background:transparent;color:#fff;outline:0; }
@@ -410,7 +411,7 @@
       <h2 id="task-dialog-title">Crear compromiso</h2><p class="muted" id="task-source"></p>
       <label class="field">Título<input id="task-title" required maxlength="180"></label>
       <label class="field">Descripción<textarea id="task-description" rows="3"></textarea></label>
-      <div class="field-grid"><label class="field">Fecha límite (opcional)<input id="task-due" type="date"></label><label class="field">Materia (opcional)<input id="task-course" maxlength="120"></label></div>
+      <div class="field-grid"><label class="field">Fecha (opcional)<input id="task-due" type="date"></label><label class="field">Materia (opcional)<input id="task-course" maxlength="120"></label></div>
       <p class="muted">La fecha es opcional y solo se guardará si la confirmás acá.</p>
       <div class="task-controls"><button class="button primary" type="submit">Guardar compromiso</button><button class="button" id="cancel-task" type="button">Cancelar</button></div>
     </form>
@@ -418,7 +419,7 @@
 
   <script>
     "use strict";
-    const KEYS = { tasks: "academic-followup.tasks.v1", decisions: "academic-followup.decisions.v1", readEmails: "academic-outlook-read.v1" };
+    const KEYS = { tasks: "academic-followup.tasks.v1", decisions: "academic-followup.decisions.v1", relevance: "academic-followup.relevance.v1", readEmails: "academic-outlook-read.v1" };
     const DATA_SOURCE = "data/comunicaciones_demo_v01.json";
     const DEMO_REFERENCE_DATE = "2026-11-04";
     const $ = selector => document.querySelector(selector);
@@ -432,12 +433,13 @@
       oportunidad: { label: "Oportunidades", icon: "sparkle-20-regular", description: "Convocatorias e invitaciones para explorar." },
       administrativo: { label: "Administrativos", icon: "clipboard-20-regular", description: "Comunicaciones sobre gestiones administrativas." }
     };
-    let emails = [], tasks = [], decisions = {}, selectedId = null, newestFirst = true;
+    let emails = [], tasks = [], decisions = {}, relevanceIds = new Set(), selectedId = null, newestFirst = true;
     let readEmailIds = new Set(), selectedOutlookMailId = null, outlookSearchQuery = "", demoReferenceDate = DEMO_REFERENCE_DATE;
     let activeCategory = "", editingTaskId = null, taskSourceId = null;
     const text = (value, fallback = "No indicado") => typeof value === "string" && value.trim() ? value : fallback;
     const normalize = value => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("es");
     const label = value => String(value ?? "").replaceAll("_", " ").replace(/^./, c => c.toLocaleUpperCase("es"));
+    const categoryName = value => CATEGORY_META[value]?.label ?? label(value);
     const node = (tag, className, value) => { const el = document.createElement(tag); if (className) el.className = className; if (value !== undefined) el.textContent = value; return el; };
     const icon = name => {
       const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -519,7 +521,7 @@
       const pendingEmails = emails.filter(mail => !decisions[mail.id] || decisions[mail.id] === "pendiente").slice(0, 3);
       pendingEmails.forEach(mail => {
         const item = node("button", "orgi-attention-item"); item.type = "button"; item.dataset.emailId = mail.id;
-        item.append(node("strong", "", text(mail.observado?.asunto)), node("small", "", `${text(mail.observado?.remitente)} · ${label(mail.hipotesis_diseno?.categoria)}`)); attention.append(item);
+        item.append(node("strong", "", text(mail.observado?.asunto)), node("small", "", `${text(mail.observado?.remitente)} · ${categoryName(mail.hipotesis_diseno?.categoria)}`)); attention.append(item);
         item.addEventListener("click", () => openDashboardForMail(mail));
       });
       if (!attention.childElementCount) attention.append(node("p", "muted", "No hay comunicaciones pendientes de revisión."));
@@ -573,8 +575,22 @@
     const linkedTasks = id => tasks.filter(task => task.sourceEmailId === id);
     function mailState(mailId) {
       const saved = decisions[mailId];
-      if (saved && typeof saved === "object") return { reviewed: saved.reviewed === true, relevant: saved.relevant === true };
-      return { reviewed: saved === "relevante" || saved === "no_relevante", relevant: saved === "relevante" };
+      if (saved && typeof saved === "object") return { reviewed: saved.reviewed === true, relevant: relevanceIds.has(mailId) || saved.relevant === true };
+      return { reviewed: saved === "relevante" || saved === "no_relevante", relevant: relevanceIds.has(mailId) || saved === "relevante" };
+    }
+    function saveMailState(mail, changes) {
+      const previousDecision = decisions[mail.id], wasRelevant = relevanceIds.has(mail.id), current = mailState(mail.id);
+      const next = { ...current, ...changes };
+      if (next.relevant) relevanceIds.add(mail.id); else relevanceIds.delete(mail.id);
+      if (next.reviewed) decisions[mail.id] = next.relevant ? "relevante" : "no_relevante";
+      else decisions[mail.id] = "pendiente";
+      if (saveLocal()) {
+        renderMailList(); renderHome(); renderOutlook(); showMail(mail);
+        return true;
+      }
+      if (previousDecision === undefined) delete decisions[mail.id]; else decisions[mail.id] = previousDecision;
+      if (wasRelevant) relevanceIds.add(mail.id); else relevanceIds.delete(mail.id);
+      return false;
     }
     function mailBody(mail) {
       const observed = mail.observado ?? {};
@@ -583,7 +599,19 @@
     }
     function showError(message) { appError.textContent = message; appError.classList.remove("hidden"); }
     function loadLocal(key, fallback) { try { const raw = localStorage.getItem(key); return raw === null ? fallback : JSON.parse(raw); } catch (error) { showError(`No se pudieron leer los datos guardados (${error.message}); los cambios podrían no persistir.`); return fallback; } }
-    function saveLocal() { try { localStorage.setItem(KEYS.tasks, JSON.stringify(tasks)); localStorage.setItem(KEYS.decisions, JSON.stringify(decisions)); return true; } catch (error) { showError(`No se pudieron guardar los cambios en este navegador (${error.message}). Revisá el espacio disponible.`); return false; } }
+    function saveLocal() {
+      const keys = [KEYS.tasks, KEYS.decisions, KEYS.relevance], previous = keys.map(key => localStorage.getItem(key));
+      try {
+        localStorage.setItem(KEYS.tasks, JSON.stringify(tasks));
+        localStorage.setItem(KEYS.decisions, JSON.stringify(decisions));
+        localStorage.setItem(KEYS.relevance, JSON.stringify([...relevanceIds]));
+        return true;
+      } catch (error) {
+        keys.forEach((key, index) => { try { if (previous[index] === null) localStorage.removeItem(key); else localStorage.setItem(key, previous[index]); } catch {} });
+        showError(`No se pudieron guardar los cambios en este navegador (${error.message}). Revisá el espacio disponible.`);
+        return false;
+      }
+    }
     function setView(view) {
       ["home", "communications", "tasks"].forEach(name => $(`#${name}-view`).classList.toggle("hidden", name !== view));
       document.querySelectorAll("nav [data-view]").forEach(button => { if (button.dataset.view === view) button.setAttribute("aria-current", "page"); else button.removeAttribute("aria-current"); });
@@ -617,7 +645,7 @@
       recentMails.forEach(mail => {
         const row = node("button", "attention-item"); row.type = "button";
         const state = mailState(mail.id), content = node("span");
-        content.append(node("strong", "", text(mail.observado?.asunto)), node("small", "", `${text(mail.observado?.remitente)} · ${formatMailDate(mail)} · ${label(mail.hipotesis_diseno?.categoria)} · ${state.reviewed ? "Revisado" : "Sin revisar"}`));
+        content.append(node("strong", "", text(mail.observado?.asunto)), node("small", "", `${text(mail.observado?.remitente)} · ${formatMailDate(mail)} · Categoría propuesta: ${categoryName(mail.hipotesis_diseno?.categoria)} · ${state.reviewed ? "Revisado" : "Sin revisar"}`));
         const badges = node("span", "home-row-badges");
         badges.append(node("span", `tag ${state.reviewed ? "task-state-finalizada" : "task-state-pendiente"}`, state.reviewed ? "Revisado" : "Sin revisar"));
         if (state.relevant) badges.append(node("span", "tag", "Relevante"));
@@ -659,13 +687,13 @@
       all.append(allIcon, allText, allTail); all.addEventListener("click", () => openCommunications()); grid.append(all);
     }
     function localDateString() { const date = new Date(); return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`; }
-    function populate(select, values) { [...new Set(values.filter(Boolean))].sort((a, b) => a.localeCompare(b, "es")).forEach(value => { const option = node("option", "", label(value)); option.value = value; select.append(option); }); }
+    function populate(select, values, format = label) { [...new Set(values.filter(Boolean))].sort((a, b) => a.localeCompare(b, "es")).forEach(value => { const option = node("option", "", format(value)); option.value = value; select.append(option); }); }
     function filteredEmails() {
       const query = normalize(search.value.trim());
       return emails.filter(mail => {
         const observed = mail.observado ?? {}, hypothesis = mail.hipotesis_diseno ?? {};
         const state = mailState(mail.id);
-        const matchesQuery = [observed.remitente, observed.asunto, mailBody(mail), hypothesis.categoria, label(hypothesis.categoria)]
+        const matchesQuery = [observed.remitente, observed.asunto, mailBody(mail), hypothesis.categoria, categoryName(hypothesis.categoria)]
           .some(value => normalize(value).includes(query));
         return (!query || matchesQuery)
           && (!categoryFilter.value || hypothesis.categoria === categoryFilter.value)
@@ -683,7 +711,7 @@
         button.dataset.reviewed = String(state.reviewed);
         const byline = node("span", "mail-byline"); byline.append(node("span", "", text(observed.remitente)), node("span", "", formatMailDate(mail)));
         const badges = node("span", "mail-badges");
-        badges.append(node("span", "badge", `${label(hypothesis.categoria)} · propuesta`), node("span", `badge ${state.reviewed ? "reviewed" : "pending"}`, state.reviewed ? "Revisado" : "Sin revisar"));
+        badges.append(node("span", "badge", `${categoryName(hypothesis.categoria)} · propuesta`), node("span", `badge ${state.reviewed ? "reviewed" : "pending"}`, state.reviewed ? "Revisado" : "Sin revisar"));
         if (state.relevant) badges.append(node("span", "badge relevance", "Relevante para vos"));
         if (linkedTasks(mail.id).length) badges.append(node("span", "badge commitment-badge", "Con compromiso"));
         button.append(node("span", "mail-subject", text(observed.asunto)), byline, badges);
@@ -698,7 +726,7 @@
       const subject = node("h2", "detail-subject", text(observed.asunto)); subject.id = "detail-subject";
       const header = node("header", "detail-header"); header.append(node("p", "muted", `Comunicación · ${mail.id}`), subject, node("p", "", text(observed.remitente)), node("p", "meta", `Recibido: ${[observed.fecha_recibido, observed.hora_recibido].filter(Boolean).join(" · ") || "Fecha no indicada"}`)); detailContent.append(header);
       const state = mailState(mail.id), linked = linkedTasks(mail.id);
-      detailContent.append(detailBlock("Estado de esta comunicación", [definitionList([["Categoría propuesta", label(hypothesis.categoria)], ["Estado de revisión", state.reviewed ? "Revisado" : "Sin revisar"], ["Relevancia", state.relevant ? "Marcada como relevante por vos" : "Sin marcar"], ["Compromiso", linked.length ? "Tiene un compromiso asociado" : "Sin compromiso asociado"]])]));
+      detailContent.append(detailBlock("Estado de esta comunicación", [definitionList([["Categoría propuesta", categoryName(hypothesis.categoria)], ["Estado de revisión", state.reviewed ? "Revisado" : "Sin revisar"], ["Relevancia", state.relevant ? "Marcada como relevante por vos" : "Sin marcar"], ["Compromiso", linked.length ? "Tiene un compromiso asociado" : "Sin compromiso asociado"]])]));
       if (hypothesis.accion_sugerida) detailContent.append(detailBlock("Posible acción · propuesta", [node("p", "", hypothesis.accion_sugerida), node("p", "muted", "Orientación basada en los datos de ejemplo; no confirma una obligación ni una fecha límite.")]));
       const body = mailBody(mail);
       detailContent.append(detailBlock("Contenido de la comunicación", [body ? node("p", "detail-body", body) : node("p", "reading-unavailable", "Contenido no disponible en esta muestra.")]));
@@ -712,7 +740,8 @@
       const actions = node("div", "task-controls");
       const existing = linkedTasks(mail.id);
       const taskAction = node("button", "button primary", existing.length ? "Editar compromiso" : "Convertir en compromiso"); taskAction.type = "button"; taskAction.addEventListener("click", () => openTaskForm(mail, existing[0] ?? null)); actions.append(taskAction);
-      [["relevante", "Marcar como revisado"], ["no_relevante", "Marcar como no relevante"], ["pendiente", "Dejar pendiente"]].forEach(([value, title]) => { const button = node("button", "button", title); button.type = "button"; button.setAttribute("aria-pressed", String((decisions[mail.id] ?? "pendiente") === value)); button.addEventListener("click", () => { const before = decisions[mail.id]; decisions[mail.id] = value; if (saveLocal()) { renderMailList(); renderHome(); renderOutlook(); showMail(mail); } else if (before === undefined) delete decisions[mail.id]; else decisions[mail.id] = before; }); actions.append(button); });
+      const reviewAction = node("button", "button", state.reviewed ? "Dejar sin revisar" : "Marcar como revisado"); reviewAction.type = "button"; reviewAction.setAttribute("aria-pressed", String(state.reviewed)); reviewAction.addEventListener("click", () => saveMailState(mail, { reviewed: !state.reviewed })); actions.append(reviewAction);
+      const relevanceAction = node("button", "button", state.relevant ? "Quitar relevancia" : "Marcar como relevante"); relevanceAction.type = "button"; relevanceAction.setAttribute("aria-pressed", String(state.relevant)); relevanceAction.addEventListener("click", () => saveMailState(mail, { relevant: !state.relevant })); actions.append(relevanceAction);
       const actionBlock = detailBlock("Acciones disponibles", [actions]); actionBlock.classList.add("detail-actions"); detailContent.append(actionBlock);
       if (!detailDialog.open) detailDialog.showModal();
       renderMailList();
@@ -720,30 +749,34 @@
     function openTaskForm(mail, task = null) {
       editingTaskId = task?.id ?? null; taskSourceId = task?.sourceEmailId ?? mail?.id ?? null;
       $("#task-dialog-title").textContent = task ? "Editar compromiso" : "Crear compromiso";
-      $("#task-source").textContent = taskSourceId ? `Vinculada a la comunicación ${taskSourceId}. El vencimiento se define acá, no se copia del correo.` : "Compromiso sin correo de origen.";
-      $("#task-title").value = task?.title ?? ""; $("#task-description").value = task?.description ?? ""; $("#task-due").value = task?.dueDate ?? ""; $("#task-course").value = task?.course ?? "";
+      const sourceMail = emails.find(item => item.id === taskSourceId);
+      $("#task-source").textContent = sourceMail ? `Vinculada a: ${text(sourceMail.observado?.asunto)}. La fecha es opcional y la definís vos.` : "Sin comunicación de origen disponible. La fecha es opcional y la definís vos.";
+      $("#task-title").value = task?.title ?? text(mail?.observado?.asunto, ""); $("#task-description").value = task?.description ?? ""; $("#task-due").value = task?.dueDate ?? ""; $("#task-course").value = task?.course ?? "";
       taskDialog.showModal(); $("#task-title").focus();
     }
+    const taskCompleted = task => task.status === "finalizada";
     function taskCard(task) {
-      const card = node("article", "task-card"), head = node("div", "task-head"); head.append(node("h3", "", task.title), node("span", `tag task-state-${task.status}`, label(task.status))); card.append(head);
+      const card = node("article", "task-card"), head = node("div", "task-head"), completed = taskCompleted(task); head.append(node("h3", "", task.title), node("span", `tag task-state-${completed ? "finalizada" : "pendiente"}`, completed ? "Completado" : "Pendiente")); card.append(head);
       if (task.description) card.append(node("p", "", task.description));
-      card.append(node("p", "meta", `${task.dueDate ? `Fecha confirmada: ${task.dueDate}` : "Sin fecha confirmada"} · ${task.course || "Materia sin indicar"}${task.sourceEmailId ? ` · Comunicación ${task.sourceEmailId}` : ""}`));
+      card.append(node("p", "meta", `${task.dueDate ? `Fecha: ${task.dueDate}` : "Sin fecha"} · ${task.course || "Materia sin indicar"}`));
+      const sourceMail = emails.find(mail => mail.id === task.sourceEmailId);
+      if (sourceMail) { const source = node("button", "text-link", `Comunicación relacionada: ${text(sourceMail.observado?.asunto)}`); source.type = "button"; source.addEventListener("click", () => { openCommunications(); showMail(sourceMail); }); card.append(source); }
+      else card.append(node("p", "meta", "Sin comunicación relacionada disponible."));
       const controls = node("div", "task-controls"), status = document.createElement("select"); status.setAttribute("aria-label", `Estado de ${task.title}`);
-      [["pendiente", "Pendiente"], ["en_progreso", "En progreso"], ["finalizada", "Finalizada"]].forEach(([value, title]) => { const option = node("option", "", title); option.value = value; status.append(option); }); status.value = task.status;
-      status.addEventListener("change", () => { const old = task.status; task.status = status.value; if (saveLocal()) { renderTasks(); renderHome(); } else task.status = old; }); controls.append(status);
+      [["pendiente", "Pendiente"], ["finalizada", "Completado"]].forEach(([value, title]) => { const option = node("option", "", title); option.value = value; status.append(option); }); status.value = completed ? "finalizada" : "pendiente";
+      status.addEventListener("change", () => { const old = task.status; task.status = status.value; if (saveLocal()) { renderTasks(); renderHome(); if (detailDialog.open && selectedId) showMail(emails.find(mail => mail.id === selectedId)); } else { task.status = old; status.value = taskCompleted(task) ? "finalizada" : "pendiente"; } }); controls.append(status);
       const edit = node("button", "button", "Editar"); edit.type = "button"; edit.addEventListener("click", () => openTaskForm(null, task));
       const remove = node("button", "button danger", "Eliminar"); remove.type = "button"; remove.addEventListener("click", () => { if (!confirm(`¿Eliminar el compromiso «${task.title}»?`)) return; const prior = tasks; tasks = tasks.filter(item => item.id !== task.id); if (saveLocal()) { renderTasks(); renderHome(); } else tasks = prior; }); controls.append(edit, remove); card.append(controls); return card;
     }
     function renderTasks() {
-      const container = $("#task-list"), overview = $("#task-overview"); container.replaceChildren(); overview.replaceChildren(); if (!tasks.length) { const empty = node("section", "task-empty"); empty.append(node("h3", "", "Tu espacio de compromisos empieza acá"), node("p", "", "Revisá una comunicación y elegí Convertir en tarea cuando decidas hacerle seguimiento. La fecha es opcional y la definís vos.")); const link = node("button", "button primary", "Explorar comunicaciones"); link.type = "button"; link.addEventListener("click", () => openCommunications()); empty.append(link); container.append(empty); return; }
-      [["Próximos con fecha", tasks.filter(task => task.status !== "finalizada" && task.dueDate && task.dueDate >= localDateString()).length], ["Sin fecha confirmada", tasks.filter(task => task.status !== "finalizada" && !task.dueDate).length]].forEach(([title, count]) => { const card = node("div", "summary-card"); card.append(node("span", "", title), node("strong", "", String(count))); overview.append(card); });
+      const container = $("#task-list"), overview = $("#task-overview"); container.replaceChildren(); overview.replaceChildren(); if (!tasks.length) { const empty = node("section", "task-empty"); empty.append(node("h3", "", "Tu espacio de compromisos empieza acá"), node("p", "", "Abrí una comunicación y elegí Convertir en compromiso si decidís darle seguimiento. La fecha es opcional y la definís vos.")); const link = node("button", "button primary", "Explorar comunicaciones"); link.type = "button"; link.addEventListener("click", () => openCommunications()); empty.append(link); container.append(empty); return; }
       const mode = $("#task-grouping").value;
       if (mode === "status") {
-        [["pendiente", "Pendientes"], ["en_progreso", "En progreso"], ["finalizada", "Finalizadas"]].forEach(([status, title]) => {
-          const matching = tasks.filter(task => task.status === status).sort((a, b) => (a.dueDate || "9999").localeCompare(b.dueDate || "9999"));
+        [[false, "Pendientes"], [true, "Completados"]].forEach(([completed, title]) => {
+          const matching = tasks.filter(task => taskCompleted(task) === completed).sort((a, b) => (a.dueDate || "9999").localeCompare(b.dueDate || "9999"));
           const group = node("section", "task-group"), heading = node("h2"); heading.append(node("span", "", title), node("span", "count", String(matching.length))); group.append(heading);
           const cards = node("div", "task-grid"); matching.forEach(task => cards.append(taskCard(task))); group.append(cards);
-           if (matching.some(task => !task.dueDate)) group.append(node("p", "muted", `${matching.filter(task => !task.dueDate).length} sin fecha confirmada`)); if (matching.length) container.append(group);
+          if (matching.length) container.append(group);
         });
         return;
       }
@@ -763,13 +796,14 @@
     $("#cancel-task").addEventListener("click", () => taskDialog.close());
     taskForm.addEventListener("submit", event => {
       event.preventDefault(); const title = $("#task-title").value.trim(); if (!title) return;
+      if (!window.confirm(`${editingTaskId ? "¿Guardar los cambios del compromiso" : "¿Crear este compromiso"} «${title}»?`)) return;
       const prior = tasks, oldTask = tasks.find(task => task.id === editingTaskId);
       const task = { id: editingTaskId ?? (crypto.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`), sourceEmailId: taskSourceId, title, description: $("#task-description").value.trim(), dueDate: $("#task-due").value, course: $("#task-course").value.trim(), status: oldTask?.status ?? "pendiente", createdAt: oldTask?.createdAt ?? new Date().toISOString() };
       tasks = editingTaskId ? tasks.map(item => item.id === editingTaskId ? task : item) : [...tasks, task];
       if (saveLocal()) { taskDialog.close(); renderTasks(); renderHome(); if (!$("#communications-view").classList.contains("hidden") && selectedId) showMail(emails.find(mail => mail.id === selectedId)); } else tasks = prior;
     });
     async function init() {
-      const savedTasks = loadLocal(KEYS.tasks, []), savedDecisions = loadLocal(KEYS.decisions, {});
+      const savedTasks = loadLocal(KEYS.tasks, []), savedDecisions = loadLocal(KEYS.decisions, {}), savedRelevance = loadLocal(KEYS.relevance, null);
       tasks = Array.isArray(savedTasks) ? savedTasks.filter(task => task && typeof task.id === "string" && typeof task.title === "string") : [];
       decisions = savedDecisions && typeof savedDecisions === "object" && !Array.isArray(savedDecisions) ? savedDecisions : {};
       try {
@@ -778,11 +812,14 @@
         emails = data.correos;
         const storedReadIds = loadLocal(KEYS.readEmails, null);
         const validEmailIds = new Set(emails.map(mail => mail.id));
+        relevanceIds = new Set(Array.isArray(savedRelevance)
+          ? savedRelevance.filter(id => typeof id === "string" && validEmailIds.has(id))
+          : emails.filter(mail => decisions[mail.id] === "relevante").map(mail => mail.id));
         if (Array.isArray(storedReadIds)) readEmailIds = new Set(storedReadIds.filter(id => typeof id === "string" && validEmailIds.has(id)));
         else readEmailIds = new Set(emails.slice().sort((a, b) => mailSortKey(b).localeCompare(mailSortKey(a))).slice(8).map(mail => mail.id));
         $("#demo-reference-date").value = DEMO_REFERENCE_DATE;
         renderOutlook();
-        populate(categoryFilter, emails.map(mail => mail.hipotesis_diseno?.categoria));
+        populate(categoryFilter, emails.map(mail => mail.hipotesis_diseno?.categoria), categoryName);
         $("#source-indicator").setAttribute("aria-label", `Modo demostración · Datos de ejemplo · ${emails.length} comunicaciones disponibles`);
         renderHome(); renderMailList();
       } catch (error) { $("#outlook-view").classList.add("hidden"); $("#dashboard-app").classList.remove("hidden"); showError(`No se pudo cargar la demostración. Ejecutá el sitio desde un servidor local y verificá ${DATA_SOURCE}. ${error.message}`); }

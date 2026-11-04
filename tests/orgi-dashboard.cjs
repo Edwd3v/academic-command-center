@@ -70,7 +70,7 @@ async function main() {
 
     const home = await evaluate(`({title:document.querySelector('#dashboard-app h1').textContent.trim(), summaries:[...document.querySelectorAll('#summary-grid .summary-card')].length, heading:document.querySelector('#attention-title').textContent, demo:document.querySelector('#source-indicator').textContent})`);
     assert.equal(home.title, "Mi espacio académico");
-    assert.equal(home.summaries, 3, "Home should show only the three requested summary indicators.");
+    assert.equal(home.summaries, 3, `Home should show only the three requested summary indicators. ${await evaluate(`document.querySelector('#app-error').textContent`)}`);
     assert(!/urgente|requiere tu atención/i.test(home.heading));
     assert.match(home.demo, /demostración|datos de ejemplo/i);
     if (process.env.ORGI_TEST_HOME_ONLY === "1") {
@@ -92,11 +92,96 @@ async function main() {
     await click("#mail-list .mail-row");
     await waitUntil(`document.querySelector('#detail-dialog').open`, "Communication detail did not open.");
     assert.match(await evaluate(`document.querySelector('#detail-content').textContent`), /Contenido no disponible en esta muestra/);
-    assert.match(await evaluate(`document.querySelector('#detail-content').textContent`), /relevante/i);
+    await click("#close-detail");
+    await evaluate(`const mail=emails.find(item=>item.id==='demo-academico-revisar'); mail.cuerpo_disponible=true; mail.cuerpo='Confirmá el acceso al laboratorio en la plataforma.'; mail.observado.captura={url:'https://example.edu/messages/demo-academico-revisar'}; document.querySelector('#global-search').value='acceso al laboratorio'; document.querySelector('#global-search').dispatchEvent(new Event('input',{bubbles:true}))`);
+    await waitUntil(`document.querySelectorAll('#mail-list .mail-row').length===1`, "Search did not match content when explicitly available.");
+    await click("#mail-list .mail-row");
+    await waitUntil(`document.querySelector('#detail-content').textContent.includes('Confirmá el acceso al laboratorio')`, "Available message content was not shown in details.");
+    assert.equal(await evaluate(`document.querySelector('#detail-content a[href^="https://example.edu/"]')?.textContent`), "Abrir mensaje original");
+    await click("#close-detail");
+    await evaluate(`document.querySelector('#global-search').value='Guía de ejercicios'; document.querySelector('#global-search').dispatchEvent(new Event('input',{bubbles:true}))`);
+    await waitUntil(`document.querySelectorAll('#mail-list .mail-row').length===1`, "Search did not return to the selected subject.");
+    const detailActions = await evaluate(`document.querySelector('.detail-actions').textContent`);
+    assert.match(detailActions, /Marcar como revisado/i);
+    assert.match(detailActions, /Marcar como relevante/i);
     const overflow = await evaluate(`({width:document.documentElement.scrollWidth,client:document.documentElement.clientWidth})`);
     assert(overflow.width <= overflow.client, `Horizontal overflow at desktop: ${JSON.stringify(overflow)}`);
 
-    console.log("PASS Orgi dashboard smoke: home, search, details and desktop overflow");
+    await evaluate(`document.querySelectorAll('.detail-actions button').forEach(button=>{if(button.textContent==='Marcar como revisado')button.click()})`);
+    await waitUntil(`document.querySelector('#detail-content').textContent.includes('Estado de revisiónRevisado')`, "Review status did not update independently.");
+    assert.match(await evaluate(`document.querySelector('#detail-content').textContent`), /RelevanciaSin marcar/);
+    await evaluate(`document.querySelectorAll('.detail-actions button').forEach(button=>{if(button.textContent==='Marcar como relevante')button.click()})`);
+    await waitUntil(`document.querySelector('#detail-content').textContent.includes('Marcada como relevante por vos')`, "Student relevance did not update.");
+    assert.match(await evaluate(`document.querySelector('#detail-content').textContent`), /CompromisoSin compromiso asociado/);
+
+    await click("#close-detail");
+    await evaluate(`document.querySelector('#category-filter').value='academico'; document.querySelector('#category-filter').dispatchEvent(new Event('change',{bubbles:true})); document.querySelector('#review-filter').value='reviewed'; document.querySelector('#review-filter').dispatchEvent(new Event('change',{bubbles:true})); document.querySelector('#relevance-filter').value='relevant'; document.querySelector('#relevance-filter').dispatchEvent(new Event('change',{bubbles:true}))`);
+    await waitUntil(`document.querySelectorAll('#mail-list .mail-row').length === 1`, "Combined category, review, and relevance filters did not match the selected communication.");
+    await click("#reset");
+    await evaluate(`document.querySelector('#global-search').value='Guía de ejercicios'; document.querySelector('#global-search').dispatchEvent(new Event('input',{bubbles:true}))`);
+    await waitUntil(`document.querySelectorAll('#mail-list .mail-row').length===1`, "Communication search did not restore the selected message.");
+    await click("#mail-list .mail-row");
+    await click(".detail-actions .button.primary");
+    await waitUntil(`document.querySelector('#task-dialog').open`, "Commitment form did not open from the communication.");
+    const title = await evaluate(`document.querySelector('#task-title').value`);
+    assert(title, "Commitment title should be proposed from the communication subject.");
+    const sourceReference = await evaluate(`document.querySelector('#task-source').textContent`);
+    assert.match(sourceReference, /Guía de ejercicios/);
+    await evaluate(`window.confirmCalls=[]; window.confirm=message=>{window.confirmCalls.push(message);return true}; document.querySelector('#task-title').value='Repasar la guía'; document.querySelector('#task-description').value='Revisar los ejercicios'; document.querySelector('#task-form').requestSubmit()`);
+    await waitUntil(`!document.querySelector('#task-dialog').open && JSON.parse(localStorage.getItem('academic-followup.tasks.v1')||'[]').length===1`, "Confirmed commitment was not persisted.");
+    assert.equal(await evaluate(`JSON.parse(localStorage.getItem('academic-followup.tasks.v1'))[0].sourceEmailId`), "demo-academico-revisar");
+    assert.match(await evaluate(`window.confirmCalls.join(' ')`), /Crear este compromiso/);
+
+    await click("nav [data-view='tasks']");
+    await waitUntil(`document.querySelectorAll('.task-card').length===1`, "Saved commitment was not shown in Mis compromisos.");
+    assert.match(await evaluate(`document.querySelector('.task-card').textContent`), /Comunicación relacionada: Guía de ejercicios/);
+    await evaluate(`[...document.querySelectorAll('.task-card button')].find(button=>button.textContent==='Editar').click()`);
+    await waitUntil(`document.querySelector('#task-dialog').open`, "Commitment edit form did not open.");
+    await evaluate(`document.querySelector('#task-title').value='Repasar ejercicios seleccionados'; document.querySelector('#task-form').requestSubmit()`);
+    await waitUntil(`JSON.parse(localStorage.getItem('academic-followup.tasks.v1'))[0].title==='Repasar ejercicios seleccionados'`, "Edited commitment was not persisted.");
+    await evaluate(`const status=document.querySelector('.task-card select'); status.value='finalizada'; status.dispatchEvent(new Event('change',{bubbles:true}))`);
+    await waitUntil(`document.querySelector('.task-group h2').textContent.includes('Completados')`, "Commitment could not be marked complete.");
+    await click("nav [data-view='home']");
+    assert.equal(await evaluate(`document.querySelector('#summary-grid').textContent.includes('Compromisos activos0')`), true);
+
+    await cdp("Emulation.setDeviceMetricsOverride", { width: 390, height: 844, deviceScaleFactor: 1, mobile: false });
+    const mobileOverflow = await evaluate(`({width:document.documentElement.scrollWidth,client:document.documentElement.clientWidth,inner:innerWidth,visual:visualViewport.width,small:matchMedia('(max-width:560px)').matches,widths:['#dashboard-app','.main-content','#home-view','.home-bento','.attention-card','#category-grid','.category-card'].map(s=>[s,Math.round(document.querySelector(s).getBoundingClientRect().width),document.querySelector(s).scrollWidth]),categories:getComputedStyle(document.querySelector('#category-grid')).gridTemplateColumns})`);
+    const overflowElements = await evaluate(`[...document.querySelectorAll('body *')].map(el=>({tag:el.tagName,id:el.id,class:typeof el.className==='string'?el.className:'',parent:el.parentElement?.className,text:el.textContent.trim().slice(0,65),left:Math.round(el.getBoundingClientRect().left),right:Math.round(el.getBoundingClientRect().right),width:Math.round(el.getBoundingClientRect().width),min:getComputedStyle(el).minWidth})).filter(el=>el.width>document.documentElement.clientWidth+1&&el.width<480).sort((a,b)=>a.width-b.width).slice(0,12)`);
+    assert(mobileOverflow.width <= mobileOverflow.client, `Horizontal overflow at mobile: ${JSON.stringify(mobileOverflow)} ${JSON.stringify(overflowElements)}`);
+    await cdp("Emulation.clearDeviceMetricsOverride");
+
+    await cdp("Page.reload");
+    await waitUntil(`document.querySelector('#open-control-center') && document.querySelector('#source-indicator').getAttribute('aria-label')`, "Dashboard demo did not reload.");
+    await click("#open-control-center");
+    await waitUntil(`!document.querySelector('#dashboard-app').classList.contains('hidden')`, "Dashboard did not reopen after reload.");
+    const persistedHome = await evaluate(`document.querySelector('#summary-grid').textContent`);
+    assert.match(persistedHome, /Relevantes para vos1/);
+    assert.match(persistedHome, /Compromisos activos0/);
+    await click("nav [data-view='tasks']");
+    await waitUntil(`document.querySelector('.task-group h2').textContent.includes('Completados')`, "Completed commitment state did not survive reload.");
+    assert.match(await evaluate(`document.querySelector('.task-card h3').textContent`), /Repasar ejercicios seleccionados/);
+    await evaluate(`window.confirmCalls=[]; window.confirm=message=>{window.confirmCalls.push(message);return true}; document.querySelector('.task-card button.danger').click()`);
+    await waitUntil(`JSON.parse(localStorage.getItem('academic-followup.tasks.v1')||'[]').length===0`, "Confirmed commitment deletion was not persisted.");
+    assert.match(await evaluate(`window.confirmCalls.join(' ')`), /Eliminar el compromiso/);
+    assert.match(await evaluate(`document.querySelector('#task-list').textContent`), /Tu espacio de compromisos empieza acá/);
+
+    await evaluate(`localStorage.setItem('academic-followup.decisions.v1',JSON.stringify({'demo-academico-revisar':'relevante','demo-academico-informativo':'no_relevante'})); localStorage.removeItem('academic-followup.relevance.v1')`);
+    await cdp("Page.reload");
+    await waitUntil(`document.querySelector('#source-indicator')?.getAttribute('aria-label') || false`, "Legacy decision data did not reload.");
+    await click("#open-control-center");
+    await waitUntil(`!document.querySelector('#dashboard-app').classList.contains('hidden')`, "Dashboard did not reopen with legacy state.");
+    const legacyStates = await evaluate(`({reviewed:mailState('demo-academico-informativo').reviewed,relevant:mailState('demo-academico-revisar').relevant,summary:document.querySelector('#summary-grid').textContent})`);
+    assert.equal(legacyStates.reviewed, true, "Legacy no_relevante must still mean reviewed.");
+    assert.equal(legacyStates.relevant, true, "Legacy relevante must migrate into student relevance.");
+    assert.match(legacyStates.summary, /Comunicaciones sin revisar23/);
+    assert.match(legacyStates.summary, /Relevantes para vos1/);
+
+    await cdp("Page.addScriptToEvaluateOnNewDocument", { source: "window.fetch=()=>Promise.reject(new Error('offline smoke test'));" });
+    await cdp("Page.reload");
+    await waitUntil(`Boolean(document.querySelector('#app-error') && !document.querySelector('#app-error').classList.contains('hidden'))`, "Data-loading error state was not presented.");
+    assert.match(await evaluate(`document.querySelector('#app-error').textContent`), /No se pudo cargar la demostración/);
+
+    console.log("PASS Orgi dashboard smoke: home, search, details, separate state, filters, commitment lifecycle, legacy persistence, errors and responsive width");
   } finally {
     socket?.close();
     browser.kill("SIGTERM");
