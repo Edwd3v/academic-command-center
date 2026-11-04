@@ -12,6 +12,11 @@
       --bg: #0B1120; --surface: #121c2b; --raised: #1e2c40; --line: #34445b;
       --text: #F8FAFC; --muted: #A8B4C5; --blue: #3B82F6; --cyan: #22D3EE;
       --amber: #F59E0B; --green: #10B981; --red: #EF4444; --accent: #9ccaff;
+      --orgi-bg: #0E1420; --orgi-sidebar: #111827; --orgi-surface: #171F30; --orgi-surface-hover: #202A40; --orgi-border: #2A354A;
+      --orgi-text: #F5F7FF; --orgi-text-muted: #A6B3C8;
+      --orgi-blue: #4A9EFF; --orgi-purple: #826BFF; --orgi-lavender: #A68AFF;
+      --orgi-success: #34D5A0; --orgi-warning: #FFBF69; --orgi-danger: #FF6B81;
+      --orgi-avatar-body: #08090D; --orgi-avatar-eyes: #F5F7FF; --orgi-avatar-glow: #826BFF;
       --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-6: 24px; --space-8: 32px;
       --radius-card: 16px; --radius-control: 10px;
     }
@@ -153,23 +158,24 @@
     /* The mail shell is a local conceptual simulation, not an Outlook connection. */
     .orgi-backdrop { position:fixed;inset:46px 0 0;background:#18263838;opacity:0;pointer-events:none;transition:opacity .2s ease;z-index:5; }
     .orgi-backdrop.open { opacity:1;pointer-events:auto; }
-    .orgi-panel { position:fixed;z-index:6;top:46px;right:0;width:min(420px,100vw);height:calc(100dvh - 46px);overflow:auto;padding:24px;background:#fff;color:#172b3e;box-shadow:-18px 10px 50px #14243a33;transform:translateX(105%);visibility:hidden;transition:transform .24s ease,visibility .24s; }
-    .orgi-panel.open { transform:translateX(0);visibility:visible; }
-    .orgi-panel-head { display:flex;justify-content:space-between;align-items:center; }
-    .orgi-panel-brand { display:flex;align-items:center;gap:10px;font-size:1.15rem;font-weight:750; }
-    .orgi-panel-brand .orgi-mark { width:34px;height:34px; }
-    .orgi-close { display:grid;place-items:center;border:0;background:transparent;color:#536579; }
-    .orgi-promise { margin:23px 0;padding:18px;border:1px solid #d7ece5;border-radius:12px;background:#f2faf7; }
-    .orgi-promise strong { display:block;font-size:1.04rem;line-height:1.4; }
-    .orgi-promise p { margin:8px 0 0;color:#61776e;font-size:.88rem;line-height:1.5; }
-    .orgi-panel h2 { margin:24px 0 10px;font-size:1rem; }
-    .orgi-attention-list { display:grid;gap:8px; }
-    .orgi-attention-item { padding:12px;border:1px solid #e3e9ed;border-radius:9px;background:#fff; }
-    .orgi-attention-item strong { display:block;font-size:.88rem;line-height:1.35; }
-    .orgi-attention-item small { display:block;margin-top:5px;color:#728193; }
-    .orgi-tip { padding:11px 12px;border-left:3px solid #56a88c;background:#f6f9f8;color:#536b63;font-size:.84rem;line-height:1.45; }
-    .orgi-primary { width:100%;min-height:46px;margin-top:22px;border:0;border-radius:8px;background:#16745f;color:white;font-weight:700; }
-    .orgi-primary:hover { background:#105e4d; }
+     .orgi-panel { position:fixed;z-index:6;top:46px;right:0;width:min(420px,100vw);height:calc(100dvh - 46px);overflow:auto;padding:24px;background:var(--orgi-bg);color:var(--orgi-text);box-shadow:-18px 10px 50px #030711a6;border-left:1px solid var(--orgi-border);transform:translateX(105%);visibility:hidden;transition:transform .24s ease,visibility .24s; }
+     .orgi-panel.open { transform:translateX(0);visibility:visible; }
+     .orgi-panel-head { display:flex;justify-content:space-between;align-items:center; }
+     .orgi-panel-brand { display:flex;align-items:center;gap:10px;font-size:1.15rem;font-weight:750; }
+     .orgi-panel-brand .orgi-mark { width:34px;height:34px;background:var(--orgi-sidebar);color:var(--orgi-lavender);box-shadow:0 0 18px #826bff35; }
+     .orgi-close { display:grid;place-items:center;border:0;border-radius:8px;background:transparent;color:var(--orgi-text-muted); }
+     .orgi-close:hover { background:var(--orgi-surface-hover);color:var(--orgi-text); }
+     .orgi-promise { margin:23px 0;padding:18px;border:1px solid var(--orgi-border);border-radius:12px;background:var(--orgi-surface); }
+     .orgi-promise strong { display:block;font-size:1.04rem;line-height:1.4; }
+     .orgi-promise p { margin:8px 0 0;color:var(--orgi-text-muted);font-size:.88rem;line-height:1.5; }
+     .orgi-panel h2 { margin:24px 0 10px;font-size:1rem; }
+     .orgi-attention-list { display:grid;gap:8px; }
+     .orgi-attention-item { padding:12px;border:1px solid var(--orgi-border);border-radius:9px;background:var(--orgi-surface); }
+     .orgi-attention-item strong { display:block;font-size:.88rem;line-height:1.35; }
+     .orgi-attention-item small { display:block;margin-top:5px;color:var(--orgi-text-muted); }
+     .orgi-tip { padding:11px 12px;border:1px solid var(--orgi-border);border-left:3px solid var(--orgi-purple);border-radius:8px;background:var(--orgi-surface);color:var(--orgi-text-muted);font-size:.84rem;line-height:1.45; }
+     .orgi-primary { width:100%;min-height:46px;margin-top:22px;border:0;border-radius:8px;background:var(--orgi-blue);color:#081321;font-weight:700; }
+     .orgi-primary:hover { background:var(--orgi-lavender); }
     .dashboard-return { margin:0 0 12px;padding:0;border:0;background:transparent;color:#8fc5ff;text-decoration:underline;text-underline-offset:3px; }
     /* Outlook-inspired mail shell; the academic dashboard above retains its own theme. */
     .outlook-view {
@@ -253,7 +259,7 @@
       .orgi-cta-arrow { color:#2676b6; }
       .orgi-cta-arrow.is-nudging { animation:orgi-arrow-nudge .46s ease-out 1; }
       @keyframes orgi-arrow-nudge { 0%,100% { transform:translateX(0); } 48% { transform:translateX(2px); } }
-       .orgi-avatar { display:block;width:34px;height:34px;overflow:hidden;border:1px solid #ffffff50;border-radius:50%;background:radial-gradient(circle at 32% 27%,#303944 0,#121a25 45%,#080c12 100%);box-shadow:0 2px 7px #07192c80; }
+        .orgi-avatar { display:block;width:34px;height:34px;overflow:hidden;border:1px solid #ffffff50;border-radius:50%;background:radial-gradient(circle at 32% 27%,#303944 0,#121a25 45%,var(--orgi-avatar-body) 100%);box-shadow:0 0 9px color-mix(in srgb,var(--orgi-avatar-glow) 40%,transparent); }
       .orgi-avatar-art { display:block;width:100%;height:100%;overflow:visible; }
       .orgi-head { transform-box:fill-box;transform-origin:center;transition:transform .72s cubic-bezier(.2,.75,.25,1); }
       .orgi-eyes { transform-box:fill-box;transform-origin:center;transform:translate(var(--orgi-eye-x,0px),var(--orgi-eye-y,0px));transition:transform .28s cubic-bezier(.2,.75,.25,1); }
@@ -262,8 +268,8 @@
       .orgi-avatar[data-state="surprised"] .orgi-head { transform:translateY(1px) rotate(var(--orgi-tilt,0deg)); }
       .orgi-avatar[data-state="happy"] .orgi-head { transform:rotate(2deg) translateY(-1px); }
       .orgi-avatar[data-state="sleepy"] .orgi-eyes,.orgi-avatar.is-blinking .orgi-eyes { transform:translate(var(--orgi-eye-x,0px),var(--orgi-eye-y,0px)) scaleY(.12); }
-      .orgi-eye { fill:#fff;filter:drop-shadow(0 0 2px #dff5ff); }
-     .orgi-launcher:hover .orgi-avatar { box-shadow:0 0 0 2px #ffffff38,0 0 12px #c7e5ff70; }
+       .orgi-eye { fill:var(--orgi-avatar-eyes);filter:drop-shadow(0 0 2px var(--orgi-avatar-glow)); }
+      .orgi-launcher:hover .orgi-avatar { box-shadow:0 0 0 2px #ffffff38,0 0 12px var(--orgi-avatar-glow); }
      .orgi-launcher::after { position:absolute;right:0;top:0;padding:3px 6px;border-radius:10px;background:#102d47;color:#fff;content:"Orgi";font-size:10px;line-height:1;opacity:0;transform:translateY(3px);transition:opacity .16s ease,transform .16s ease;pointer-events:none; }
      .orgi-launcher:hover::after,.orgi-launcher:focus-visible::after { opacity:1;transform:translateY(0); }
     .outlook-tab-menu,.outlook-tab { display:grid;place-items:center;height:35px;padding:0 4px;border-bottom:2px solid transparent;color:#d1d1d1;font-size:.83rem; }
@@ -914,7 +920,11 @@
       return cleanup;
     }
     initOrgiPersonality();
-    function openOrgi() { renderOutlook(); toggleOrgi(true); }
+    function openOrgi() {
+      const opening = !$("#orgi-panel").classList.contains("open");
+      if (opening) renderOutlook();
+      toggleOrgi(opening);
+    }
     $("#orgi-launcher").addEventListener("click", openOrgi);
     $("#orgi-close").addEventListener("click", () => toggleOrgi(false));
     $("#orgi-backdrop").addEventListener("click", () => toggleOrgi(false));

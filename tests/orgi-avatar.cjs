@@ -210,17 +210,34 @@ test("pagehide cancels timers and aborts listeners", () => {
   assert.equal(state.timers.size, 0);
 });
 
-test("only the avatar launcher opens the Orgi panel", () => {
+test("repeated avatar clicks toggle Orgi while only opening refreshes its content", () => {
   const calls = [];
   const registrations = [...html.matchAll(/\$\("#(orgi-launcher|orgi-cta)"\)\.addEventListener\("click", openOrgi\)/g)].map(match => match[1]);
   assert.deepEqual(registrations, ["orgi-launcher"]);
   const open = html.match(/function openOrgi\(\) \{[^}]+\}/)?.[0];
   assert(open);
-  vm.runInNewContext(`${open}; openOrgi();`, {
+  const panelClasses = new Set();
+  vm.runInNewContext(`${open}; openOrgi(); openOrgi();`, {
+    $(selector) {
+      assert.equal(selector, "#orgi-panel");
+      return { classList: { contains: value => panelClasses.has(value) } };
+    },
     renderOutlook: () => calls.push("render"),
-    toggleOrgi: value => calls.push(value),
+    toggleOrgi(value) { calls.push(value); if (value) panelClasses.add("open"); else panelClasses.delete("open"); },
   });
-  assert.deepEqual(calls, ["render", true]);
+  assert.deepEqual(calls, ["render", true, false]);
+});
+
+test("Orgi panel uses the supplied dark palette", () => {
+  const palette = {
+    bg: "#0E1420", sidebar: "#111827", surface: "#171F30", "surface-hover": "#202A40", border: "#2A354A",
+    text: "#F5F7FF", "text-muted": "#A6B3C8", blue: "#4A9EFF", purple: "#826BFF", lavender: "#A68AFF",
+    success: "#34D5A0", warning: "#FFBF69", danger: "#FF6B81", "avatar-body": "#08090D", "avatar-eyes": "#F5F7FF", "avatar-glow": "#826BFF",
+  };
+  for (const [name, value] of Object.entries(palette)) {
+    assert.ok(new RegExp(`--orgi-${name}\\s*:\\s*${value}`).test(html), `missing --orgi-${name}: ${value}`);
+  }
+  assert.match(html, /\.orgi-panel\s*\{[^}]*background:var\(--orgi-bg\)[^}]*color:var\(--orgi-text\)/);
 });
 
 test("context CTA is informational, not a button, and has a right-pointing Fluent arrow", () => {
