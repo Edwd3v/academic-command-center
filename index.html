@@ -233,17 +233,39 @@
     .outlook-mail .outlook-sender-cell .outlook-sender { padding:0; }
     .outlook-preview { display:block;overflow:hidden;color:var(--mail-muted);font-size:.72rem;text-overflow:ellipsis;white-space:nowrap; }
     .inbox-note { flex:none;margin:0;padding:6px 12px;background:var(--mail-bg);color:var(--mail-muted);font-size:.76rem; }
-     @media(prefers-reduced-motion:reduce) { .orgi-panel,.orgi-backdrop,.orgi-launcher { transition:none; } }
+     @media(prefers-reduced-motion:reduce) { .orgi-panel,.orgi-backdrop,.orgi-launcher { transition:none; }.orgi-avatar { animation:none !important; } }
     .outlook-search-wrap { display:flex;flex:0 1 356px;align-items:center;gap:8px;min-width:80px;height:32px;padding:0 10px;border:1px solid #63788e;border-radius:4px;background:#29435c;color:#d9e3ee; }
     .outlook-search-wrap:focus-within { outline:2px solid #163653;outline-offset:1px; }
     .outlook-search { width:100%;min-width:0;height:28px;min-height:28px;padding:3px 0;border:0;background:transparent;color:#fff;outline:0; }
     .outlook-search::placeholder { color:#d4dfeb; }
     .outlook-search:focus-visible { outline:0; }
     .simulation-badge { margin-right:12px;color:#163855;font-size:.75rem;white-space:nowrap; }
-     .orgi-launcher { display:flex;align-items:center;justify-content:center;gap:6px;flex:none;min-width:76px;min-height:34px;padding:3px 10px;border:1px solid #175c98;border-radius:4px;background:#e7f3ff;color:#123957;font-weight:650;transition:background .16s ease; }
-     .orgi-launcher:hover,.orgi-launcher[aria-expanded="true"] { background:#fff; }
-     .orgi-launcher:focus-visible { outline:3px solid #102d47;outline-offset:2px; }
-     .orgi-mark { display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#d9f5ec;color:#12705b; }
+     .orgi-launcher { position:relative;display:grid;place-items:center;flex:none;width:44px;height:44px;padding:0;border:0;border-radius:50%;background:transparent;color:#fff;cursor:pointer;transition:transform .2s ease,background .2s ease; }
+     .orgi-launcher:hover,.orgi-launcher[aria-expanded="true"] { transform:translateY(-1px) scale(1.04);background:#ffffff20; }
+      .orgi-launcher:active { transform:scale(.94); }
+      .orgi-launcher:focus-visible { outline:3px solid #fff;outline-offset:2px;box-shadow:0 0 0 5px #102d47; }
+      .orgi-cta-wrap { display:flex;align-items:center;gap:2px;flex:none;min-height:34px;padding:0 6px 0 4px;border:1px solid #c7def2;border-radius:999px;background:#eff7ff;color:#123957;box-shadow:0 2px 7px #153e6130;opacity:0;transform:translateX(9px);transition:opacity .34s ease,transform .48s cubic-bezier(.2,.75,.25,1),background .18s ease,box-shadow .18s ease; }
+      .orgi-cta-wrap.is-visible { opacity:1;transform:translateX(0); }
+      .orgi-cta-wrap:hover { background:#fff;box-shadow:0 0 0 2px #ffffff30,0 3px 10px #153e6140; }
+      .orgi-cta-wrap[hidden] { display:none !important; }
+      .orgi-cta { display:inline-flex;align-items:center;gap:7px;min-height:32px;padding:0 6px;border-radius:999px;color:inherit;font-size:.76rem;font-weight:650;white-space:nowrap; }
+      .orgi-cta .fluent-icon { width:15px;height:15px; }
+      .orgi-cta-arrow { color:#2676b6; }
+      .orgi-cta-arrow.is-nudging { animation:orgi-arrow-nudge .46s ease-out 1; }
+      @keyframes orgi-arrow-nudge { 0%,100% { transform:translateX(0); } 48% { transform:translateX(2px); } }
+       .orgi-avatar { display:block;width:34px;height:34px;overflow:hidden;border:1px solid #ffffff50;border-radius:50%;background:radial-gradient(circle at 32% 27%,#303944 0,#121a25 45%,#080c12 100%);box-shadow:0 2px 7px #07192c80; }
+      .orgi-avatar-art { display:block;width:100%;height:100%;overflow:visible; }
+      .orgi-head { transform-box:fill-box;transform-origin:center;transition:transform .72s cubic-bezier(.2,.75,.25,1); }
+      .orgi-eyes { transform-box:fill-box;transform-origin:center;transform:translate(var(--orgi-eye-x,0px),var(--orgi-eye-y,0px));transition:transform .28s cubic-bezier(.2,.75,.25,1); }
+      .orgi-avatar[data-state="curious"] .orgi-head { transform:rotate(var(--orgi-tilt,4deg)) translateY(-1px); }
+      .orgi-avatar[data-state="watching"] .orgi-head { transform:rotate(var(--orgi-tilt,0deg)); }
+      .orgi-avatar[data-state="surprised"] .orgi-head { transform:translateY(1px) rotate(var(--orgi-tilt,0deg)); }
+      .orgi-avatar[data-state="happy"] .orgi-head { transform:rotate(2deg) translateY(-1px); }
+      .orgi-avatar[data-state="sleepy"] .orgi-eyes,.orgi-avatar.is-blinking .orgi-eyes { transform:translate(var(--orgi-eye-x,0px),var(--orgi-eye-y,0px)) scaleY(.12); }
+      .orgi-eye { fill:#fff;filter:drop-shadow(0 0 2px #dff5ff); }
+     .orgi-launcher:hover .orgi-avatar { box-shadow:0 0 0 2px #ffffff38,0 0 12px #c7e5ff70; }
+     .orgi-launcher::after { position:absolute;right:0;top:0;padding:3px 6px;border-radius:10px;background:#102d47;color:#fff;content:"Orgi";font-size:10px;line-height:1;opacity:0;transform:translateY(3px);transition:opacity .16s ease,transform .16s ease;pointer-events:none; }
+     .orgi-launcher:hover::after,.orgi-launcher:focus-visible::after { opacity:1;transform:translateY(0); }
     .outlook-tab-menu,.outlook-tab { display:grid;place-items:center;height:35px;padding:0 4px;border-bottom:2px solid transparent;color:#d1d1d1;font-size:.83rem; }
     .fluent-icon { display:block;flex:none;width:20px;height:20px;fill:currentColor; }
     .folder-icon .fluent-icon { width:16px;height:16px; }
@@ -277,13 +299,14 @@
     .reading-unavailable { margin:0;padding:12px;border:1px solid #5a5544;border-radius:6px;background:#2b2922;color:#e4d9b7; }
     .outlook-error { color:#ffb8b3; }
     @media(max-width:1100px) { .outlook-view { --mail-folder-width:220px;--mail-columns:minmax(0,32fr) minmax(0,50fr) minmax(88px,18fr); }.inbox-controls #inbox-date-summary { display:none; }.outlook-reading-pane { flex-basis:clamp(220px,35%,320px); } }
-    @media(max-width:760px) { .outlook-view { --mail-folder-width:180px;--mail-rail-width:40px;--mail-columns:minmax(0,35fr) minmax(0,45fr) minmax(75px,20fr); }.outlook-brand { flex-basis:110px; }.simulation-badge,.ribbon-note { display:none; }.outlook-tabsbar { gap:12px; }.outlook-sidebar { padding:8px 4px; }.inbox-controls label { display:none; }.outlook-reading-pane { flex-basis:42%; } }
+     @media(max-width:760px) { .outlook-view { --mail-folder-width:180px;--mail-rail-width:40px;--mail-columns:minmax(0,35fr) minmax(0,45fr) minmax(75px,20fr); }.outlook-brand { flex-basis:110px; }.simulation-badge,.ribbon-note,.orgi-cta-wrap { display:none; }.outlook-tabsbar { gap:12px; }.outlook-sidebar { padding:8px 4px; }.inbox-controls label { display:none; }.outlook-reading-pane { flex-basis:42%; } }
      @media(max-width:600px) { .outlook-view { --mail-columns:minmax(0,36fr) minmax(0,44fr) minmax(64px,20fr); }.outlook-body { grid-template-columns:minmax(0,1fr); }.outlook-app-rail,.outlook-sidebar { display:none; }.outlook-layout { grid-template-columns:minmax(0,1fr); }.outlook-brand { flex-basis:32px; }.outlook-brand span:last-child { display:none; }.outlook-topbar { gap:8px;padding:0 8px; }.outlook-tabsbar { gap:10px; }.outlook-reading-pane { position:absolute;z-index:4;inset:0; width:100%;background:#202020;border:0; }.outlook-message-stage { position:relative; }.inbox-controls input { width:112px; }.inbox-heading .meta { font-size:.7rem; } }
+      @media(prefers-reduced-motion:reduce) { .orgi-head,.orgi-eyes,.orgi-cta-wrap,.orgi-cta { transition:none !important; }.orgi-cta-arrow.is-nudging { animation:none !important; } }
   </style>
 </head>
 <body>
   <section class="outlook-view" id="outlook-view" aria-label="Bandeja de entrada simulada">
-      <header class="outlook-topbar"><div class="outlook-brand"><span class="outlook-brand-mark" aria-hidden="true"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#mail-20-filled"></use></svg></span><span>Outlook</span></div><label class="outlook-search-wrap"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#search-20-regular"></use></svg><input class="outlook-search" id="outlook-search" type="search" aria-label="Buscar en los correos" placeholder="Buscar"></label><div class="outlook-top-spacer"></div><span class="simulation-badge">Simulación conceptual</span><button class="orgi-launcher" id="orgi-launcher" type="button" title="Abrir el panel de Orgi" aria-label="Abrir Orgi" aria-expanded="false" aria-controls="orgi-panel"><span class="orgi-mark" aria-hidden="true"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#arrow-right-16-regular"></use></svg></span><span>Orgi</span></button></header>
+      <header class="outlook-topbar"><div class="outlook-brand"><span class="outlook-brand-mark" aria-hidden="true"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#mail-20-filled"></use></svg></span><span>Outlook</span></div><label class="outlook-search-wrap"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#search-20-regular"></use></svg><input class="outlook-search" id="outlook-search" type="search" aria-label="Buscar en los correos" placeholder="Buscar"></label><div class="outlook-top-spacer"></div><span class="simulation-badge">Simulación conceptual</span><div class="orgi-cta-wrap" id="orgi-cta-wrap"><div class="orgi-cta" id="orgi-cta"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#sparkle-20-regular"></use></svg><span>Mejoremos tu experiencia</span><svg class="fluent-icon orgi-cta-arrow" id="orgi-cta-arrow" aria-hidden="true"><use href="icons/fluent.svg#arrow-right-16-regular"></use></svg></div></div><button class="orgi-launcher" id="orgi-launcher" type="button" title="Abrir el panel de Orgi" aria-label="Abrir Orgi" aria-expanded="false" aria-controls="orgi-panel"><span class="orgi-avatar" id="orgi-avatar" aria-hidden="true"><svg class="orgi-avatar-art" viewBox="0 0 34 34" focusable="false" aria-hidden="true"><defs><radialGradient id="orgi-sphere" cx="32%" cy="27%"><stop offset="0" stop-color="#303944"/><stop offset=".45" stop-color="#121a25"/><stop offset="1" stop-color="#080c12"/></radialGradient></defs><g class="orgi-head"><circle cx="17" cy="17" r="16.5" fill="url(#orgi-sphere)"/><g class="orgi-eyes"><ellipse class="orgi-eye" cx="12" cy="16" rx="2" ry="2.7"/><ellipse class="orgi-eye" cx="22" cy="16" rx="2" ry="2.7"/></g></g></svg></span></button></header>
     <div class="outlook-body"><nav class="outlook-app-rail" id="outlook-app-rail" aria-label="Navegación de aplicaciones"><span class="outlook-rail-button active" aria-label="Correo" title="Correo"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#mail-20-filled"></use></svg></span><span class="outlook-rail-button" aria-label="Calendario simulado" title="Calendario simulado"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#calendar-20-regular"></use></svg></span><span class="outlook-rail-button" aria-label="Contactos simulados" title="Contactos simulados"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#people-20-regular"></use></svg></span><span class="outlook-rail-button" aria-label="Tareas simuladas" title="Tareas simuladas"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#checkmark-20-regular"></use></svg></span><span class="outlook-rail-button" aria-label="Más aplicaciones simuladas" title="Más aplicaciones simuladas"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#apps-20-regular"></use></svg></span></nav>
       <div class="outlook-workspace"><nav class="outlook-tabsbar" aria-label="Secciones de correo"><span class="outlook-tab-menu" aria-label="Menú ilustrativo" title="Menú ilustrativo"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#navigation-20-regular"></use></svg></span><span class="outlook-tab">Archivo</span><span class="outlook-tab active">Inicio</span><span class="outlook-tab">Vista</span><span class="outlook-tab">Ayuda</span></nav><div class="outlook-ribbon" id="outlook-ribbon" aria-label="Barra de herramientas"><span class="ribbon-context">Bandeja de entrada · muestra local</span><button id="mark-mail-read" type="button" disabled>Marcar como leído</button><span class="ribbon-note">Las demás acciones no están disponibles en esta simulación.</span></div>
         <div class="outlook-layout"><aside class="outlook-sidebar"><nav class="outlook-folders" aria-label="Carpetas simuladas">
@@ -731,7 +754,168 @@
         renderHome(); renderMailList();
       } catch (error) { $("#outlook-view").classList.add("hidden"); $("#dashboard-app").classList.remove("hidden"); showError(`No se pudo cargar la demostración. Ejecutá el sitio desde un servidor local y verificá ${DATA_SOURCE}. ${error.message}`); }
     }
-    $("#orgi-launcher").addEventListener("click", () => { renderOutlook(); toggleOrgi(true); });
+    function initOrgiPersonality() {
+      const launcher = $("#orgi-launcher"), avatar = $("#orgi-avatar"), cta = $("#orgi-cta"), ctaWrap = $("#orgi-cta-wrap"), ctaArrow = $("#orgi-cta-arrow");
+      if (!launcher || !avatar) return () => {};
+      const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)"), controller = new AbortController();
+      if (avatar.dataset.personalityInitialized === "true") return () => {};
+      avatar.dataset.personalityInitialized = "true";
+      const timers = new Set(), idleActionTimers = new Set();
+      let idleTimer = 0, blinkTimer = 0, headTimer = 0, stateTimer = 0, lastActivity = performance.now();
+      let arrowTimer = 0, ctaLookTimer = 0, ctaReturnTimer = 0;
+      let pointer = null, pointerAt = 0, wasNear = false, lastSurprise = 0, behaviorVersion = 0, temporaryState = "", destroyed = false;
+      const random = (min, max) => min + Math.random() * (max - min);
+      const later = (callback, delay, bucket = timers) => {
+        const id = window.setTimeout(() => { timers.delete(id); bucket.delete(id); callback(); }, delay);
+        timers.add(id); bucket.add(id); return id;
+      };
+      const clearTimer = id => { if (id) { clearTimeout(id); timers.delete(id); idleActionTimers.delete(id); } };
+      const cancelCtaLook = () => {
+        clearTimer(ctaLookTimer); clearTimer(ctaReturnTimer); ctaLookTimer = ctaReturnTimer = 0;
+      };
+      const cancelIdleActions = () => {
+        behaviorVersion += 1; clearTimer(idleTimer); idleTimer = 0;
+        idleActionTimers.forEach(id => { clearTimeout(id); timers.delete(id); }); idleActionTimers.clear();
+      };
+      const setState = (state, tilt = 0) => {
+        avatar.dataset.state = state;
+        avatar.style.setProperty("--orgi-tilt", `${tilt.toFixed(1)}deg`);
+      };
+      const setGaze = (x, y) => {
+        avatar.style.setProperty("--orgi-eye-x", `${x.toFixed(1)}px`);
+        avatar.style.setProperty("--orgi-eye-y", `${y.toFixed(1)}px`);
+      };
+      const showTemporaryState = (state, tilt, duration) => {
+        clearTimer(stateTimer); temporaryState = state; setState(state, tilt);
+        stateTimer = later(() => {
+          temporaryState = ""; stateTimer = 0;
+          setState(wasNear ? "watching" : "idle");
+        }, duration);
+      };
+      const blink = (double = false) => {
+        if (motionPreference.matches || document.hidden) return;
+        avatar.classList.add("is-blinking");
+        later(() => avatar.classList.remove("is-blinking"), 130);
+        if (double) later(() => { avatar.classList.add("is-blinking"); later(() => avatar.classList.remove("is-blinking"), 130); }, 210);
+      };
+      const scheduleBlink = () => {
+        clearTimer(blinkTimer);
+        if (motionPreference.matches || document.hidden) return;
+        blinkTimer = later(() => { blink(Math.random() < .16); scheduleBlink(); }, random(2600, 7200));
+      };
+      const scheduleArrowNudge = () => {
+        clearTimer(arrowTimer); arrowTimer = 0;
+        if (!ctaArrow || ctaWrap?.hidden || motionPreference.matches || document.hidden) return;
+        arrowTimer = later(() => {
+          if (Math.random() < .42) {
+            ctaArrow.classList.add("is-nudging");
+            later(() => ctaArrow.classList.remove("is-nudging"), 480);
+          }
+          scheduleArrowNudge();
+        }, random(9000, 16000));
+      };
+      const revealCta = () => {
+        if (!ctaWrap || ctaWrap.hidden) return;
+        const reveal = () => {
+          if (destroyed || ctaWrap.hidden) return;
+          ctaWrap.classList.add("is-visible");
+          if (motionPreference.matches || wasNear) return;
+          setState("idle"); setGaze(-2.4, 0);
+          ctaLookTimer = later(() => { if (!wasNear && !motionPreference.matches) setState("curious", -4); }, 260);
+          ctaReturnTimer = later(() => {
+            if (!wasNear && !motionPreference.matches) { setGaze(0, 0); setState("idle"); scheduleIdle(); }
+          }, 1660);
+        };
+        if (motionPreference.matches) reveal();
+        else if (window.requestAnimationFrame) window.requestAnimationFrame(reveal);
+        else later(reveal, 16);
+      };
+      const scheduleIdle = () => {
+        clearTimer(idleTimer);
+        if (motionPreference.matches || document.hidden || wasNear) return;
+        idleTimer = later(() => {
+          idleTimer = 0;
+          const version = behaviorVersion;
+          const idleLater = (callback, delay) => later(() => {
+            if (version === behaviorVersion && !wasNear && !document.hidden && !motionPreference.matches) callback();
+          }, delay, idleActionTimers);
+          if (performance.now() - lastActivity > 38000 && Math.random() < .13) {
+            setState("sleepy");
+            idleLater(() => { setState("idle"); scheduleIdle(); }, random(1100, 2100));
+            return;
+          }
+          const action = Math.random();
+          if (action < .52) {
+            const x = random(-2.4, 2.4), y = Math.random() < .25 ? random(-1.8, -1) : random(-.5, .8);
+            setGaze(x, y);
+            if (Math.random() < .38) idleLater(() => setState("curious", random(-6, 6)), random(160, 360));
+            if (Math.random() < .22) idleLater(() => setGaze(random(-2, 2), random(-1.5, 1.5)), random(100, 190));
+            idleLater(() => { setGaze(0, 0); setState("idle"); }, random(850, 1900));
+          } else if (action < .7) blink(Math.random() < .2);
+          else if (action < .78) { setState("curious", random(-5, 5)); idleLater(() => setState("idle"), random(500, 1000)); }
+          scheduleIdle();
+        }, random(2200, 5600));
+      };
+      const handlePointer = event => {
+        if (event.pointerType === "touch" || motionPreference.matches) return;
+        const rect = launcher.getBoundingClientRect(), dx = event.clientX - (rect.left + rect.width / 2), dy = event.clientY - (rect.top + rect.height / 2);
+        const distance = Math.hypot(dx, dy), now = performance.now();
+        const overCta = Boolean(cta && (cta.contains(event.target) || cta.matches?.(":hover")));
+        if (distance < 118 || overCta) {
+          lastActivity = now;
+          if (!wasNear) { wasNear = true; cancelIdleActions(); cancelCtaLook(); }
+          if (!temporaryState) setState("watching");
+          setGaze(Math.max(-2.5, Math.min(2.5, dx / 118 * 2.5)), Math.max(-1.8, Math.min(1.8, dy / 118 * 1.8)));
+          if (!temporaryState) {
+            clearTimer(headTimer);
+            headTimer = later(() => { if (wasNear && !temporaryState) avatar.style.setProperty("--orgi-tilt", `${Math.max(-4, Math.min(4, dx / 118 * 4)).toFixed(1)}deg`); }, 110);
+          }
+          if (!temporaryState && pointer && now - pointerAt > 0 && now - pointerAt < 90 && Math.hypot(event.clientX - pointer.x, event.clientY - pointer.y) / (now - pointerAt) > 1.05 && distance < 62 && now - lastSurprise > 8500) {
+            lastSurprise = now; showTemporaryState("surprised", Math.max(-3, Math.min(3, dx / 118 * 3)), 720);
+          }
+        } else if (wasNear) {
+          wasNear = false; lastActivity = now; clearTimer(headTimer);
+          setGaze(0, 0); if (!temporaryState) setState("idle"); scheduleIdle();
+        }
+        pointer = { x: event.clientX, y: event.clientY }; pointerAt = now;
+      };
+      const handleEnter = () => {
+        if (motionPreference.matches) return;
+        lastActivity = performance.now(); wasNear = true; cancelIdleActions();
+        showTemporaryState("happy", 0, 680);
+      };
+      const handleVisibility = () => {
+        if (document.hidden) {
+          timers.forEach(clearTimeout); timers.clear(); idleActionTimers.clear();
+          idleTimer = blinkTimer = headTimer = stateTimer = arrowTimer = ctaLookTimer = ctaReturnTimer = 0; wasNear = false; temporaryState = ""; pointer = null;
+          avatar.classList.remove("is-blinking");
+          ctaArrow?.classList.remove("is-nudging");
+          setGaze(0, 0); setState("idle");
+        } else { lastActivity = performance.now(); scheduleBlink(); scheduleIdle(); scheduleArrowNudge(); }
+      };
+      const handleMotionPreference = () => {
+        if (motionPreference.matches) {
+          timers.forEach(clearTimeout); timers.clear(); idleActionTimers.clear(); idleTimer = blinkTimer = headTimer = stateTimer = arrowTimer = ctaLookTimer = ctaReturnTimer = 0;
+          wasNear = false; temporaryState = ""; pointer = null; avatar.classList.remove("is-blinking"); ctaArrow?.classList.remove("is-nudging"); setGaze(0, 0); setState("idle");
+          ctaWrap?.classList.add("is-visible");
+        } else { lastActivity = performance.now(); scheduleBlink(); scheduleIdle(); scheduleArrowNudge(); }
+      };
+      document.addEventListener("pointermove", handlePointer, { passive:true, signal:controller.signal });
+      document.addEventListener("visibilitychange", handleVisibility, { signal:controller.signal });
+      launcher.addEventListener("pointerenter", handleEnter, { signal:controller.signal });
+      launcher.addEventListener("pointerleave", () => { if (!wasNear) { setGaze(0, 0); setState("idle"); } }, { signal:controller.signal });
+      motionPreference.addEventListener?.("change", handleMotionPreference, { signal:controller.signal });
+      const cleanup = () => {
+        if (destroyed) return; destroyed = true; controller.abort(); timers.forEach(clearTimeout); timers.clear(); idleActionTimers.clear();
+        avatar.classList.remove("is-blinking"); setGaze(0, 0); setState("idle"); delete avatar.dataset.personalityInitialized;
+      };
+      window.addEventListener("pagehide", cleanup, { once:true, signal:controller.signal });
+      revealCta(); scheduleBlink(); scheduleIdle(); scheduleArrowNudge();
+      return cleanup;
+    }
+    initOrgiPersonality();
+    function openOrgi() { renderOutlook(); toggleOrgi(true); }
+    $("#orgi-launcher").addEventListener("click", openOrgi);
     $("#orgi-close").addEventListener("click", () => toggleOrgi(false));
     $("#orgi-backdrop").addEventListener("click", () => toggleOrgi(false));
     $("#open-control-center").addEventListener("click", () => openDashboardForMail(null));
