@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard académico - Prototipo v0.1</title>
+  <style>
+    :root{
+      --bg:#0f172a;
+      --panel:#111827;
+      --panel-2:#1f2937;
+      --text:#e5e7eb;
+      --muted:#94a3b8;
+      --line:#334155;
+      --accent:#38bdf8;
+      --high:#ef4444;
+      --medium:#f59e0b;
+      --low:#22c55e;
+      --academic:#3b82f6;
+      --institutional:#8b5cf6;
+      --wellbeing:#14b8a6;
+      --opportunity:#f97316;
+      --admin:#64748b;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, Arial, sans-serif;
+      background:linear-gradient(180deg, #0b1220 0%, #0f172a 100%);
+      color:var(--text);
+    }
+
+    .container{
+      max-width:1300px;
+      margin:0 auto;
+      padding:24px;
+    }
+
+    .header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:24px;
+      margin-bottom:24px;
+    }
+
+    .header h1{
+      margin:0 0 8px 0;
+      font-size:32px;
+    }
+
+    .header p{
+      margin:0;
+      color:var(--muted);
+      max-width:780px;
+      line-height:1.5;
+    }
+
+    .tag{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      background:#0b2534;
+      color:#7dd3fc;
+      border:1px solid #164e63;
+      margin-top:10px;
+    }
+
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:16px;
+      margin-bottom:24px;
+    }
+
+    .card{
+      background:rgba(17,24,39,.92);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:18px;
+      box-shadow:0 12px 32px rgba(0,0,0,.22);
+    }
+
+    .card .label{
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:8px;
+    }
+
+    .card .value{
+      font-size:30px;
+      font-weight:700;
+      margin-bottom:6px;
+    }
+
+    .card .sub{
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns: 2fr 1fr;
+      gap:20px;
+    }
+
+    .panel{
+      background:rgba(17,24,39,.92);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:18px;
+      box-shadow:0 12px 32px rgba(0,0,0,.22);
+    }
+
+    .panel h2{
+      margin:0 0 16px 0;
+      font-size:20px;
+    }
+
+    .filters{
+      display:grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    input, select{
+      width:100%;
+      padding:12px 14px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#0b1220;
+      color:var(--text);
+      outline:none;
+    }
+
+    .mail-list{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .mail{
+      border:1px solid var(--line);
+      background:#0b1220;
+      border-radius:14px;
+      padding:14px;
+    }
+
+    .mail-top{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:8px;
+      flex-wrap:wrap;
+    }
+
+    .sender{
+      font-weight:700;
+      color:#f8fafc;
+    }
+
+    .date{
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .subject{
+      font-size:15px;
+      margin-bottom:10px;
+      line-height:1.4;
+    }
+
+    .badges{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-bottom:10px;
+    }
+
+    .badge{
+      font-size:12px;
+      padding:5px 9px;
+      border-radius:999px;
+      border:1px solid transparent;
+    }
+
+    .priority-alta{ background:rgba(239,68,68,.12); color:#fca5a5; border-color:rgba(239,68,68,.35); }
+    .priority-media{ background:rgba(245,158,11,.12); color:#fcd34d; border-color:rgba(245,158,11,.35); }
+    .priority-baja{ background:rgba(34,197,94,.12); color:#86efac; border-color:rgba(34,197,94,.35); }
+
+    .cat-académico{ background:rgba(59,130,246,.12); color:#93c5fd; border-color:rgba(59,130,246,.35); }
+    .cat-institucional{ background:rgba(139,92,246,.12); color:#c4b5fd; border-color:rgba(139,92,246,.35); }
+    .cat-bienestar{ background:rgba(20,184,166,.12); color:#99f6e4; border-color:rgba(20,184,166,.35); }
+    .cat-oportunidad{ background:rgba(249,115,22,.12); color:#fdba74; border-color:rgba(249,115,22,.35); }
+    .cat-administrativo{ background:rgba(100,116,139,.12); color:#cbd5e1; border-color:rgba(100,116,139,.35); }
+
+    .mail-footer{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .mail-footer strong{
+      color:#cbd5e1;
+    }
+
+    .insights{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .insight-box{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px;
+      background:#0b1220;
+    }
+
+    .insight-box h3{
+      margin:0 0 8px 0;
+      font-size:15px;
+    }
+
+    .insight-box ul{
+      margin:0;
+      padding-left:18px;
+      color:var(--muted);
+      line-height:1.5;
+    }
+
+    .footnote{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    @media (max-width: 1000px){
+      .cards{ grid-template-columns:repeat(2, 1fr); }
+      .layout{ grid-template-columns:1fr; }
+    }
+
+    @media (max-width: 700px){
+      .cards{ grid-template-columns:1fr; }
+      .filters{ grid-template-columns:1fr; }
+      .mail-footer{ grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div>
+        <h1>Dashboard académico</h1>
+        <p>
+          Prototipo v0.1 basado únicamente en remitente, asunto y fecha visible de una muestra
+          del buzón institucional. El objetivo no es reemplazar Outlook, sino priorizar
+          información académica relevante y sugerir acciones.
+        </p>
+        <div class="tag">Fuente del prototipo: capturas de Outlook · análisis exploratorio</div>
+      </div>
+    </div>
+
+    <section class="cards">
+      <div class="card">
+        <div class="label">Correos modelados en la muestra</div>
+        <div class="value" id="totalCount">0</div>
+        <div class="sub">Base mock inicial para el dashboard</div>
+      </div>
+      <div class="card">
+        <div class="label">Prioridad alta</div>
+        <div class="value" id="highCount">0</div>
+        <div class="sub">Posibles asuntos de atención inmediata</div>
+      </div>
+      <div class="card">
+        <div class="label">Académicos</div>
+        <div class="value" id="academicCount">0</div>
+        <div class="sub">Tutorías, calificaciones, Canvas, rúbricas</div>
+      </div>
+      <div class="card">
+        <div class="label">Institucional / oportunidades</div>
+        <div class="value" id="otherCount">0</div>
+        <div class="sub">Comunicaciones no estrictamente académicas</div>
+      </div>
+    </section>
+
+    <section class="layout">
+      <div class="panel">
+        <h2>Lista priorizada de correos</h2>
+
+        <div class="filters">
+          <input id="searchInput" type="text" placeholder="Buscar por asunto, remitente o curso..." />
+          <select id="categoryFilter">
+            <option value="">Todas las categorías</option>
+            <option value="Académico">Académico</option>
+            <option value="Institucional">Institucional</option>
+            <option value="Bienestar">Bienestar</option>
+            <option value="Oportunidad">Oportunidad</option>
+            <option value="Administrativo">Administrativo</option>
+          </select>
+          <select id="priorityFilter">
+            <option value="">Todas las prioridades</option>
+            <option value="Alta">Alta</option>
+            <option value="Media">Media</option>
+            <option value="Baja">Baja</option>
+          </select>
+        </div>
+
+        <div class="mail-list" id="mailList"></div>
+      </div>
+
+      <aside class="panel">
+        <h2>Hallazgos del buzón</h2>
+
+        <div class="insights">
+          <div class="insight-box">
+            <h3>Problemas visibles</h3>
+            <ul>
+              <li>Mezcla de correos académicos, institucionales y promocionales.</li>
+              <li>Alta repetición de remitentes y asuntos similares.</li>
+              <li>Difícil detección rápida de “qué debo atender hoy”.</li>
+            </ul>
+          </div>
+
+          <div class="insight-box">
+            <h3>Remitentes frecuentes observados</h3>
+            <ul>
+              <li>Comunicación Universidad EAN</li>
+              <li>Carmen Elizabeth Chaparro Malaver</li>
+              <li>EAN Canvas LMS</li>
+              <li>English II</li>
+              <li>EAN Contigo</li>
+            </ul>
+          </div>
+
+          <div class="insight-box">
+            <h3>Reglas iniciales de priorización</h3>
+            <ul>
+              <li><strong>Alta:</strong> hoy, mañana, tutoría, rúbrica, grade changed, agendar.</li>
+              <li><strong>Media:</strong> Canvas, grabaciones, notificaciones, matrícula, modalidad.</li>
+              <li><strong>Baja:</strong> eventos, bienestar, invitaciones generales.</li>
+            </ul>
+          </div>
+
+          <div class="insight-box">
+            <h3>Siguiente mejora del prototipo</h3>
+            <ul>
+              <li>Agrupar por materia.</li>
+              <li>Separar “requiere acción” vs “solo informativo”.</li>
+              <li>Agregar una vista “Hoy / Esta semana / Después”.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footnote">
+          Este prototipo no interpreta el cuerpo del correo. Las acciones sugeridas son inferencias
+          basadas en el asunto visible y deben mostrarse como ayuda, no como verdad confirmada.
+        </div>
+      </aside>
+    </section>
+  </div>
+
+  <script>
+    const emails = [
+      {
+        sender: "ARQUITECTURA DE COMPUTADORES Y OS",
+        subject: "Agendar Tutoría Por Grupo: ARQUITECTURA DE COMPUTADORES Y OS",
+        date: "Hoy · 20:16",
+        category: "Académico",
+        priority: "Alta",
+        course: "Arquitectura de Computadores",
+        action: "Revisar y agendar tutoría",
+        evidence: "Contiene la palabra 'Agendar Tutoría'"
+      },
+      {
+        sender: "TREND + TECH | G2",
+        subject: "Tutoría No.5: TREND + TECH | G2",
+        date: "Hoy · 18:32",
+        category: "Académico",
+        priority: "Alta",
+        course: "Trend + Tech",
+        action: "Revisar tutoría y posible asistencia",
+        evidence: "Contiene 'Tutoría No.5'"
+      },
+      {
+        sender: "ENGLISH II",
+        subject: "Grade changed: Dexway - Module 3 - Level A2 - Course 2",
+        date: "Ayer · 21:35",
+        category: "Académico",
+        priority: "Alta",
+        course: "English II",
+        action: "Consultar cambio de calificación",
+        evidence: "Contiene 'Grade changed'"
+      },
+      {
+        sender: "EAN Canvas LMS",
+        subject: "Notificaciones recientes de Canvas",
+        date: "La semana pasada · 20:17",
+        category: "Académico",
+        priority: "Media",
+        course: "Canvas",
+        action: "Revisar novedades o entregas relacionadas",
+        evidence: "Notificación académica del LMS"
+      },
+      {
+        sender: "CÁLCULO INTEGRAL",
+        subject: "Grabaciones de tutorías: CÁLCULO INTEGRAL",
+        date: "20/10/2026 · 17:17",
+        category: "Académico",
+        priority: "Media",
+        course: "Cálculo Integral",
+        action: "Consultar grabaciones si la tutoría es relevante",
+        evidence: "Contiene 'Grabaciones de tutorías'"
+      },
+      {
+        sender: "ESTRUCTURA DE DATOS",
+        subject: "Rúbrica Proyecto Final: ESTRUCTURA DE DATOS",
+        date: "14/10/2026 · 15:31",
+        category: "Académico",
+        priority: "Alta",
+        course: "Estructura de Datos",
+        action: "Revisar rúbrica del proyecto final",
+        evidence: "Contiene 'Rúbrica Proyecto Final'"
+      },
+      {
+        sender: "CARMEN ELIZABETH CHAPARRO MALAVER",
+        subject: "TyT C4 Tutoría No.5 - Tutoría Canvas",
+        date: "26/10/2026 · 20:08",
+        category: "Académico",
+        priority: "Alta",
+        course: "Trend + Tech",
+        action: "Revisar tutoría y materiales asociados",
+        evidence: "Contiene 'Tutoría No.5'"
+      },
+      {
+        sender: "CARMEN ELIZABETH CHAPARRO MALAVER",
+        subject: "TyT C4 Tutoría No.4 - Tutoría Canvas",
+        date: "26/10/2026 · 20:03",
+        category: "Académico",
+        priority: "Alta",
+        course: "Trend + Tech",
+        action: "Verificar instrucciones o tutoría",
+        evidence: "Contiene 'Tutoría No.4'"
+      },
+      {
+        sender: "ARQUITECTURA DE COMPUTADORES Y OS",
+        subject: "Tutoría 7 hoy 27 de octubre",
+        date: "27/10/2026 · 19:55",
+        category: "Académico",
+        priority: "Alta",
+        course: "Arquitectura de Computadores",
+        action: "Atender tutoría del día",
+        evidence: "Contiene 'hoy' y 'Tutoría'"
+      },
+      {
+        sender: "COMUNICACION UNIVERSIDAD EAN",
+        subject: "Comunicado movilidad 14 de octubre: horarios y modalidades",
+        date: "14/10/2026 · 14:11",
+        category: "Institucional",
+        priority: "Media",
+        course: "Institucional",
+        action: "Revisar si impacta asistencia o modalidad",
+        evidence: "Comunicado institucional con posible afectación operativa"
+      },
+      {
+        sender: "COMUNICACION UNIVERSIDAD EAN",
+        subject: "Recuerda: mañana 22 de octubre modalidad PAT",
+        date: "21/10/2026 · 18:24",
+        category: "Institucional",
+        priority: "Alta",
+        course: "Institucional",
+        action: "Revisar instrucción para el día siguiente",
+        evidence: "Contiene 'mañana'"
+      },
+      {
+        sender: "COMUNICACION UNIVERSIDAD EAN",
+        subject: "Tu próxima matrícula viene con más beneficios",
+        date: "30/10/2026 · 10:32",
+        category: "Institucional",
+        priority: "Media",
+        course: "Institucional",
+        action: "Leer si hay impacto académico o financiero",
+        evidence: "Tema administrativo/institucional"
+      },
+      {
+        sender: "VICERECTORIA ADMINISTRATIVA Y FINANCIERA",
+        subject: "VAF en contacto",
+        date: "Hoy · 11:20",
+        category: "Administrativo",
+        priority: "Media",
+        course: "Administrativo",
+        action: "Revisar si requiere trámite",
+        evidence: "Remitente administrativo"
+      },
+      {
+        sender: "EAN CONTIGO",
+        subject: "Entrena tu mente: Inscríbete a los nuevos talleres de psicopedagogía",
+        date: "Hoy · 16:26",
+        category: "Bienestar",
+        priority: "Baja",
+        course: "Bienestar",
+        action: "Leer solo si es de interés",
+        evidence: "Invitación general de bienestar"
+      },
+      {
+        sender: "EAN CONTIGO",
+        subject: "¿Dejas todo para después? Vence la procrastinación con psicopedagogía",
+        date: "27/10/2026 · 14:40",
+        category: "Bienestar",
+        priority: "Baja",
+        course: "Bienestar",
+        action: "Revisar opcionalmente",
+        evidence: "Contenido de apoyo, no claramente urgente"
+      },
+      {
+        sender: "VICERRECTORÍA DE IA Y TECNOLOGÍA",
+        subject: "¡Hay noticias que no te puedes perder! NOTI IA está de regreso",
+        date: "28/10/2026 · 16:13",
+        category: "Oportunidad",
+        priority: "Baja",
+        course: "Tecnología",
+        action: "Revisar si interesa académicamente",
+        evidence: "Boletín / oportunidad"
+      },
+      {
+        sender: "INFO EANX",
+        subject: "Nuevo BootCamp AGENTIC - Estudiantes 40% Off",
+        date: "Hoy · 8:01",
+        category: "Oportunidad",
+        priority: "Baja",
+        course: "Tecnología",
+        action: "Consultar si aporta al perfil profesional",
+        evidence: "Oportunidad de formación"
+      },
+      {
+        sender: "FELIPE ESPINOSA TORRES",
+        subject: "ES HOY a las 5:00 p.m. - Winter School 2026",
+        date: "Hoy · 16:47",
+        category: "Oportunidad",
+        priority: "Media",
+        course: "Internacionalización",
+        action: "Revisar si se desea asistir",
+        evidence: "Contiene 'ES HOY'"
+      },
+      {
+        sender: "INTERNACIONALIZACION EAN",
+        subject: "Vive la experiencia que transforma! Misión Académica Internacional a China 2027",
+        date: "16/10/2026 · 11:50",
+        category: "Oportunidad",
+        priority: "Baja",
+        course: "Internacionalización",
+        action: "Revisar opcionalmente",
+        evidence: "Convocatoria de oportunidad"
+      },
+      {
+        sender: "Bienestar 360°",
+        subject: "¡Tu voz cuenta! Queremos conocer tu experiencia en la Universidad EAN",
+        date: "29/10/2026 · 18:03",
+        category: "Bienestar",
+        priority: "Baja",
+        course: "Bienestar",
+        action: "Responder solo si se desea participar",
+        evidence: "Encuesta / participación voluntaria"
+      }
+    ];
+
+    const mailList = document.getElementById("mailList");
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const priorityFilter = document.getElementById("priorityFilter");
+
+    const totalCount = document.getElementById("totalCount");
+    const highCount = document.getElementById("highCount");
+    const academicCount = document.getElementById("academicCount");
+    const otherCount = document.getElementById("otherCount");
+
+    function priorityClass(priority){
+      if(priority === "Alta") return "priority-alta";
+      if(priority === "Media") return "priority-media";
+      return "priority-baja";
+    }
+
+    function categoryClass(category){
+      if(category === "Académico") return "cat-académico";
+      if(category === "Institucional") return "cat-institucional";
+      if(category === "Bienestar") return "cat-bienestar";
+      if(category === "Oportunidad") return "cat-oportunidad";
+      return "cat-administrativo";
+    }
+
+    function renderStats(data){
+      totalCount.textContent = data.length;
+      highCount.textContent = data.filter(e => e.priority === "Alta").length;
+      academicCount.textContent = data.filter(e => e.category === "Académico").length;
+      otherCount.textContent = data.filter(e => e.category !== "Académico").length;
+    }
+
+    function renderEmails(data){
+      mailList.innerHTML = "";
+
+      if(!data.length){
+        mailList.innerHTML = `
+          <div class="mail">
+            <div class="subject">No hay resultados para los filtros seleccionados.</div>
+          </div>
+        `;
+        return;
+      }
+
+      data.forEach(email => {
+        const item = document.createElement("div");
+        item.className = "mail";
+        item.innerHTML = `
+          <div class="mail-top">
+            <div class="sender">${email.sender}</div>
+            <div class="date">${email.date}</div>
+          </div>
+
+          <div class="subject">${email.subject}</div>
+
+          <div class="badges">
+            <span class="badge ${categoryClass(email.category)}">${email.category}</span>
+            <span class="badge ${priorityClass(email.priority)}">Prioridad ${email.priority}</span>
+            <span class="badge" style="background:#111827;border:1px solid #334155;color:#cbd5e1;">${email.course}</span>
+          </div>
+
+          <div class="mail-footer">
+            <div><strong>Acción sugerida:</strong> ${email.action}</div>
+            <div><strong>Evidencia:</strong> ${email.evidence}</div>
+          </div>
+        `;
+        mailList.appendChild(item);
+      });
+    }
+
+    function applyFilters(){
+      const search = searchInput.value.toLowerCase().trim();
+      const category = categoryFilter.value;
+      const priority = priorityFilter.value;
+
+      const filtered = emails.filter(email => {
+        const matchesSearch =
+          email.sender.toLowerCase().includes(search) ||
+          email.subject.toLowerCase().includes(search) ||
+          email.course.toLowerCase().includes(search);
+
+        const matchesCategory = !category || email.category === category;
+        const matchesPriority = !priority || email.priority === priority;
+
+        return matchesSearch && matchesCategory && matchesPriority;
+      });
+
+      renderStats(filtered);
+      renderEmails(filtered);
+    }
+
+    searchInput.addEventListener("input", applyFilters);
+    categoryFilter.addEventListener("change", applyFilters);
+    priorityFilter.addEventListener("change", applyFilters);
+
+    renderStats(emails);
+    renderEmails(emails);
+  </script>
+</body>
+</html>
