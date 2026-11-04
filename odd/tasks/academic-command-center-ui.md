@@ -1,0 +1,23 @@
+# Academic Command Center UI
+Objective: Incrementally redesign the existing HTML/CSS/JS academic dashboard without changing its data or persistence semantics.
+Branch: `feat/academic-command-center-ui` · Delivery: ask-on-risk · Runner: browser smoke checks and structural JavaScript checks · Forecast: approximately 300 authored changed lines.
+
+## Specs
+S1. Inicio: "Hero operativo" with visually dominant "Requiere tu atención", secondary "Compromisos activos", short actionable lists, clear counts, readable badges, and a useful empty state. Preserve the distinction between suggested classifications and confirmed urgency.
+S2. Inicio: "Resumen ejecutivo" with compact functional counts: "sin revisar", "revisadas", "convertidas en tarea", "no relevantes", "tareas pendientes"; counts reflect existing emails, decisions, and linked tasks, never invented data.
+S3. Inicio: "Explorar comunicaciones" with compact, consistent, clickable cards for "Académicos", "Institucionales", "Administrativos", "Bienestar", "Oportunidades", and "Todos los correos"; each shows icon, name, brief description, count, navigation hint and optionally pending count.
+S4. Comunicaciones: improve list scanning with prominent subject, secondary sender/date, category and decision badges, course/area, suggested action when present; distinguish hover, selected, reviewed, and pending states without changing filters, search, sorting or selection.
+S5. Detail: visually separate "Encabezado", "Estado / clasificación", "Posible acción", "Información de origen", and "Acciones disponibles"; emphasize "Convertir en tarea" and preserve all existing actions and disclosure that suggestions are provisional.
+S6. Mis compromisos: useful guided empty state with CTA to communications; when populated, clearer groups by status and date (including undated/upcoming); preserve create/edit/delete/status and localStorage.
+S7. General: premium dark administrative visual hierarchy, compact density, restrained shadows and motion, responsive layouts, `prefers-reduced-motion`, no APIs or fabricated content. Existing functionality must remain intact.
+
+## Tasks
+- T1 [S1-S3,S7] inline; implemented, static checks passed, browser pending; commit `feat(dashboard): strengthen academic command center hierarchy` — home hero, metrics, and compact category cards. No writer trigger: one shared HTML/CSS/JS surface.
+- T2 [S4-S5,S7] inline; implemented, static checks passed, browser pending; same commit — list and detail hierarchy with existing interactions. No writer trigger: same shared HTML/CSS/JS surface.
+- T3 [S6-S7] inline; implemented, static checks passed, browser pending; same commit — guided empty state and task overview. No writer trigger: dependent on shared surface.
+
+## Log
+L1 (2026-11-04): User requested an incremental premium SaaS dark-mode redesign of the current dashboard, explicitly retaining the HTML/CSS/JavaScript stack, existing navigation, search, filters, local persistence, email-to-task conversion and all existing functionality. Requested audit, brief per-screen proposal, layered implementation, changed-file explanation and visual/functional test instructions. Priority: attention, commitments, communications, details. Acceptance: stronger home hierarchy, compact useful categories, scannable mail list, structured administrative detail, useful empty task state, mature decision-oriented visual system without ornamental excess.
+L2: Audit: `index.html` contains all styling and behavior; the data file is synthetic and already loaded. Worktree contains unrelated untracked `.atl/`; leave it untouched. No relevant existing test runner found. Branch created from `main` before first write.
+L3: Preserved filtering, sorting, task conversion, editing, deletion, status transitions and localStorage paths. Verification: static smoke asserted source dataset has 25 entries, required views/actions and reduced-motion support; `node --check` and `git diff --check` passed. A headless Chromium DOM run timed out after 30 seconds; interactive visual/functional checks remain unverified. Test-first exception: presentational work has no deterministic project test runner; no meaningful RED test available. Initial static check failed due to expecting a literal DOM class where the implementation creates it dynamically; corrected the check and reran successfully.
+L4: Native assessment with explicitly excluded unrelated `.atl/` inventory: medium/executable_change, `review_due=false` (`under_budget`). No review START or candidate consent is due on this commit. Browser-dependent outcomes remain pending rather than being marked verified.
