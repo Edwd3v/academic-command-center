@@ -92,7 +92,7 @@
     .upcoming-item strong, .task-card h3 { display: block; overflow-wrap: anywhere; }
     .upcoming-item p, .task-card p { margin: 7px 0 0; white-space: pre-wrap; line-height: 1.45; }
     .muted, .meta { color: var(--muted); font-size: .82rem; }
-    .toolbar { display: grid; grid-template-columns: minmax(180px, 1fr) minmax(135px, 190px) minmax(140px, 200px) minmax(140px, 190px) auto; gap: 8px; margin-bottom: 12px; }
+    .toolbar { display: grid; grid-template-columns: minmax(160px, 1fr) minmax(150px, .9fr) minmax(160px, 1fr) auto; gap: 8px; margin-bottom: 12px; }
     input, select, textarea, .button { min-height: 40px; padding: 8px 11px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
     textarea { min-height: 88px; resize: vertical; }
     .button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; transition: background-color 180ms ease, border-color 180ms ease; }
@@ -105,17 +105,20 @@
     .sort { border: 0; background: transparent; color: var(--accent); padding: 5px; }
     .scroll { overflow: auto; padding: 5px; }
     .mail-row { width: 100%; display: grid; gap: 8px; padding: 14px 16px; margin-bottom: 8px; border: 1px solid #2e4057; border-left: 3px solid #6d8ba8; border-radius: 10px; background: #172335; color: var(--text); text-align: left; transition: background-color 160ms ease, border-color 160ms ease; }
-    .mail-row[data-decision="pendiente"] { border-left-color: var(--amber); }
+    .mail-row[data-reviewed="false"] { border-left-color: var(--amber); }
     .mail-row:hover { background: #203149; border-color: #6888a8; }
     .mail-row[aria-pressed="true"] { background: #203a56; border-color: #83b7e6; border-left-color: var(--cyan); }
     .mail-subject { display: block; overflow-wrap: anywhere; line-height: 1.35; font-size: 1rem; font-weight: 650; }
     .mail-byline, .mail-meta { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; color: var(--muted); font-size: .8rem; }
     .mail-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+    .home-row-badges { display: flex; align-items: center; justify-content: end; flex-wrap: wrap; gap: 5px; }
     .mail-suggestion { color: #bdd0e2; font-size: .82rem; line-height: 1.4; }
     .mail-suggestion::before { content: "Posible acción · "; color: var(--muted); }
     .badge { display: inline-flex; align-items: center; padding: 3px 8px; border: 1px solid #51667e; border-radius: 6px; color: #d8e8f8; font-size: .75rem; }
     .badge.pending { border-color: #8a6a30; color: #f9d794; }
     .badge.reviewed { border-color: #357760; color: #a0e7cc; }
+    .badge.relevance { border-color: #2d7291; color: #9de7f2; }
+    .badge.commitment-badge { border-color: #526579; color: #cbd7e4; }
     .decision-dot { width: 7px; height: 7px; display: inline-block; border-radius: 50%; background: var(--amber); }
     .decision-dot.reviewed { background: var(--green); }
     .empty { padding: 18px; color: var(--muted); line-height: 1.5; }
@@ -353,7 +356,7 @@
     <button class="dashboard-return" id="back-to-inbox" type="button"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#arrow-left-16-regular"></use></svg>Volver a la bandeja de demostración</button>
     <header>
       <div><h1>Mi espacio académico</h1><p class="subtitle">Encuentra tus comunicaciones y organiza lo importante</p></div>
-      <form id="global-search-form" role="search"><input class="global-search" id="global-search" type="search" aria-label="Buscar comunicaciones por remitente, asunto o curso" placeholder="Buscar comunicaciones…"></form>
+      <form id="global-search-form" role="search"><input class="global-search" id="global-search" type="search" aria-label="Buscar comunicaciones por asunto, remitente, contenido disponible o categoría" placeholder="Buscar comunicaciones…"></form>
       <details class="demo-disclosure"><summary class="demo-indicator" id="source-indicator">Modo demostración · Datos de ejemplo</summary><p>Los mensajes pueden ser ficticios o parciales. Las categorías y acciones son propuestas; no representan obligaciones confirmadas. Algunos mensajes no incluyen el cuerpo completo.</p></details>
     </header>
     <p id="app-error" class="message hidden" role="alert"></p>
@@ -381,15 +384,15 @@
     </section>
 
     <section id="communications-view" class="hidden" aria-labelledby="communications-title">
-      <div class="panel-heading" style="padding:0 0 10px;border:0"><h2 id="communications-title">Todos los correos</h2><span id="communications-count" class="muted"></span></div>
+      <div class="panel-heading" style="padding:0 0 10px;border:0"><h2 id="communications-title">Comunicaciones</h2><span id="communications-count" class="muted"></span></div>
       <form class="toolbar" id="filters" role="search">
         <select id="category-filter" aria-label="Filtrar por categoría"><option value="">Todas las categorías</option></select>
-        <select id="attention-filter" aria-label="Filtrar por estado propuesto"><option value="">Todos los estados propuestos</option></select>
-        <select id="decision-filter" aria-label="Filtrar por estado de revisión"><option value="">Todas las revisiones</option><option value="pendiente">Pendiente de revisión</option><option value="relevante">Revisada</option><option value="no_relevante">No relevante</option></select>
+        <select id="review-filter" aria-label="Filtrar por estado de revisión"><option value="">Todas las revisiones</option><option value="unreviewed">Sin revisar</option><option value="reviewed">Revisadas</option></select>
+        <select id="relevance-filter" aria-label="Filtrar por relevancia marcada por vos"><option value="">Toda relevancia</option><option value="relevant">Relevantes para vos</option><option value="not-relevant">Sin marcar como relevantes</option></select>
         <button class="button" id="reset" type="button">Reiniciar</button>
       </form>
       <div class="comm-layout">
-         <section class="panel list-panel" aria-labelledby="mail-list-title"><div class="panel-heading"><h2 id="mail-list-title">Comunicaciones</h2><button class="sort" id="sort" type="button" aria-label="Ordenar por fecha descendente">Fecha <svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#arrow-down-16-regular"></use></svg></button></div><div class="scroll" id="mail-list" aria-live="polite"><p class="empty">Cargando muestra…</p></div></section>
+          <section class="panel list-panel" aria-labelledby="mail-list-title"><div class="panel-heading"><h2 id="mail-list-title">Resultados</h2><button class="sort" id="sort" type="button" aria-label="Ordenar por fecha descendente">Fecha <svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#arrow-down-16-regular"></use></svg></button></div><div class="scroll" id="mail-list" aria-live="polite"><p class="empty">Cargando muestra…</p></div></section>
       </div>
     </section>
 
@@ -420,7 +423,7 @@
     const DEMO_REFERENCE_DATE = "2026-11-04";
     const $ = selector => document.querySelector(selector);
     const list = $("#mail-list"), detailDialog = $("#detail-dialog"), detailContent = $("#detail-content");
-    const search = $("#global-search"), categoryFilter = $("#category-filter"), attentionFilter = $("#attention-filter"), decisionFilter = $("#decision-filter");
+    const search = $("#global-search"), categoryFilter = $("#category-filter"), reviewFilter = $("#review-filter"), relevanceFilter = $("#relevance-filter");
     const appError = $("#app-error"), taskDialog = $("#task-dialog"), taskForm = $("#task-form");
     const CATEGORY_META = {
       academico: { label: "Académicos", icon: "book-20-regular", description: "Avisos y actividades relacionadas con cursos." },
@@ -573,6 +576,11 @@
       if (saved && typeof saved === "object") return { reviewed: saved.reviewed === true, relevant: saved.relevant === true };
       return { reviewed: saved === "relevante" || saved === "no_relevante", relevant: saved === "relevante" };
     }
+    function mailBody(mail) {
+      const observed = mail.observado ?? {};
+      const body = [mail.cuerpo, mail.contenido, observed.cuerpo, observed.contenido].find(value => typeof value === "string" && value.trim());
+      return mail.cuerpo_disponible === true && body ? body.trim() : "";
+    }
     function showError(message) { appError.textContent = message; appError.classList.remove("hidden"); }
     function loadLocal(key, fallback) { try { const raw = localStorage.getItem(key); return raw === null ? fallback : JSON.parse(raw); } catch (error) { showError(`No se pudieron leer los datos guardados (${error.message}); los cambios podrían no persistir.`); return fallback; } }
     function saveLocal() { try { localStorage.setItem(KEYS.tasks, JSON.stringify(tasks)); localStorage.setItem(KEYS.decisions, JSON.stringify(decisions)); return true; } catch (error) { showError(`No se pudieron guardar los cambios en este navegador (${error.message}). Revisá el espacio disponible.`); return false; } }
@@ -584,12 +592,12 @@
       if (view === "tasks") renderTasks();
       if (detailDialog.open) detailDialog.close();
     }
-    function openCommunications(category = "", decision = "") {
+    function openCommunications(category = "", review = "") {
       activeCategory = category;
       categoryFilter.value = category;
-      decisionFilter.value = decision;
+      reviewFilter.value = review;
+      relevanceFilter.value = "";
       search.value = "";
-      attentionFilter.value = "";
       setView("communications");
       $("#communications-title").textContent = category ? (CATEGORY_META[category]?.label ?? label(category)) : "Todos los correos";
     }
@@ -656,11 +664,13 @@
       const query = normalize(search.value.trim());
       return emails.filter(mail => {
         const observed = mail.observado ?? {}, hypothesis = mail.hipotesis_diseno ?? {};
-        const decision = decisions[mail.id] ?? "pendiente";
-        return (!query || [observed.remitente, observed.asunto, hypothesis.curso].some(value => normalize(value).includes(query)))
+        const state = mailState(mail.id);
+        const matchesQuery = [observed.remitente, observed.asunto, mailBody(mail), hypothesis.categoria, label(hypothesis.categoria)]
+          .some(value => normalize(value).includes(query));
+        return (!query || matchesQuery)
           && (!categoryFilter.value || hypothesis.categoria === categoryFilter.value)
-          && (!attentionFilter.value || hypothesis.estado_atencion === attentionFilter.value)
-          && (!decisionFilter.value || decision === decisionFilter.value);
+          && (!reviewFilter.value || (reviewFilter.value === "reviewed" ? state.reviewed : !state.reviewed))
+          && (!relevanceFilter.value || (relevanceFilter.value === "relevant" ? state.relevant : !state.relevant));
       }).sort((a, b) => mailDate(a).localeCompare(mailDate(b)) * (newestFirst ? -1 : 1));
     }
     function renderMailList() {
@@ -668,13 +678,15 @@
       $("#communications-count").textContent = `${filtered.length} de ${emails.length}`;
       if (!filtered.length) { list.append(node("p", "empty", "No hay comunicaciones que coincidan con la búsqueda y los filtros.")); return; }
       filtered.forEach(mail => {
-        const observed = mail.observado ?? {}, hypothesis = mail.hipotesis_diseno ?? {}, decision = decisions[mail.id] ?? "pendiente";
+        const observed = mail.observado ?? {}, hypothesis = mail.hipotesis_diseno ?? {}, state = mailState(mail.id);
         const button = node("button", "mail-row"); button.type = "button"; button.setAttribute("aria-pressed", String(selectedId === mail.id));
-        button.dataset.decision = decision;
-        const byline = node("span", "mail-byline"); byline.append(node("span", "", text(observed.remitente)), node("span", "", text(observed.fecha_recibido)));
-        const badges = node("span", "mail-badges"); badges.append(node("span", "badge", label(hypothesis.categoria)), node("span", `badge ${decision === "pendiente" ? "pending" : "reviewed"}`, label(decision)));
-        button.append(node("span", "mail-subject", text(observed.asunto)), byline, badges, node("span", "mail-meta", text(hypothesis.curso, "Materia no indicada")));
-        if (hypothesis.accion_sugerida) button.append(node("span", "mail-suggestion", hypothesis.accion_sugerida));
+        button.dataset.reviewed = String(state.reviewed);
+        const byline = node("span", "mail-byline"); byline.append(node("span", "", text(observed.remitente)), node("span", "", formatMailDate(mail)));
+        const badges = node("span", "mail-badges");
+        badges.append(node("span", "badge", `${label(hypothesis.categoria)} · propuesta`), node("span", `badge ${state.reviewed ? "reviewed" : "pending"}`, state.reviewed ? "Revisado" : "Sin revisar"));
+        if (state.relevant) badges.append(node("span", "badge relevance", "Relevante para vos"));
+        if (linkedTasks(mail.id).length) badges.append(node("span", "badge commitment-badge", "Con compromiso"));
+        button.append(node("span", "mail-subject", text(observed.asunto)), byline, badges);
         button.addEventListener("click", () => showMail(mail)); list.append(button);
       });
     }
@@ -685,12 +697,21 @@
       detailContent.replaceChildren();
       const subject = node("h2", "detail-subject", text(observed.asunto)); subject.id = "detail-subject";
       const header = node("header", "detail-header"); header.append(node("p", "muted", `Comunicación · ${mail.id}`), subject, node("p", "", text(observed.remitente)), node("p", "meta", `Recibido: ${[observed.fecha_recibido, observed.hora_recibido].filter(Boolean).join(" · ") || "Fecha no indicada"}`)); detailContent.append(header);
-      detailContent.append(detailBlock("Estado y clasificación propuesta", [definitionList([["Categoría", label(hypothesis.categoria)], ["Curso relacionado", text(hypothesis.curso)], ["Estado de revisión", label(decisions[mail.id] ?? "pendiente")]])]));
-      detailContent.append(detailBlock("Posible acción", [node("p", "", text(hypothesis.accion_sugerida)), definitionList([["Señal del asunto", text(hypothesis.senal_asunto)]]), node("p", "notice", "Sugerencia provisional basada en metadatos del asunto; no se ha verificado leyendo el cuerpo del mensaje.")]));
-      detailContent.append(detailBlock("Información de origen", [definitionList([["Asunto registrado", `${text(observed.asunto)}${observed.asunto_abreviado_o_normalizado ? " (puede estar abreviado o normalizado)" : ""}`], ["Fuente del registro", `Registro ${mail.id} de ${DATA_SOURCE}`], ["Cuerpo del mensaje", mail.cuerpo_disponible === true ? "Indicado como disponible; no se muestra aquí." : "No disponible"]])]));
+      const state = mailState(mail.id), linked = linkedTasks(mail.id);
+      detailContent.append(detailBlock("Estado de esta comunicación", [definitionList([["Categoría propuesta", label(hypothesis.categoria)], ["Estado de revisión", state.reviewed ? "Revisado" : "Sin revisar"], ["Relevancia", state.relevant ? "Marcada como relevante por vos" : "Sin marcar"], ["Compromiso", linked.length ? "Tiene un compromiso asociado" : "Sin compromiso asociado"]])]));
+      if (hypothesis.accion_sugerida) detailContent.append(detailBlock("Posible acción · propuesta", [node("p", "", hypothesis.accion_sugerida), node("p", "muted", "Orientación basada en los datos de ejemplo; no confirma una obligación ni una fecha límite.")]));
+      const body = mailBody(mail);
+      detailContent.append(detailBlock("Contenido de la comunicación", [body ? node("p", "detail-body", body) : node("p", "reading-unavailable", "Contenido no disponible en esta muestra.")]));
+      const sourceRows = [["Remitente", text(observed.remitente)], ["Fecha", formatMailDate(mail)], ["Fuente del registro", `Registro ${mail.id} de ${DATA_SOURCE}`]];
+      const capture = observed.captura, originalUrl = typeof capture === "string" ? capture : capture && typeof capture === "object" ? (capture.url ?? capture.href) : "";
+      const sourceBlock = detailBlock("Información de origen", [definitionList(sourceRows)]);
+      if (typeof originalUrl === "string" && /^https?:\/\//i.test(originalUrl)) {
+        const link = node("a", "text-link", "Abrir mensaje original"); link.href = originalUrl; link.target = "_blank"; link.rel = "noopener noreferrer"; sourceBlock.append(link);
+      }
+      detailContent.append(sourceBlock);
       const actions = node("div", "task-controls");
       const existing = linkedTasks(mail.id);
-      const taskAction = node("button", "button primary", existing.length ? "Editar tarea vinculada" : "Convertir en tarea"); taskAction.type = "button"; taskAction.addEventListener("click", () => openTaskForm(mail, existing[0] ?? null)); actions.append(taskAction);
+      const taskAction = node("button", "button primary", existing.length ? "Editar compromiso" : "Convertir en compromiso"); taskAction.type = "button"; taskAction.addEventListener("click", () => openTaskForm(mail, existing[0] ?? null)); actions.append(taskAction);
       [["relevante", "Marcar como revisado"], ["no_relevante", "Marcar como no relevante"], ["pendiente", "Dejar pendiente"]].forEach(([value, title]) => { const button = node("button", "button", title); button.type = "button"; button.setAttribute("aria-pressed", String((decisions[mail.id] ?? "pendiente") === value)); button.addEventListener("click", () => { const before = decisions[mail.id]; decisions[mail.id] = value; if (saveLocal()) { renderMailList(); renderHome(); renderOutlook(); showMail(mail); } else if (before === undefined) delete decisions[mail.id]; else decisions[mail.id] = before; }); actions.append(button); });
       const actionBlock = detailBlock("Acciones disponibles", [actions]); actionBlock.classList.add("detail-actions"); detailContent.append(actionBlock);
       if (!detailDialog.open) detailDialog.showModal();
@@ -732,11 +753,11 @@
     document.querySelectorAll("nav [data-view]").forEach(button => button.addEventListener("click", () => setView(button.dataset.view)));
     $("#review-summary").addEventListener("click", () => openCommunications());
     $("#tasks-link").addEventListener("click", () => setView("tasks"));
-    $("#global-search-form").addEventListener("submit", event => { event.preventDefault(); categoryFilter.value = ""; decisionFilter.value = ""; attentionFilter.value = ""; $("#communications-title").textContent = "Resultados de búsqueda"; setView("communications"); });
+    $("#global-search-form").addEventListener("submit", event => { event.preventDefault(); categoryFilter.value = ""; reviewFilter.value = ""; relevanceFilter.value = ""; $("#communications-title").textContent = search.value.trim() ? "Resultados de búsqueda" : "Comunicaciones"; setView("communications"); });
     $("#close-detail").addEventListener("click", () => detailDialog.close());
     $("#filters").addEventListener("submit", event => event.preventDefault());
-    [search, categoryFilter, attentionFilter, decisionFilter].forEach(control => control.addEventListener(control === search ? "input" : "change", () => { activeCategory = categoryFilter.value; $("#communications-title").textContent = activeCategory ? (CATEGORY_META[activeCategory]?.label ?? label(activeCategory)) : "Todos los correos"; renderMailList(); }));
-    $("#reset").addEventListener("click", () => { search.value = ""; categoryFilter.value = ""; attentionFilter.value = ""; decisionFilter.value = ""; activeCategory = ""; $("#communications-title").textContent = "Todos los correos"; renderMailList(); search.focus(); });
+    [search, categoryFilter, reviewFilter, relevanceFilter].forEach(control => control.addEventListener(control === search ? "input" : "change", () => { activeCategory = categoryFilter.value; $("#communications-title").textContent = activeCategory ? (CATEGORY_META[activeCategory]?.label ?? label(activeCategory)) : "Todos los correos"; renderMailList(); }));
+    $("#reset").addEventListener("click", () => { search.value = ""; categoryFilter.value = ""; reviewFilter.value = ""; relevanceFilter.value = ""; activeCategory = ""; $("#communications-title").textContent = "Todos los correos"; renderMailList(); search.focus(); });
     $("#sort").addEventListener("click", event => { newestFirst = !newestFirst; event.currentTarget.querySelector("use").setAttribute("href", `icons/fluent.svg#arrow-${newestFirst ? "down" : "up"}-16-regular`); event.currentTarget.setAttribute("aria-label", `Ordenar por fecha ${newestFirst ? "descendente" : "ascendente"}`); renderMailList(); });
     $("#task-grouping").addEventListener("change", renderTasks);
     $("#cancel-task").addEventListener("click", () => taskDialog.close());
@@ -762,7 +783,6 @@
         $("#demo-reference-date").value = DEMO_REFERENCE_DATE;
         renderOutlook();
         populate(categoryFilter, emails.map(mail => mail.hipotesis_diseno?.categoria));
-        populate(attentionFilter, emails.map(mail => mail.hipotesis_diseno?.estado_atencion));
         $("#source-indicator").setAttribute("aria-label", `Modo demostración · Datos de ejemplo · ${emails.length} comunicaciones disponibles`);
         renderHome(); renderMailList();
       } catch (error) { $("#outlook-view").classList.add("hidden"); $("#dashboard-app").classList.remove("hidden"); showError(`No se pudo cargar la demostración. Ejecutá el sitio desde un servidor local y verificá ${DATA_SOURCE}. ${error.message}`); }

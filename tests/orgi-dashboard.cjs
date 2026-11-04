@@ -83,6 +83,12 @@ async function main() {
     const row = await evaluate(`document.querySelector('#mail-list .mail-row .mail-subject').textContent`);
     assert.match(row, /Guía de ejercicios/);
 
+    await evaluate(`document.querySelector('#global-search').value='oportunidad'; document.querySelector('#global-search').dispatchEvent(new Event('input',{bubbles:true}))`);
+    await waitUntil(`document.querySelectorAll('#mail-list .mail-row').length > 0`, "Search did not include the proposed category.");
+    assert.match(await evaluate(`document.querySelector('#mail-list').textContent`), /convocatoria|boletín|charla/i);
+    await evaluate(`document.querySelector('#global-search').value='Guía de ejercicios'; document.querySelector('#global-search').dispatchEvent(new Event('input',{bubbles:true}))`);
+    await waitUntil(`document.querySelectorAll('#mail-list .mail-row').length === 1`, "Search could not return to a subject match.");
+
     await click("#mail-list .mail-row");
     await waitUntil(`document.querySelector('#detail-dialog').open`, "Communication detail did not open.");
     assert.match(await evaluate(`document.querySelector('#detail-content').textContent`), /Contenido no disponible en esta muestra/);
