@@ -102,6 +102,23 @@ async function main() {
 
     const home = await evaluate(`({title:document.querySelector('#dashboard-app h1').textContent.trim(), summaries:[...document.querySelectorAll('#summary-grid .summary-card')].length, heading:document.querySelector('#attention-title').textContent, demo:document.querySelector('#source-indicator').textContent})`);
     assert.equal(home.title, "Mi espacio académico");
+    const header = await evaluate(`({subtitle:document.querySelector('#dashboard-app .subtitle').textContent.trim(),button:document.querySelector('#back-to-inbox').textContent.trim(),icon:document.querySelector('#back-to-inbox use').getAttribute('href'),inHeader:document.querySelector('.main-content > header').contains(document.querySelector('#back-to-inbox')),search:document.querySelector('#global-search-form').contains(document.querySelector('#global-search')),disclosure:document.querySelector('#source-indicator').closest('details')?.className})`);
+    assert.equal(header.subtitle, "Todo lo importante, en un solo lugar.");
+    assert.equal(header.button, "Bandeja demo");
+    assert.equal(header.icon, "icons/fluent.svg#mail-20-regular");
+    assert.equal(header.inHeader, true);
+    assert.equal(header.search, true);
+    assert.equal(header.disclosure, "demo-disclosure");
+    const headerDesktop = await evaluate(`(()=>{const title=document.querySelector('#dashboard-app h1').getBoundingClientRect(),button=document.querySelector('#back-to-inbox').getBoundingClientRect(),search=document.querySelector('#global-search').getBoundingClientRect();return {buttonRight:button.right,titleRight:title.right,searchWidth:search.width,overflow:document.documentElement.scrollWidth>innerWidth}})()`);
+    assert(headerDesktop.buttonRight > headerDesktop.titleRight);
+    assert(headerDesktop.searchWidth >= 190);
+    assert.equal(headerDesktop.overflow, false);
+    await cdp("Emulation.setDeviceMetricsOverride", { width: 390, height: 844, deviceScaleFactor: 1, mobile: false });
+    const headerMobile = await evaluate(`(()=>{const heading=document.querySelector('#dashboard-app h1').getBoundingClientRect(),button=document.querySelector('#back-to-inbox').getBoundingClientRect(),search=document.querySelector('#global-search').getBoundingClientRect();return {buttonRight:button.right,headingRight:heading.right,searchWidth:search.width,overflow:document.documentElement.scrollWidth>innerWidth}})()`);
+    assert(headerMobile.buttonRight > headerMobile.headingRight);
+    assert(headerMobile.searchWidth >= 190);
+    assert.equal(headerMobile.overflow, false);
+    await cdp("Emulation.setDeviceMetricsOverride", { width: 1365, height: 900, deviceScaleFactor: 1, mobile: false });
     assert.equal(home.summaries, 3, `Home should show only the three requested summary indicators. ${await evaluate(`document.querySelector('#app-error').textContent`)}`);
     assert(!/urgente|requiere tu atención/i.test(home.heading));
     assert.match(home.demo, /demostración|datos de ejemplo/i);
