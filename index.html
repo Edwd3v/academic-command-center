@@ -16,7 +16,7 @@
       --orgi-text: #F5F7FF; --orgi-text-muted: #A6B3C8;
       --orgi-blue: #4A9EFF; --orgi-purple: #826BFF; --orgi-lavender: #A68AFF;
       --orgi-success: #34D5A0; --orgi-warning: #FFBF69; --orgi-danger: #FF6B81;
-      --orgi-avatar-body: #08090D; --orgi-avatar-eyes: #F5F7FF; --orgi-avatar-glow: #826BFF;
+      --orgi-avatar-body: #0B1020; --orgi-avatar-eyes: #F5FAFF; --orgi-avatar-outline: #22D3EE; --orgi-avatar-glow: #A78BFA;
       --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-6: 24px; --space-8: 32px;
       --radius-card: 16px; --radius-control: 10px;
     }
@@ -25,15 +25,22 @@
     button, input, select, textarea { font: inherit; color: inherit; }
     button { cursor: pointer; }
     :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-    .app { width: min(1600px, 100%); min-height: 100vh; margin: auto; padding: var(--space-4); display: grid; grid-template-columns: 224px minmax(0, 1fr); gap: var(--space-6); }
-    .sidebar { position: sticky; top: var(--space-4); height: calc(100vh - 32px); padding: var(--space-4) var(--space-2); border-right: 1px solid var(--line); background: #0e1827; border-radius: 14px; }
-    .brand { display: flex; align-items: center; gap: 10px; padding: 0 10px 22px; color: var(--text); font-weight: 650; }
-    .brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 11px; background: #172b44; color: var(--cyan); }
+    .app { width: min(1600px, 100%); min-height: 100vh; margin: auto; padding: var(--space-4); display: grid; grid-template-columns: 224px minmax(0, 1fr); gap: var(--space-6); transition: grid-template-columns 200ms ease; }
+    .sidebar { position: sticky; top: var(--space-4); display: flex; flex-direction: column; min-width: 0; height: calc(100vh - 32px); padding: var(--space-4) var(--space-2); border-right: 1px solid var(--line); background: #0e1827; border-radius: 14px; }
+    .sidebar-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 4px 18px; }
+    .brand { min-width: 0; color: var(--text); font-size: 1.2rem; font-weight: 750; letter-spacing: -.035em; }
     .sidebar nav { display: grid; gap: 6px; }
-    .sidebar nav button { display: flex; align-items: center; gap: 12px; width: 100%; padding: 11px 12px; border: 1px solid transparent; border-radius: var(--radius-control); background: transparent; color: var(--muted); text-align: left; }
+    .sidebar nav button { display: flex; align-items: center; gap: 12px; width: 100%; min-width: 0; padding: 11px 12px; border: 1px solid transparent; border-radius: var(--radius-control); background: transparent; color: var(--muted); text-align: left; transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, padding 200ms ease; }
     .sidebar nav button:hover { background: var(--surface); color: var(--text); }
     .sidebar nav button[aria-current="page"] { background: #1b304a; border-color: #426386; color: var(--text); font-weight: 650; }
     .nav-icon { display:inline-flex;align-items:center;justify-content:center;width:20px;color:var(--cyan); }
+    .nav-label { min-width: 0; overflow: hidden; max-width: 180px; white-space: nowrap; opacity: 1; transition: max-width 180ms ease, opacity 120ms ease; }
+    .app.sidebar-collapsed { grid-template-columns: 68px minmax(0, 1fr); }
+    .sidebar-collapsed .sidebar { padding: 12px 6px; }
+    .sidebar-collapsed .sidebar-heading { justify-content: center; padding: 0 0 18px; }
+    .sidebar-collapsed .brand { display: none; }
+    .sidebar-collapsed .sidebar nav button { justify-content: center; gap: 0; padding: 11px 8px; }
+    .sidebar-collapsed .nav-label { max-width: 0; opacity: 0; }
     .main-content { min-width: 0; padding: 8px 10px 28px 0; }
     .main-content > section { width: 100%; min-width: 0; }
     .main-content > header { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(220px, 360px) auto; align-items: center; gap: 16px; margin-bottom: 14px; }
@@ -161,7 +168,7 @@
     .field label { color: #d8e2ed; font-size: .88rem; }
     .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; }
     @media (max-width: 1100px) { .app { grid-template-columns: 184px minmax(0, 1fr); gap: 16px; } .home-bento { grid-template-columns: minmax(0, 1.4fr) minmax(250px, 1fr); } .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 820px) { .app { grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 12px 16px; } .sidebar { position: static; width: 100%; height: auto; padding: 0; border: 0; } .brand { display: none; } .sidebar nav { display: flex; overflow-x: auto; border-bottom: 1px solid var(--line); } .sidebar nav button { justify-content: center; white-space: nowrap; } .main-content { padding: 8px 0 24px; } .main-content > header { grid-template-columns: 1fr minmax(190px, 280px); } .demo-disclosure { grid-column: 1 / -1; justify-self: start; } .home-bento { grid-template-columns: minmax(0, 1fr); } .commitment-panel { display: grid; grid-template-columns: minmax(0, 1fr); } .toolbar { grid-template-columns: repeat(2, minmax(0, 1fr)); } .comm-layout { min-height: 0; } .list-panel { min-height: 55vh; } }
+    @media (max-width: 820px) { .app { grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 12px 16px; } .app.sidebar-collapsed { grid-template-columns: minmax(0, 1fr); } .sidebar { position: static; width: 100%; height: auto; padding: 0; border: 0; } .sidebar-heading { padding: 0 0 8px; } .sidebar-collapsed .sidebar-heading { justify-content: center; padding: 0 0 8px; } .sidebar-collapsed .brand { display: none; } .sidebar nav { display: flex; overflow-x: auto; border-bottom: 1px solid var(--line); } .sidebar nav button { justify-content: center; white-space: nowrap; } .sidebar-collapsed .sidebar nav button { flex: 1 1 0; } .main-content { padding: 8px 0 24px; } .main-content > header { grid-template-columns: 1fr minmax(190px, 280px); } .demo-disclosure { grid-column: 1 / -1; justify-self: start; } .home-bento { grid-template-columns: minmax(0, 1fr); } .commitment-panel { display: grid; grid-template-columns: minmax(0, 1fr); } .toolbar { grid-template-columns: repeat(2, minmax(0, 1fr)); } .comm-layout { min-height: 0; } .list-panel { min-height: 55vh; } }
     @media (max-width: 560px) { .app { padding: 8px 12px; } .main-content > header { grid-template-columns: 1fr; gap: 10px; } h1 { font-size: 1.75rem; } .summary-grid { grid-template-columns: minmax(0, 1fr); } .category-grid, .upcoming-list, .task-grid { grid-template-columns: minmax(0, 1fr); } .toolbar { grid-template-columns: minmax(0, 1fr); } .toolbar select:last-of-type { grid-column: auto; } .field-grid { grid-template-columns: minmax(0, 1fr); } .detail-dl { grid-template-columns: minmax(0, 1fr); gap: 3px; } dialog { width: 100vw; border-radius: 0; padding: 18px; } }
      @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
     /* The mail shell is a local conceptual simulation, not an Outlook connection. */
@@ -256,6 +263,7 @@
     .outlook-search:focus-visible { outline:0; }
     .simulation-badge { margin-right:12px;color:#163855;font-size:.75rem;white-space:nowrap; }
      .orgi-launcher { position:relative;display:grid;place-items:center;flex:none;width:44px;height:44px;padding:0;border:0;border-radius:50%;background:transparent;color:#fff;cursor:pointer;transition:transform .2s ease,background .2s ease; }
+     .orgi-launcher-slot { display:flex;flex:none;align-items:center;justify-content:center;width:44px;height:44px; }
      .orgi-launcher:hover,.orgi-launcher[aria-expanded="true"] { transform:translateY(-1px) scale(1.04);background:#ffffff20; }
       .orgi-launcher:active { transform:scale(.94); }
       .orgi-launcher:focus-visible { outline:3px solid #fff;outline-offset:2px;box-shadow:0 0 0 5px #102d47; }
@@ -268,8 +276,10 @@
       .orgi-cta-arrow { color:#2676b6; }
       .orgi-cta-arrow.is-nudging { animation:orgi-arrow-nudge .46s ease-out 1; }
       @keyframes orgi-arrow-nudge { 0%,100% { transform:translateX(0); } 48% { transform:translateX(2px); } }
-        .orgi-avatar { display:block;width:34px;height:34px;overflow:hidden;border:1px solid #ffffff50;border-radius:50%;background:radial-gradient(circle at 32% 27%,#303944 0,#121a25 45%,var(--orgi-avatar-body) 100%);box-shadow:0 0 9px color-mix(in srgb,var(--orgi-avatar-glow) 40%,transparent); }
+        .orgi-avatar { display:block;width:34px;height:34px;overflow:hidden;border:1px solid var(--orgi-avatar-outline);border-radius:50%;background:radial-gradient(circle at 32% 27%,color-mix(in srgb,var(--orgi-avatar-outline) 18%,#303944) 0,#121a25 45%,var(--orgi-avatar-body) 100%);box-shadow:0 0 9px color-mix(in srgb,var(--orgi-avatar-glow) 40%,transparent); }
       .orgi-avatar-art { display:block;width:100%;height:100%;overflow:visible; }
+      .orgi-avatar-art stop:first-child { stop-color:var(--orgi-avatar-outline);stop-opacity:.32; }
+      .orgi-avatar-art stop:last-child { stop-color:var(--orgi-avatar-body); }
       .orgi-head { transform-box:fill-box;transform-origin:center;transition:transform .72s cubic-bezier(.2,.75,.25,1); }
       .orgi-eyes { transform-box:fill-box;transform-origin:center;transform:translate(var(--orgi-eye-x,0px),var(--orgi-eye-y,0px));transition:transform .28s cubic-bezier(.2,.75,.25,1); }
       .orgi-avatar[data-state="curious"] .orgi-head { transform:rotate(var(--orgi-tilt,4deg)) translateY(-1px); }
@@ -278,8 +288,8 @@
       .orgi-avatar[data-state="happy"] .orgi-head { transform:rotate(2deg) translateY(-1px); }
       .orgi-avatar[data-state="sleepy"] .orgi-eyes,.orgi-avatar.is-blinking .orgi-eyes { transform:translate(var(--orgi-eye-x,0px),var(--orgi-eye-y,0px)) scaleY(.12); }
        .orgi-eye { fill:var(--orgi-avatar-eyes);filter:drop-shadow(0 0 2px var(--orgi-avatar-glow)); }
-      .orgi-launcher:hover .orgi-avatar { box-shadow:0 0 0 2px #ffffff38,0 0 12px var(--orgi-avatar-glow); }
-     .orgi-launcher::after { position:absolute;right:0;top:0;padding:3px 6px;border-radius:10px;background:#102d47;color:#fff;content:"Orgi";font-size:10px;line-height:1;opacity:0;transform:translateY(3px);transition:opacity .16s ease,transform .16s ease;pointer-events:none; }
+      .orgi-launcher:hover .orgi-avatar { box-shadow:0 0 0 2px color-mix(in srgb,var(--orgi-avatar-outline) 60%,transparent),0 0 12px var(--orgi-avatar-glow); }
+     .orgi-launcher::after { position:absolute;z-index:8;right:0;top:0;padding:3px 6px;border-radius:10px;background:#102d47;color:#fff;content:attr(data-tooltip);font-size:10px;line-height:1;white-space:nowrap;opacity:0;transform:translateY(3px);transition:opacity .16s ease,transform .16s ease;pointer-events:none; }
      .orgi-launcher:hover::after,.orgi-launcher:focus-visible::after { opacity:1;transform:translateY(0); }
     .outlook-tab-menu,.outlook-tab { display:grid;place-items:center;height:35px;padding:0 4px;border-bottom:2px solid transparent;color:#d1d1d1;font-size:.83rem; }
     .fluent-icon { display:block;flex:none;width:20px;height:20px;fill:currentColor; }
@@ -346,11 +356,11 @@
   <div class="orgi-backdrop" id="orgi-backdrop"></div><aside class="orgi-panel" id="orgi-panel" aria-label="Panel de Orgi" aria-hidden="true"><div class="orgi-panel-head"><div class="orgi-panel-brand"><span class="orgi-mark" aria-hidden="true"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#arrow-right-16-regular"></use></svg></span>Orgi</div><button class="orgi-close" id="orgi-close" type="button" aria-label="Cerrar panel"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#dismiss-20-regular"></use></svg></button></div><div class="orgi-promise"><strong>Del correo disperso a un seguimiento claro.</strong><p>Orgi te ayuda a revisar comunicaciones y decidir qué merece convertirse en un compromiso.</p></div><h2>Comunicaciones para revisar</h2><div class="orgi-attention-list" id="orgi-attention-list"></div><h2>Sugerencia rápida</h2><p class="orgi-tip">Revisá el asunto y el contexto antes de confirmar una acción. Las sugerencias son orientativas; vos decidís qué hacer.</p><button class="orgi-primary" id="open-control-center" type="button">Abrir centro de control</button></aside>
   <main class="app hidden" id="dashboard-app">
     <aside class="sidebar">
-      <div class="brand"><span class="brand-mark" aria-hidden="true">O</span><span>Centro de control Orgi</span></div>
-      <nav aria-label="Navegación principal">
-        <button type="button" data-view="home" aria-current="page"><span class="nav-icon" aria-hidden="true"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#home-20-filled"></use></svg></span>Inicio</button>
-        <button type="button" data-view="communications"><span class="nav-icon" aria-hidden="true"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#mail-20-regular"></use></svg></span>Comunicaciones</button>
-        <button type="button" data-view="tasks"><span class="nav-icon" aria-hidden="true"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#checkmark-20-regular"></use></svg></span>Mis compromisos</button>
+      <div class="sidebar-heading"><div class="brand">Orgi</div></div>
+      <nav id="primary-navigation" aria-label="Navegación principal">
+        <button type="button" data-view="home" aria-current="page"><span class="nav-icon" aria-hidden="true"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#home-20-filled"></use></svg></span><span class="nav-label">Inicio</span></button>
+        <button type="button" data-view="communications"><span class="nav-icon" aria-hidden="true"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#mail-20-regular"></use></svg></span><span class="nav-label">Comunicaciones</span></button>
+        <button type="button" data-view="tasks"><span class="nav-icon" aria-hidden="true"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#checkmark-20-regular"></use></svg></span><span class="nav-label">Mis compromisos</span></button>
       </nav>
     </aside>
     <div class="main-content">
@@ -423,6 +433,12 @@
     const DATA_SOURCE = "data/comunicaciones_demo_v01.json";
     const DEMO_REFERENCE_DATE = "2026-11-04";
     const $ = selector => document.querySelector(selector);
+    const orgiLauncher = $("#orgi-launcher"), orgiLauncherSlot = document.createElement("span");
+    orgiLauncherSlot.id = "orgi-launcher-slot";
+    orgiLauncherSlot.className = "orgi-launcher-slot";
+    orgiLauncher.setAttribute("data-tooltip", "Orgi");
+    orgiLauncher.before(orgiLauncherSlot);
+    orgiLauncherSlot.append(orgiLauncher);
     const list = $("#mail-list"), detailDialog = $("#detail-dialog"), detailContent = $("#detail-content");
     const search = $("#global-search"), categoryFilter = $("#category-filter"), reviewFilter = $("#review-filter"), relevanceFilter = $("#relevance-filter");
     const appError = $("#app-error"), taskDialog = $("#task-dialog"), taskForm = $("#task-form");
@@ -563,6 +579,7 @@
       $("#orgi-panel").classList.remove("open"); $("#orgi-backdrop").classList.remove("open");
       $("#orgi-panel").setAttribute("aria-hidden", "true"); $("#orgi-launcher").setAttribute("aria-expanded", "false");
       $("#outlook-view").classList.add("hidden"); $("#dashboard-app").classList.remove("hidden");
+      setAvatarContext(true);
       if (mail) { openCommunications(); showMail(mail); } else $("#back-to-inbox").focus();
     }
     function toggleOrgi(open) {
@@ -784,6 +801,31 @@
       [...groups.keys()].sort((a, b) => mode === "date" && a === "Sin fecha confirmada" ? 1 : mode === "date" && b === "Sin fecha confirmada" ? -1 : a.localeCompare(b, "es")).forEach(key => { const group = node("section", "task-group"), heading = node("h2", "", key), cards = node("div", "task-grid"); group.append(heading); groups.get(key).sort((a, b) => a.status.localeCompare(b.status)).forEach(task => cards.append(taskCard(task))); group.append(cards); container.append(group); });
     }
     document.querySelectorAll("nav [data-view]").forEach(button => button.addEventListener("click", () => setView(button.dataset.view)));
+    const sidebarToggle = $("#orgi-launcher"), dashboardApp = $("#dashboard-app");
+    function setSidebarCollapsed(collapsed) {
+      dashboardApp.classList.toggle("sidebar-collapsed", collapsed);
+      sidebarToggle.setAttribute("aria-expanded", String(!collapsed));
+      sidebarToggle.setAttribute("aria-label", collapsed ? "Expandir panel" : "Contraer panel");
+      sidebarToggle.setAttribute("aria-controls", "primary-navigation");
+      sidebarToggle.title = collapsed ? "Expandir panel" : "Contraer panel";
+      sidebarToggle.setAttribute("data-tooltip", collapsed ? "Expandir panel" : "Contraer panel");
+      document.querySelectorAll(".sidebar nav button[data-view]").forEach(button => {
+        button.title = collapsed ? button.querySelector(".nav-label").textContent.trim() : "";
+      });
+    }
+    function setAvatarContext(inSidebar) {
+      if (inSidebar) {
+        $(".sidebar-heading").append(sidebarToggle);
+        setSidebarCollapsed(dashboardApp.classList.contains("sidebar-collapsed"));
+        return;
+      }
+      orgiLauncherSlot.append(sidebarToggle);
+      sidebarToggle.setAttribute("aria-label", "Abrir Orgi");
+      sidebarToggle.setAttribute("aria-expanded", String($("#orgi-panel").classList.contains("open")));
+      sidebarToggle.setAttribute("aria-controls", "orgi-panel");
+      sidebarToggle.title = "Abrir el panel de Orgi";
+      sidebarToggle.setAttribute("data-tooltip", "Orgi");
+    }
     $("#review-summary").addEventListener("click", () => openCommunications());
     $("#tasks-link").addEventListener("click", () => setView("tasks"));
     $("#global-search-form").addEventListener("submit", event => { event.preventDefault(); categoryFilter.value = ""; reviewFilter.value = ""; relevanceFilter.value = ""; $("#communications-title").textContent = search.value.trim() ? "Resultados de búsqueda" : "Comunicaciones"; setView("communications"); });
@@ -989,11 +1031,18 @@
       if (opening) renderOutlook();
       toggleOrgi(opening);
     }
-    $("#orgi-launcher").addEventListener("click", openOrgi);
+    function handleLauncherClick() {
+      if (!dashboardApp.classList.contains("hidden")) {
+        setSidebarCollapsed(!dashboardApp.classList.contains("sidebar-collapsed"));
+        return;
+      }
+      openOrgi();
+    }
+    $("#orgi-launcher").addEventListener("click", handleLauncherClick);
     $("#orgi-close").addEventListener("click", () => toggleOrgi(false));
     $("#orgi-backdrop").addEventListener("click", () => toggleOrgi(false));
     $("#open-control-center").addEventListener("click", () => openDashboardForMail(null));
-    $("#back-to-inbox").addEventListener("click", () => { $("#dashboard-app").classList.add("hidden"); $("#outlook-view").classList.remove("hidden"); $("#orgi-launcher").focus(); });
+    $("#back-to-inbox").addEventListener("click", () => { setAvatarContext(false); $("#dashboard-app").classList.add("hidden"); $("#outlook-view").classList.remove("hidden"); $("#orgi-launcher").focus(); });
     document.addEventListener("keydown", event => {
       if (event.key !== "Escape") return;
       if ($("#orgi-panel").classList.contains("open")) toggleOrgi(false);

@@ -212,7 +212,7 @@ test("pagehide cancels timers and aborts listeners", () => {
 
 test("repeated avatar clicks toggle Orgi while only opening refreshes its content", () => {
   const calls = [];
-  const registrations = [...html.matchAll(/\$\("#(orgi-launcher|orgi-cta)"\)\.addEventListener\("click", openOrgi\)/g)].map(match => match[1]);
+  const registrations = [...html.matchAll(/\$\("#(orgi-launcher|orgi-cta)"\)\.addEventListener\("click", handleLauncherClick\)/g)].map(match => match[1]);
   assert.deepEqual(registrations, ["orgi-launcher"]);
   const open = html.match(/function openOrgi\(\) \{[^}]+\}/)?.[0];
   assert(open);
@@ -232,11 +232,15 @@ test("Orgi panel uses the supplied dark palette", () => {
   const palette = {
     bg: "#0E1420", sidebar: "#111827", surface: "#171F30", "surface-hover": "#202A40", border: "#2A354A",
     text: "#F5F7FF", "text-muted": "#A6B3C8", blue: "#4A9EFF", purple: "#826BFF", lavender: "#A68AFF",
-    success: "#34D5A0", warning: "#FFBF69", danger: "#FF6B81", "avatar-body": "#08090D", "avatar-eyes": "#F5F7FF", "avatar-glow": "#826BFF",
+    success: "#34D5A0", warning: "#FFBF69", danger: "#FF6B81", "avatar-body": "#0B1020", "avatar-eyes": "#F5FAFF", "avatar-outline": "#22D3EE", "avatar-glow": "#A78BFA",
   };
   for (const [name, value] of Object.entries(palette)) {
     assert.ok(new RegExp(`--orgi-${name}\\s*:\\s*${value}`).test(html), `missing --orgi-${name}: ${value}`);
   }
+  assert.match(html, /\.orgi-avatar\s*\{[^}]*border:1px solid var\(--orgi-avatar-outline\)/);
+  assert.match(html, /\.orgi-avatar-art stop:first-child\s*\{[^}]*stop-color:\s*var\(--orgi-avatar-outline\)[^}]*stop-opacity:\s*\.32/);
+  assert.match(html, /\.orgi-avatar-art stop:last-child\s*\{[^}]*stop-color:\s*var\(--orgi-avatar-body\)/);
+  assert.match(html, /\.orgi-launcher:hover \.orgi-avatar\s*\{[^}]*var\(--orgi-avatar-outline\)[^}]*var\(--orgi-avatar-glow\)/);
   assert.match(html, /\.orgi-panel\s*\{[^}]*background:var\(--orgi-bg\)[^}]*color:var\(--orgi-text\)/);
 });
 
