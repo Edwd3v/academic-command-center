@@ -63,7 +63,7 @@
     .demo-disclosure p { position: absolute; z-index: 4; right: 0; top: 100%; width: min(320px, 80vw); margin: 8px 0; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--raised); color: var(--text); font-size: .82rem; line-height: 1.5; box-shadow: 0 10px 24px #0005; }
     h2 { margin: 0 0 12px; font-family: var(--font-display); font-size: 1.125rem; font-weight: 600; letter-spacing: -.015em; }
     h3 { margin: 0; font-family: var(--font-display); font-size: var(--text-card); font-weight: 600; }
-    .summary-card strong, .attention-count { font-family: var(--font-display); font-weight: 700; }
+    .attention-count { font-family: var(--font-display); font-weight: 700; }
     button, input, select, textarea, .button { font-family: var(--font-body); font-size: var(--text-base); }
     .notice, .message { margin: 0 0 14px; padding: 9px 12px; border: 1px solid #6c5328; border-radius: var(--radius-control); background: #211c14; color: #f7d795; font-size: .84rem; line-height: 1.5; }
     .message { border-color: #76504d; background: #2b1e20; color: #ffd0cc; }
@@ -83,9 +83,30 @@
     .text-link { border: 0; padding: 4px 0; background: transparent; color: #8fc5ff; text-decoration: underline; text-underline-offset: 3px; }
     #tasks-link { display:inline-flex;align-items:center;gap:4px; }
     #tasks-link .fluent-icon { width:16px;height:16px; }
-    .summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 14px 0 0; }
-    .summary-card { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 60px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--muted); font-size: .82rem; }
-    .summary-card strong { color: var(--text); font-size: 1.35rem; line-height: 1; }
+    .communication-status { margin: 0; }
+    .home-priority-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 52px); margin: var(--space-6) 0; align-items: start; }
+    .home-priority-grid > * { min-width: 0; margin: 0; }
+    .requires-attention h2, .communication-status > h2 { margin-bottom: var(--space-4); }
+    .priority-list { display: grid; gap: 5px; }
+    .priority-item { display: grid; gap: 5px; width: 100%; min-width: 0; padding: 10px 12px; border: 1px solid transparent; border-radius: 9px; background: #ffffff08; color: var(--text); text-align: left; cursor: pointer; }
+    .priority-item:hover, .priority-item:focus-visible { border-color: #ffffff18; background: #ffffff0d; }
+    .priority-item strong { overflow-wrap: anywhere; font-size: .9rem; font-weight: 600; }
+    .priority-item small { color: var(--muted); font-size: .78rem; }
+    .priority-empty { margin: 0; color: var(--muted); font-size: var(--text-sm); }
+    .priority-footer { margin-top: var(--space-3); }
+    @media (max-width: 820px) { .home-priority-grid { grid-template-columns: minmax(0, 1fr); } }
+    .review-visual { display: grid; grid-template-columns: clamp(148px, 16vw, 212px) max-content; justify-content: center; align-items: center; gap: 12px 16px; }
+    .review-donut { display: grid; place-items: center; width: clamp(148px, 16vw, 212px); aspect-ratio: 1; border-radius: 50%; background: conic-gradient(var(--cyan) var(--reviewed-percent, 0%), var(--line) 0); }
+    .review-center { display: grid; place-items: center; width: calc(100% - 44px); aspect-ratio: 1; border-radius: 50%; background: var(--bg); }
+    .review-percent { font-family: var(--font-display); font-size: clamp(2.25rem, 3vw, 2.5rem); font-weight: 700; }
+    .review-legend { display: grid; gap: var(--space-2); color: var(--muted); }
+    .review-legend span { display: flex; align-items: center; gap: var(--space-2); }
+    .review-legend strong { margin-left: auto; color: var(--text); font-family: var(--font-display); font-weight: 600; }
+    .review-legend .reviewed-dot::before, .review-legend .unreviewed-dot::before { content: ""; flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--cyan); }
+    .review-legend .unreviewed-dot::before { background: var(--line); }
+    .review-support { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: var(--text-sm); text-align: center; }
+    .review-empty { margin: var(--space-3) 0 0; color: var(--muted); font-size: var(--text-sm); }
+    @media (max-width: 1100px) { .review-visual { grid-template-columns: clamp(140px, 16vw, 184px) max-content; gap: 12px; } .review-donut { width: clamp(140px, 16vw, 184px); } }
     .commitment-panel { background: #172132; }
     .commitment-list { display: grid; gap: 8px; margin: 14px 0; }
     .commitment-item { display: block; width: 100%; padding: 10px 11px; border: 1px solid #283549; border-radius: 10px; background: #151e2c; color: var(--text); text-align: left; }
@@ -180,7 +201,7 @@
     .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; }
     @media (max-width: 1100px) { .app { grid-template-columns: 184px minmax(0, 1fr); gap: 16px; } .home-bento { grid-template-columns: minmax(0, 65fr) minmax(250px, 35fr); } .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 820px) { .app { grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 12px 16px; } .app.sidebar-collapsed { grid-template-columns: minmax(0, 1fr); } .sidebar { position: static; width: 100%; height: auto; padding: 0; border: 0; } .sidebar-heading { padding: 0 0 8px; } .sidebar-collapsed .sidebar-heading { justify-content: center; padding: 0 0 8px; } .sidebar-collapsed .brand { display: none; } .sidebar nav { display: flex; overflow-x: auto; border-bottom: 1px solid var(--line); } .sidebar nav button { justify-content: center; white-space: nowrap; } .sidebar-collapsed .sidebar nav button { flex: 1 1 0; } .main-content { padding: 8px 0 24px; } .home-bento { grid-template-columns: minmax(0, 1fr); } .commitment-panel { display: grid; grid-template-columns: minmax(0, 1fr); } .toolbar { grid-template-columns: repeat(2, minmax(0, 1fr)); } .comm-layout { min-height: 0; } .list-panel { min-height: 55vh; } }
-    @media (max-width: 560px) { .app { padding: 8px 12px; } .main-content > header { column-gap: 8px; } .main-content > header #global-search-form { grid-column: 1 / -1; } .demo-disclosure { grid-column: 1 / -1; grid-row: 3; justify-self: start; } .dashboard-heading h1 { font-size: 1.25rem; } .summary-grid { grid-template-columns: minmax(0, 1fr); } .category-grid, .upcoming-list, .task-grid { grid-template-columns: minmax(0, 1fr); } .toolbar { grid-template-columns: minmax(0, 1fr); } .toolbar select:last-of-type { grid-column: auto; } .field-grid { grid-template-columns: minmax(0, 1fr); } .detail-dl { grid-template-columns: minmax(0, 1fr); gap: 3px; } dialog { width: 100vw; border-radius: 0; padding: 18px; } }
+    @media (max-width: 560px) { .app { padding: 8px 12px; } .main-content > header { column-gap: 8px; } .main-content > header #global-search-form { grid-column: 1 / -1; } .demo-disclosure { grid-column: 1 / -1; grid-row: 3; justify-self: start; } .dashboard-heading h1 { font-size: 1.25rem; } .category-grid, .upcoming-list, .task-grid { grid-template-columns: minmax(0, 1fr); } .toolbar { grid-template-columns: minmax(0, 1fr); } .toolbar select:last-of-type { grid-column: auto; } .field-grid { grid-template-columns: minmax(0, 1fr); } .detail-dl { grid-template-columns: minmax(0, 1fr); gap: 3px; } dialog { width: 100vw; border-radius: 0; padding: 18px; } }
      @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
     /* The mail shell is a local conceptual simulation, not an Outlook connection. */
     .orgi-backdrop { position:fixed;inset:46px 0 0;background:#18263838;opacity:0;pointer-events:none;transition:opacity .2s ease;z-index:5; }
@@ -388,6 +409,23 @@
       <h2 id="home-title" class="hidden">Inicio</h2>
       <h2 class="section-heading" id="category-heading">Explorar por categoría</h2>
       <div id="category-grid" class="category-grid" aria-label="Categorías de comunicaciones"></div>
+      <div class="home-priority-grid">
+      <section class="requires-attention" id="requires-attention" aria-labelledby="requires-attention-title">
+        <h2 id="requires-attention-title">Requieren tu atención</h2>
+        <div id="priority-list" class="priority-list" aria-live="polite"></div>
+        <p id="priority-empty" class="priority-empty hidden">No hay comunicaciones sin revisar clasificadas para atención.</p>
+        <div class="priority-footer"><button class="text-link" id="explore-messages" type="button">Explorar mensajes</button></div>
+      </section>
+      <section class="communication-status" id="communication-status" aria-labelledby="status-title">
+        <h2 id="status-title">Estado de tus comunicaciones</h2>
+        <div class="review-visual" aria-live="polite">
+          <div class="review-donut" role="img" aria-label="Revisadas: 0; sin revisar: 0"><div class="review-center"><strong class="review-percent">0%</strong></div></div>
+          <div class="review-legend"><span class="reviewed-dot">Revisadas <strong class="reviewed-count">0</strong></span><span class="unreviewed-dot">Sin revisar <strong class="unreviewed-count">0</strong></span></div>
+          <p id="review-support" class="review-support">0 de 0 comunicaciones revisadas</p>
+        </div>
+        <p class="review-empty hidden">No hay comunicaciones para revisar.</p>
+      </section>
+      </div>
       <div class="home-bento">
         <section class="attention-card" aria-labelledby="attention-title">
           <div class="attention-top">
@@ -403,7 +441,6 @@
             <button class="text-link" id="tasks-link" type="button">Ir a Mis compromisos <svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#arrow-right-16-regular"></use></svg></button>
         </aside>
       </div>
-      <section aria-labelledby="summary-title"><h2 class="section-heading" id="summary-title">Resumen de actividad</h2><div id="summary-grid" class="summary-grid" aria-live="polite"></div></section>
     </section>
 
     <section id="communications-view" class="hidden" aria-labelledby="communications-title">
@@ -661,15 +698,38 @@
       $("#communications-title").textContent = category === UNCLASSIFIED_CATEGORY ? "Sin clasificar" : category ? categoryName(category) : "Todos los correos";
     }
     function renderHome() {
-      const pendingTasks = tasks.filter(task => task.status !== "finalizada").length;
       const pendingMails = emails.filter(mail => !mailState(mail.id).reviewed);
-      const relevantMails = emails.filter(mail => mailState(mail.id).relevant).length;
-      const summary = $("#summary-grid"); summary.replaceChildren();
-      [
-        ["Comunicaciones sin revisar", pendingMails.length],
-        ["Relevantes para vos", relevantMails],
-        ["Compromisos activos", pendingTasks]
-      ].forEach(([name, value]) => { const card = node("div", "summary-card"); card.append(node("span", "", name), node("strong", "", String(value))); summary.append(card); });
+      const priorityMails = pendingMails.filter(mail => {
+        const hypothesis = mail.hipotesis_diseno ?? {};
+        return hypothesis.estado_atencion === "revisar"
+          || (mail.accion_verificada === true && typeof hypothesis.accion_sugerida === "string" && hypothesis.accion_sugerida.trim());
+      }).sort((a, b) => {
+        const attentionRank = mail => mail.hipotesis_diseno?.estado_atencion === "revisar" ? 0 : 1;
+        return attentionRank(a) - attentionRank(b)
+          || mailDate(b).localeCompare(mailDate(a))
+          || String(a.id).localeCompare(String(b.id));
+      }).slice(0, 3);
+      const priorityList = $("#priority-list"); priorityList.replaceChildren();
+      $("#priority-empty").classList.toggle("hidden", priorityMails.length !== 0);
+      priorityMails.forEach(mail => {
+        const hypothesis = mail.hipotesis_diseno ?? {};
+        const card = node("button", "priority-item"); card.type = "button";
+        card.setAttribute("aria-label", `${text(mail.observado?.asunto)}. ${categoryName(hypothesis.categoria)}. Clasificación: ${hypothesis.estado_atencion === "revisar" ? "revisar" : "acción indicada en los datos"}. Abrir comunicación.`);
+        card.append(node("strong", "", text(mail.observado?.asunto)), node("small", "", categoryName(hypothesis.categoria)));
+        if (hypothesis.estado_atencion === "revisar") card.append(node("small", "", "Clasificación de la muestra: revisar"));
+        else card.append(node("small", "", hypothesis.accion_sugerida.trim()));
+        card.addEventListener("click", () => { openCommunications(); showMail(mail); });
+        priorityList.append(card);
+      });
+      const reviewedCount = emails.length - pendingMails.length;
+      const reviewedPercent = emails.length ? reviewedCount / emails.length * 100 : 0;
+      $(".review-percent").textContent = `${Math.round(reviewedPercent)}%`;
+      $(".reviewed-count").textContent = String(reviewedCount);
+      $(".unreviewed-count").textContent = String(pendingMails.length);
+      $("#review-support").textContent = `${reviewedCount} de ${emails.length} comunicaciones revisadas`;
+      $(".review-donut").style.setProperty("--reviewed-percent", `${reviewedPercent}%`);
+      $(".review-donut").setAttribute("aria-label", `Revisadas: ${reviewedCount}; sin revisar: ${pendingMails.length}`);
+      $(".review-empty").classList.toggle("hidden", emails.length !== 0);
       const attentionList = $("#attention-list"); attentionList.replaceChildren();
       const recentMails = [...pendingMails.sort((a, b) => mailDate(b).localeCompare(mailDate(a))), ...emails.filter(mail => mailState(mail.id).reviewed).sort((a, b) => mailDate(b).localeCompare(mailDate(a)))].slice(0, 5);
       if (!recentMails.length) attentionList.append(node("p", "commitment-empty", "Todavía no hay comunicaciones en esta muestra. Podés explorar las categorías cuando estén disponibles."));
@@ -849,6 +909,7 @@
       sidebarToggle.setAttribute("data-tooltip", "Orgi");
     }
     $("#review-summary").addEventListener("click", () => openCommunications());
+    $("#explore-messages").addEventListener("click", () => openCommunications());
     $("#tasks-link").addEventListener("click", () => setView("tasks"));
     $("#global-search-form").addEventListener("submit", event => { event.preventDefault(); categoryFilter.value = ""; reviewFilter.value = ""; relevanceFilter.value = ""; $("#communications-title").textContent = search.value.trim() ? "Resultados de búsqueda" : "Comunicaciones"; setView("communications"); });
     $("#close-detail").addEventListener("click", () => detailDialog.close());

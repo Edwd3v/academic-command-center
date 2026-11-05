@@ -55,7 +55,7 @@ async function main() {
   }
   async function evaluate(expression) {
     const result = await cdp("Runtime.evaluate", { expression, awaitPromise: true, returnByValue: true });
-    if (result.exceptionDetails) throw new Error(result.exceptionDetails.text);
+    if (result.exceptionDetails) throw new Error(result.exceptionDetails.exception?.description ?? result.exceptionDetails.text);
     return result.result.value;
   }
   async function click(selector) { await evaluate(`document.querySelector(${JSON.stringify(selector)})?.click()`); }
@@ -113,7 +113,7 @@ async function main() {
     await click("#orgi-launcher");
     assert.equal(await evaluate(`document.querySelector('#orgi-launcher').getAttribute('aria-expanded')`), "true");
 
-    const home = await evaluate(`({title:document.querySelector('#dashboard-app h1').textContent.trim(), summaries:[...document.querySelectorAll('#summary-grid .summary-card')].length, heading:document.querySelector('#attention-title').textContent, demo:document.querySelector('#source-indicator').textContent})`);
+    const home = await evaluate(`({title:document.querySelector('#dashboard-app h1').textContent.trim(), heading:document.querySelector('#attention-title').textContent, demo:document.querySelector('#source-indicator').textContent})`);
     assert.equal(home.title, "Mi espacio académico");
     const header = await evaluate(`({subtitle:document.querySelector('#dashboard-app .subtitle').textContent.trim(),button:document.querySelector('#back-to-inbox').textContent.trim(),icon:document.querySelector('#back-to-inbox use').getAttribute('href'),inHeader:document.querySelector('.main-content > header').contains(document.querySelector('#back-to-inbox')),search:document.querySelector('#global-search-form').contains(document.querySelector('#global-search')),disclosure:document.querySelector('#source-indicator').closest('details')?.className})`);
     assert.equal(header.subtitle, "Todo lo importante, en un solo lugar.");
@@ -147,7 +147,67 @@ async function main() {
     const stacked = await evaluate(`(()=>{const r=document.querySelector('.attention-card').getBoundingClientRect(),c=document.querySelector('.commitment-panel').getBoundingClientRect();return {below:c.top>=r.bottom,width:Math.abs(r.width-c.width)<1,overflow:document.documentElement.scrollWidth>innerWidth}})()`);
     assert.deepEqual(stacked, {below:true,width:true,overflow:false});
     await cdp("Emulation.setDeviceMetricsOverride", { width: 1365, height: 900, deviceScaleFactor: 1, mobile: false });
-    assert.equal(home.summaries, 3, `Home should show only the three requested summary indicators. ${await evaluate(`document.querySelector('#app-error').textContent`)}`);
+    const status = await evaluate(`(()=>{const section=document.querySelector('#communication-status'),ring=section.querySelector('.review-donut'),reviewed=emails.filter(mail=>mailState(mail.id).reviewed).length;return {heading:section.querySelector('h2').textContent,order:section.closest('.home-priority-grid').previousElementSibling.id,after:section.closest('.home-priority-grid').nextElementSibling.className,cards:section.querySelectorAll('.status-card').length,percent:section.querySelector('.review-percent').textContent,reviewed:section.querySelector('.reviewed-count').textContent,unreviewed:section.querySelector('.unreviewed-count').textContent,portion:ring.style.getPropertyValue('--reviewed-percent'),total:emails.length,actual:reviewed,priority:section.querySelector('.priority-card'),reviewTitle:section.querySelector('h3'),support:section.querySelector('#review-support').textContent,kpis:document.querySelectorAll('.summary-card').length}})()`);
+    assert.equal(status.heading, "Estado de tus comunicaciones");
+    assert.equal(status.order, "category-grid");
+    assert.equal(status.after, "home-bento");
+    assert.equal(status.cards, 0);
+    assert.equal(status.reviewed, String(status.actual));
+    assert.equal(status.unreviewed, String(status.total - status.actual));
+    assert.equal(status.percent, `${status.total ? Math.round(status.actual / status.total * 100) : 0}%`);
+    assert.equal(status.portion, `${status.total ? status.actual / status.total * 100 : 0}%`);
+    assert.equal(status.priority, null, 'The priority block should not be present.');
+    assert.equal(status.reviewTitle, null, 'The redundant review-status subtitle should be absent.');
+    assert.equal(status.support, `${status.actual} de ${status.total} comunicaciones revisadas`);
+    assert.equal(await evaluate(`document.querySelectorAll('.status-card').length`), 0, 'Review status should not be wrapped in a card.');
+    assert.equal(status.kpis, 0);
+    const priorities = JSON.parse(await evaluate(`JSON.stringify((()=>{return {heading:document.querySelector('#requires-attention-title').textContent,items:[...document.querySelectorAll('#priority-list .priority-item')].map(item=>item.textContent.trim()),count:document.querySelectorAll('#priority-list .priority-item').length,allUnread:[...document.querySelectorAll('#priority-list .priority-item')].every(item=>!mailState(emails.find(mail=>mail.observado.asunto===item.querySelector('strong').textContent)?.id).reviewed),deadlines:[...document.querySelectorAll('#priority-list .priority-item')].filter(item=>/límite|vence|vencimiento/i.test(item.textContent)).length,position:document.querySelector('#requires-attention').parentElement.previousElementSibling.id,empty:document.querySelector('#priority-empty').classList.contains('hidden')}})())`));
+    assert.equal(priorities.heading, 'Requieren tu atención');
+    assert.equal(priorities.count, 3, 'The attention section should show no more than three qualifying communications.');
+    assert.equal(priorities.allUnread, true, 'Reviewed communications should not appear in the attention section.');
+    assert.equal(priorities.deadlines, 0, 'The sample contains no verified deadlines.');
+    assert.equal(priorities.position, 'category-grid');
+    assert.equal(priorities.empty, true);
+    assert.match(priorities.items.join(' '), /Clasificación de la muestra: revisar/);
+    await click('#explore-messages');
+    assert.equal(await evaluate(`document.querySelector('#communications-title').textContent`), 'Todos los correos');
+    await click('[data-view="home"]');
+    await click('#priority-list .priority-item');
+    assert.equal(await evaluate(`document.querySelector('#detail-dialog').open`), true, 'Selecting an attention card should open the existing communication detail.');
+    assert.match(await evaluate(`document.querySelector('#detail-content').textContent`), /Convertir en compromiso/);
+    await click('#close-detail');
+    await evaluate(`window.priorityTestMail=emails.find(mail=>mail.hipotesis_diseno?.estado_atencion==='revisar'&&!mailState(mail.id).reviewed); saveMailState(window.priorityTestMail,{reviewed:true});`);
+    assert.equal(await evaluate(`document.querySelectorAll('#priority-list .priority-item').length`), 3, 'The list should refresh when a message is reviewed.');
+    assert.equal(await evaluate(`![...document.querySelectorAll('#priority-list .priority-item strong')].some(item=>item.textContent===window.priorityTestMail.observado.asunto)`), true, 'Reviewed communications should be removed from attention candidates.');
+    await evaluate(`saveMailState(window.priorityTestMail,{reviewed:false})`);
+    await click('[data-view="home"]');
+    const statusDesktop = await evaluate(`({rows:new Set([...document.querySelectorAll('#requires-attention,#communication-status')].map(card=>Math.round(card.getBoundingClientRect().top))).size,overflow:document.documentElement.scrollWidth>innerWidth,attentionColumns:new Set([...document.querySelectorAll('#requires-attention,#communication-status')].map(card=>Math.round(card.getBoundingClientRect().left))).size})`);
+    assert.deepEqual(statusDesktop, {rows:1,overflow:false,attentionColumns:2});
+    const donutDesktop = await evaluate(`(()=>{const donut=document.querySelector('.review-donut'),rect=donut.getBoundingClientRect(),center=donut.querySelector('.review-center').getBoundingClientRect(),legend=document.querySelector('.review-legend').getBoundingClientRect(),section=document.querySelector('#communication-status').getBoundingClientRect();return {diameter:Math.round(rect.width),ring:Math.round((rect.width-center.width)/2),percentSize:parseFloat(getComputedStyle(document.querySelector('.review-percent')).fontSize),legendBeside:legend.left>=rect.right-1,centered:Math.abs((rect.left+legend.right)/2-(section.left+section.width/2))<25}})()`);
+    assert(donutDesktop.diameter >= 200 && donutDesktop.diameter <= 220, `Desktop donut diameter was ${donutDesktop.diameter}px.`);
+    assert(donutDesktop.ring >= 20 && donutDesktop.ring <= 24, `Donut ring was ${donutDesktop.ring}px thick.`);
+    assert(donutDesktop.percentSize >= 36 && donutDesktop.percentSize <= 40);
+    assert.equal(donutDesktop.legendBeside, true);
+    assert.equal(donutDesktop.centered, true);
+    const sidebarWasCollapsed = await evaluate(`document.querySelector('#dashboard-app').classList.contains('sidebar-collapsed')`);
+    await evaluate(`document.querySelector('#dashboard-app').classList.add('sidebar-collapsed')`);
+    await delay(260);
+    const chartCollapsed = await evaluate(`(()=>{const d=document.querySelector('.review-donut').getBoundingClientRect(),c=document.querySelector('#communication-status').getBoundingClientRect();return {diameter:Math.round(d.width),fits:d.right<=c.right+1}})()`);
+    await evaluate(`document.querySelector('#dashboard-app').classList.toggle('sidebar-collapsed',${sidebarWasCollapsed})`);
+    await delay(260);
+    const chartExpanded = await evaluate(`(()=>{const d=document.querySelector('.review-donut').getBoundingClientRect(),c=document.querySelector('#communication-status').getBoundingClientRect();return {diameter:Math.round(d.width),fits:d.right<=c.right+1}})()`);
+    assert(chartCollapsed.diameter >= 140 && chartCollapsed.fits, 'The donut should fit with the sidebar collapsed.');
+    assert(chartExpanded.diameter >= 140 && chartExpanded.fits, 'The donut should fit with the sidebar expanded.');
+    await evaluate(`window.savedEmails=emails; emails=[]; renderHome()`);
+    assert.deepEqual(await evaluate(`({percentage:document.querySelector('.review-percent').textContent,reviewed:document.querySelector('.reviewed-count').textContent,unreviewed:document.querySelector('.unreviewed-count').textContent,empty:document.querySelector('.review-empty')?.textContent.trim(),support:document.querySelector('#review-support').textContent,ring:document.querySelector('.review-donut').style.getPropertyValue('--reviewed-percent')})`), {percentage:"0%",reviewed:"0",unreviewed:"0",empty:"No hay comunicaciones para revisar.",support:"0 de 0 comunicaciones revisadas",ring:"0%"});
+    await evaluate(`emails=window.savedEmails; renderHome()`);
+    await cdp("Emulation.setDeviceMetricsOverride", { width: 390, height: 844, deviceScaleFactor: 1, mobile: false });
+    const donutMobile = await evaluate(`(()=>{const d=document.querySelector('.review-donut').getBoundingClientRect(),c=document.querySelector('#communication-status').getBoundingClientRect(),l=document.querySelector('.review-legend').getBoundingClientRect();return {diameter:Math.round(d.width),legendBeside:l.left>=d.right-1,contained:d.right<=c.right+1&&l.right<=c.right+1}})()`);
+    assert(donutMobile.diameter >= 140 && donutMobile.diameter < 200);
+    assert.equal(donutMobile.legendBeside, true);
+    assert.equal(donutMobile.contained, true);
+    assert.deepEqual(await evaluate(`({rows:new Set([...document.querySelectorAll('#requires-attention,#communication-status')].map(card=>Math.round(card.getBoundingClientRect().top))).size,overflow:document.documentElement.scrollWidth>innerWidth,attentionColumns:new Set([...document.querySelectorAll('#requires-attention,#communication-status')].map(card=>Math.round(card.getBoundingClientRect().left))).size})`), {rows:2,overflow:false,attentionColumns:1});
+    await cdp("Emulation.setDeviceMetricsOverride", { width: 1365, height: 900, deviceScaleFactor: 1, mobile: false });
     assert(!/urgente|requiere tu atención/i.test(home.heading));
     assert.match(home.demo, /demostración|datos de ejemplo/i);
     await cdp("Emulation.setDeviceMetricsOverride", { width: 900, height: 900, deviceScaleFactor: 1, mobile: false });
@@ -229,6 +289,9 @@ async function main() {
 
     await evaluate(`document.querySelectorAll('.detail-actions button').forEach(button=>{if(button.textContent==='Marcar como revisado')button.click()})`);
     await waitUntil(`document.querySelector('#detail-content').textContent.includes('Estado de revisiónRevisado')`, "Review status did not update independently.");
+    assert.equal(await evaluate(`document.querySelector('.reviewed-count').textContent`), String(status.actual + 1));
+    assert.equal(await evaluate(`document.querySelector('.unreviewed-count').textContent`), String(status.total - status.actual - 1));
+    assert.equal(await evaluate(`document.querySelector('.review-percent').textContent`), `${Math.round((status.actual + 1) / status.total * 100)}%`);
     assert.match(await evaluate(`document.querySelector('#detail-content').textContent`), /RelevanciaSin marcar/);
     await evaluate(`document.querySelectorAll('.detail-actions button').forEach(button=>{if(button.textContent==='Marcar como relevante')button.click()})`);
     await waitUntil(`document.querySelector('#detail-content').textContent.includes('Marcada como relevante por vos')`, "Student relevance did not update.");
@@ -262,7 +325,7 @@ async function main() {
     await evaluate(`const status=document.querySelector('.task-card select'); status.value='finalizada'; status.dispatchEvent(new Event('change',{bubbles:true}))`);
     await waitUntil(`document.querySelector('.task-group h2').textContent.includes('Completados')`, "Commitment could not be marked complete.");
     await click("nav [data-view='home']");
-    assert.equal(await evaluate(`document.querySelector('#summary-grid').textContent.includes('Compromisos activos0')`), true);
+    assert.equal(await evaluate(`document.querySelector('.reviewed-count').textContent`), String(status.actual + 1));
 
     await cdp("Emulation.setDeviceMetricsOverride", { width: 390, height: 844, deviceScaleFactor: 1, mobile: false });
     const mobileOverflow = await evaluate(`({width:document.documentElement.scrollWidth,client:document.documentElement.clientWidth,inner:innerWidth,visual:visualViewport.width,small:matchMedia('(max-width:560px)').matches,widths:['#dashboard-app','.main-content','#home-view','.home-bento','.attention-card','#category-grid','.category-card'].map(s=>[s,Math.round(document.querySelector(s).getBoundingClientRect().width),document.querySelector(s).scrollWidth]),categories:getComputedStyle(document.querySelector('#category-grid')).gridTemplateColumns})`);
@@ -283,9 +346,7 @@ async function main() {
     await click("#open-control-center");
     await waitUntil(`!document.querySelector('#dashboard-app').classList.contains('hidden')`, "Dashboard did not reopen after reload.");
     assert.equal(await evaluate(`document.querySelector('#dashboard-app').classList.contains('sidebar-collapsed') && document.querySelector('#orgi-launcher').getAttribute('aria-expanded') === 'false'`), true, "Reload should restore the collapsed sidebar.");
-    const persistedHome = await evaluate(`document.querySelector('#summary-grid').textContent`);
-    assert.match(persistedHome, /Relevantes para vos1/);
-    assert.match(persistedHome, /Compromisos activos0/);
+    assert.equal(await evaluate(`document.querySelector('.reviewed-count').textContent`), String(status.actual + 1));
     await click("nav [data-view='tasks']");
     await waitUntil(`document.querySelector('.task-group h2').textContent.includes('Completados')`, "Completed commitment state did not survive reload.");
     assert.match(await evaluate(`document.querySelector('.task-card h3').textContent`), /Repasar ejercicios seleccionados/);
@@ -300,11 +361,11 @@ async function main() {
     await evaluate(`window.orgiLauncherReference=document.querySelector('#orgi-launcher'); window.orgiAvatarReference=document.querySelector('#orgi-avatar')`);
     await click("#open-control-center");
     await waitUntil(`!document.querySelector('#dashboard-app').classList.contains('hidden')`, "Dashboard did not reopen with legacy state.");
-    const legacyStates = await evaluate(`({reviewed:mailState('demo-academico-informativo').reviewed,relevant:mailState('demo-academico-revisar').relevant,summary:document.querySelector('#summary-grid').textContent})`);
+    const legacyStates = await evaluate(`({reviewed:mailState('demo-academico-informativo').reviewed,relevant:mailState('demo-academico-revisar').relevant,reviewedCount:document.querySelector('.reviewed-count').textContent,unreviewedCount:document.querySelector('.unreviewed-count').textContent})`);
     assert.equal(legacyStates.reviewed, true, "Legacy no_relevante must still mean reviewed.");
     assert.equal(legacyStates.relevant, true, "Legacy relevante must migrate into student relevance.");
-    assert.match(legacyStates.summary, /Comunicaciones sin revisar23/);
-    assert.match(legacyStates.summary, /Relevantes para vos1/);
+    assert.equal(legacyStates.reviewedCount, "2");
+    assert.equal(legacyStates.unreviewedCount, "23");
 
     await click("#back-to-inbox");
     await waitUntil(`!document.querySelector('#outlook-view').classList.contains('hidden')`, "Returning to Outlook should restore the inbox.");
