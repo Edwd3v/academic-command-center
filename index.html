@@ -104,6 +104,8 @@
     .category-tail { display: grid; justify-items: end; gap: 10px; }
     .category-arrow { color: var(--accent); }
     .count { color: #83c8ff; font-weight: 650; }
+    .unclassified-link { margin: 10px 0 0; padding: 0; border: 0; background: transparent; color: var(--muted); font: inherit; font-size: var(--text-xs); text-decoration: underline; text-underline-offset: 3px; }
+    .unclassified-link:hover { color: var(--text); }
     .upcoming-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
     .upcoming-item, .task-card { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 12px; }
     .upcoming-item strong, .task-card h3 { display: block; overflow-wrap: anywhere; }
@@ -383,6 +385,8 @@
 
     <section id="home-view" aria-labelledby="home-title">
       <h2 id="home-title" class="hidden">Inicio</h2>
+      <h2 class="section-heading" id="category-heading">Explorar por categoría</h2>
+      <div id="category-grid" class="category-grid" aria-label="Categorías de comunicaciones"></div>
       <div class="home-bento">
         <section class="attention-card" aria-labelledby="attention-title">
           <div class="attention-top">
@@ -399,8 +403,6 @@
         </aside>
       </div>
       <section aria-labelledby="summary-title"><h2 class="section-heading" id="summary-title">Resumen de actividad</h2><div id="summary-grid" class="summary-grid" aria-live="polite"></div></section>
-      <h2 class="section-heading">Explorar por categoría</h2>
-      <div id="category-grid" class="category-grid" aria-label="Categorías de comunicaciones"></div>
     </section>
 
     <section id="communications-view" class="hidden" aria-labelledby="communications-title">
@@ -458,13 +460,14 @@
       oportunidad: { label: "Oportunidades", icon: "sparkle-20-regular", description: "Convocatorias e invitaciones para explorar." },
       administrativo: { label: "Administrativos", icon: "clipboard-20-regular", description: "Comunicaciones sobre gestiones administrativas." }
     };
+    const UNCLASSIFIED_CATEGORY = "__unclassified__";
     let emails = [], tasks = [], decisions = {}, relevanceIds = new Set(), selectedId = null, newestFirst = true;
     let readEmailIds = new Set(), selectedOutlookMailId = null, outlookSearchQuery = "", demoReferenceDate = DEMO_REFERENCE_DATE;
     let activeCategory = "", editingTaskId = null, taskSourceId = null;
     const text = (value, fallback = "No indicado") => typeof value === "string" && value.trim() ? value : fallback;
     const normalize = value => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("es");
     const label = value => String(value ?? "").replaceAll("_", " ").replace(/^./, c => c.toLocaleUpperCase("es"));
-    const categoryName = value => CATEGORY_META[value]?.label ?? label(value);
+    const categoryName = value => CATEGORY_META[value]?.label ?? "Sin clasificar";
     const node = (tag, className, value) => { const el = document.createElement(tag); if (className) el.className = className; if (value !== undefined) el.textContent = value; return el; };
     const icon = name => {
       const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -653,7 +656,7 @@
       relevanceFilter.value = "";
       search.value = "";
       setView("communications");
-      $("#communications-title").textContent = category ? (CATEGORY_META[category]?.label ?? label(category)) : "Todos los correos";
+      $("#communications-title").textContent = category === UNCLASSIFIED_CATEGORY ? "Sin clasificar" : category ? categoryName(category) : "Todos los correos";
     }
     function renderHome() {
       const pendingTasks = tasks.filter(task => task.status !== "finalizada").length;
@@ -697,20 +700,28 @@
       ["academico", "institucional", "administrativo", "bienestar", "oportunidad", ...[...counts.keys()].filter(key => !CATEGORY_META[key])].forEach(key => {
         const info = CATEGORY_META[key] ?? { label: label(key), icon: "mail-20-regular", description: "Comunicaciones de esta categoría." };
         const total = counts.get(key) ?? 0;
-        const pending = emails.filter(mail => mail.hipotesis_diseno?.categoria === key && !mailState(mail.id).reviewed).length;
-        const button = node("button", "category-card"); button.type = "button"; button.setAttribute("aria-label", `${info.label}: ${total} comunicaciones, ${pending} sin revisar`);
-        const description = node("span"); description.append(node("strong", "", info.label), node("small", "", info.description), node("small", "category-secondary", `${pending} sin revisar`));
+        const pendingCount = emails.filter(mail => mail.hipotesis_diseno?.categoria === key && !mailState(mail.id).reviewed).length;
+        const button = node("button", "category-card"); button.type = "button"; button.dataset.category = key;
+        button.setAttribute("aria-label", `${info.label}: ${total} comunicaciones, ${pendingCount} sin revisar`);
+        const description = node("span"); description.append(node("strong", "", info.label), node("small", "", info.description), node("small", "category-secondary", `${pendingCount} sin revisar`));
         const tail = node("span", "category-tail"), arrow = node("span", "category-arrow"); arrow.append(icon("arrow-right-16-regular")); tail.append(node("span", "count", String(total)), arrow);
         const categoryIcon = node("span", "category-icon"); categoryIcon.append(icon(info.icon));
         button.replaceChildren(categoryIcon, description, tail);
         button.addEventListener("click", () => openCommunications(key)); grid.append(button);
       });
-      const all = node("button", "category-card"); all.type = "button"; all.setAttribute("aria-label", `Todos los correos: ${emails.length} comunicaciones`);
+      const all = node("button", "category-card"); all.type = "button"; all.dataset.category = "all"; all.setAttribute("aria-label", `Todos los correos: ${emails.length} comunicaciones`);
       const allText = node("span"); allText.append(node("strong", "", "Todos los correos"), node("small", "", "Explorá la muestra completa."));
       const allTail = node("span", "category-tail"), allArrow = node("span", "category-arrow"), allIcon = node("span", "category-icon");
       allArrow.append(icon("arrow-right-16-regular")); allIcon.append(icon("mail-20-regular"));
       allTail.append(node("span", "count", String(emails.length)), allArrow);
       all.append(allIcon, allText, allTail); all.addEventListener("click", () => openCommunications()); grid.append(all);
+      const unclassifiedCount = emails.filter(mail => !CATEGORY_META[mail.hipotesis_diseno?.categoria]).length;
+      const previousUnclassified = grid.nextElementSibling?.classList.contains("unclassified-link") ? grid.nextElementSibling : null;
+      previousUnclassified?.remove();
+      if (unclassifiedCount) {
+        const link = node("button", "unclassified-link", `Sin clasificar: ${unclassifiedCount} comunicación${unclassifiedCount === 1 ? "" : "es"}`);
+        link.type = "button"; link.addEventListener("click", () => openCommunications(UNCLASSIFIED_CATEGORY)); grid.after(link);
+      }
     }
     function localDateString() { const date = new Date(); return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`; }
     function populate(select, values, format = label) { [...new Set(values.filter(Boolean))].sort((a, b) => a.localeCompare(b, "es")).forEach(value => { const option = node("option", "", format(value)); option.value = value; select.append(option); }); }
@@ -722,7 +733,7 @@
         const matchesQuery = [observed.remitente, observed.asunto, mailBody(mail), hypothesis.categoria, categoryName(hypothesis.categoria)]
           .some(value => normalize(value).includes(query));
         return (!query || matchesQuery)
-          && (!categoryFilter.value || hypothesis.categoria === categoryFilter.value)
+          && (!categoryFilter.value || (categoryFilter.value === UNCLASSIFIED_CATEGORY ? !CATEGORY_META[hypothesis.categoria] : hypothesis.categoria === categoryFilter.value))
           && (!reviewFilter.value || (reviewFilter.value === "reviewed" ? state.reviewed : !state.reviewed))
           && (!relevanceFilter.value || (relevanceFilter.value === "relevant" ? state.relevant : !state.relevant));
       }).sort((a, b) => mailDate(a).localeCompare(mailDate(b)) * (newestFirst ? -1 : 1));
@@ -840,7 +851,7 @@
     $("#global-search-form").addEventListener("submit", event => { event.preventDefault(); categoryFilter.value = ""; reviewFilter.value = ""; relevanceFilter.value = ""; $("#communications-title").textContent = search.value.trim() ? "Resultados de búsqueda" : "Comunicaciones"; setView("communications"); });
     $("#close-detail").addEventListener("click", () => detailDialog.close());
     $("#filters").addEventListener("submit", event => event.preventDefault());
-    [search, categoryFilter, reviewFilter, relevanceFilter].forEach(control => control.addEventListener(control === search ? "input" : "change", () => { activeCategory = categoryFilter.value; $("#communications-title").textContent = activeCategory ? (CATEGORY_META[activeCategory]?.label ?? label(activeCategory)) : "Todos los correos"; renderMailList(); }));
+    [search, categoryFilter, reviewFilter, relevanceFilter].forEach(control => control.addEventListener(control === search ? "input" : "change", () => { activeCategory = categoryFilter.value; $("#communications-title").textContent = activeCategory === UNCLASSIFIED_CATEGORY ? "Sin clasificar" : activeCategory ? categoryName(activeCategory) : "Todos los correos"; renderMailList(); }));
     $("#reset").addEventListener("click", () => { search.value = ""; categoryFilter.value = ""; reviewFilter.value = ""; relevanceFilter.value = ""; activeCategory = ""; $("#communications-title").textContent = "Todos los correos"; renderMailList(); search.focus(); });
     $("#sort").addEventListener("click", event => { newestFirst = !newestFirst; event.currentTarget.querySelector("use").setAttribute("href", `icons/fluent.svg#arrow-${newestFirst ? "down" : "up"}-16-regular`); event.currentTarget.setAttribute("aria-label", `Ordenar por fecha ${newestFirst ? "descendente" : "ascendente"}`); renderMailList(); });
     $("#task-grouping").addEventListener("change", renderTasks);
@@ -870,7 +881,8 @@
         else readEmailIds = new Set(emails.slice().sort((a, b) => mailSortKey(b).localeCompare(mailSortKey(a))).slice(8).map(mail => mail.id));
         $("#demo-reference-date").value = DEMO_REFERENCE_DATE;
         renderOutlook();
-        populate(categoryFilter, emails.map(mail => mail.hipotesis_diseno?.categoria), categoryName);
+        populate(categoryFilter, emails.map(mail => mail.hipotesis_diseno?.categoria).filter(key => CATEGORY_META[key]), categoryName);
+        const unclassifiedOption = node("option", "", "Sin clasificar"); unclassifiedOption.value = UNCLASSIFIED_CATEGORY; categoryFilter.append(unclassifiedOption);
         $("#source-indicator").setAttribute("aria-label", `Modo demostración · Datos de ejemplo · ${emails.length} comunicaciones disponibles`);
         renderHome(); renderMailList();
       } catch (error) { $("#outlook-view").classList.add("hidden"); $("#dashboard-app").classList.remove("hidden"); showError(`No se pudo cargar la demostración. Ejecutá el sitio desde un servidor local y verificá ${DATA_SOURCE}. ${error.message}`); }
