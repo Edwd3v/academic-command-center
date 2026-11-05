@@ -64,7 +64,7 @@ async function main() {
   }
     await cdp("Page.enable");
     await cdp("Page.navigate", { url: `http://127.0.0.1:${server.address().port}/index.html` });
-    await waitUntil(`document.querySelector('#open-control-center')`, "Orgi dashboard entry point did not load.");
+    await waitUntil(`document.querySelector('#orgi-launcher-slot')`, "Orgi dashboard entry point did not load.");
     const outlookAvatar = await evaluate(`({launcher:(window.orgiLauncherReference=document.querySelector('#orgi-launcher'))?.parentElement?.id,avatar:(window.orgiAvatarReference=document.querySelector('#orgi-avatar'))?.className,instances:document.querySelectorAll('#orgi-avatar').length,palette:(()=>{const avatar=document.querySelector('#orgi-avatar'),eye=document.querySelector('.orgi-eye'),reflection=document.querySelector('#orgi-sphere stop');return {border:getComputedStyle(avatar).borderTopColor,glow:getComputedStyle(avatar).boxShadow,eye:getComputedStyle(eye).fill,eyeGlow:getComputedStyle(eye).filter,reflection:getComputedStyle(reflection).stopColor,body:getComputedStyle(document.querySelector('#orgi-sphere stop:last-child')).stopColor}})()})`);
     assert.equal(outlookAvatar.launcher, "orgi-launcher-slot", "Original Outlook avatar should remain in its own slot.");
     assert.equal(outlookAvatar.avatar, "orgi-avatar");
@@ -79,8 +79,9 @@ async function main() {
     const sidebar = await evaluate(`({brand:document.querySelector('.sidebar .brand')?.textContent.trim(),brandMark:document.querySelector('.sidebar .brand-mark'),toggle:document.querySelector('#orgi-launcher')?.getAttribute('aria-expanded'),tooltip:document.querySelector('#orgi-launcher')?.title,controls:document.querySelector('#orgi-launcher')?.getAttribute('aria-controls'),launcherSame:document.querySelector('#orgi-launcher')===window.orgiLauncherReference,avatarSame:document.querySelector('#orgi-avatar')===window.orgiAvatarReference,avatarInstances:document.querySelectorAll('#orgi-avatar').length,parent:document.querySelector('#orgi-launcher')?.parentElement.className,labels:[...document.querySelectorAll('.sidebar nav .nav-label')].map(label=>label.textContent.trim()),palette:(()=>{const avatar=document.querySelector('#orgi-avatar'),eye=document.querySelector('.orgi-eye'),reflection=document.querySelector('#orgi-sphere stop');return {border:getComputedStyle(avatar).borderTopColor,glow:getComputedStyle(avatar).boxShadow,eye:getComputedStyle(eye).fill,eyeGlow:getComputedStyle(eye).filter,reflection:getComputedStyle(reflection).stopColor,body:getComputedStyle(document.querySelector('#orgi-sphere stop:last-child')).stopColor}})()})`);
     assert.equal(sidebar.brand, "Orgi", "Sidebar should use Orgi as its only brand text.");
     assert.equal(sidebar.brandMark, null, "Sidebar should not show the old letter mark.");
-    assert.equal(sidebar.toggle, "true", "Sidebar should start expanded with an accessible toggle.");
-    assert.equal(sidebar.tooltip, "Contraer panel");
+    assert.equal(sidebar.toggle, "false", "Sidebar should start collapsed with an accessible toggle.");
+    assert.equal(sidebar.tooltip, "Expandir panel");
+    assert.equal(await evaluate(`document.querySelector('#dashboard-app').classList.contains('sidebar-collapsed')`), true);
     assert.equal(sidebar.controls, "primary-navigation");
     assert.equal(sidebar.launcherSame, true, "Sidebar should reuse the original Outlook launcher node.");
     assert.equal(sidebar.avatarSame, true, "Sidebar should reuse the original animated avatar node.");
@@ -88,7 +89,6 @@ async function main() {
     assert.equal(sidebar.parent, "sidebar-heading");
     assert.deepEqual(sidebar.palette, outlookAvatar.palette, "Avatar palette should remain identical after moving it into the sidebar.");
     assert.deepEqual(sidebar.labels, ["Inicio", "Comunicaciones", "Mis compromisos"]);
-    await click("#orgi-launcher");
     await delay(250);
     const collapsed = await evaluate(`({expanded:document.querySelector('#orgi-launcher').getAttribute('aria-expanded'),collapsed:document.querySelector('#dashboard-app').classList.contains('sidebar-collapsed'),tooltip:document.querySelector('#orgi-launcher').title,controls:document.querySelector('#orgi-launcher').getAttribute('aria-controls'),titles:[...document.querySelectorAll('.sidebar nav button')].map(button=>button.title),labelWidths:[...document.querySelectorAll('.sidebar nav .nav-label')].map(label=>Math.round(label.getBoundingClientRect().width))})`);
     assert.equal(collapsed.expanded, "false", "Toggle should expose the collapsed state accessibly.");
@@ -97,6 +97,19 @@ async function main() {
     assert.equal(collapsed.controls, "primary-navigation");
     assert.deepEqual(collapsed.titles, ["Inicio", "Comunicaciones", "Mis compromisos"], "Collapsed navigation should provide section tooltips.");
     assert(collapsed.labelWidths.every(width => width === 0), "Collapsed navigation should hide labels visually.");
+    await click("nav [data-view='communications']");
+    assert.equal(await evaluate(`document.querySelector('#communications-view').classList.contains('hidden')`), false);
+    await click("nav [data-view='tasks']");
+    assert.equal(await evaluate(`document.querySelector('#dashboard-app').classList.contains('sidebar-collapsed')`), true);
+    await click("nav [data-view='home']");
+    await click("#orgi-launcher");
+    assert.equal(await evaluate(`document.querySelector('#orgi-launcher').getAttribute('aria-expanded')`), "true");
+    await click("nav [data-view='tasks']");
+    assert.equal(await evaluate(`document.querySelector('#dashboard-app').classList.contains('sidebar-collapsed')`), false);
+    await click("nav [data-view='home']");
+    await click("#back-to-inbox");
+    await click("#open-control-center");
+    assert.equal(await evaluate(`document.querySelector('#dashboard-app').classList.contains('sidebar-collapsed')`), true, "Re-entering the dashboard should reset the sidebar.");
     await click("#orgi-launcher");
     assert.equal(await evaluate(`document.querySelector('#orgi-launcher').getAttribute('aria-expanded')`), "true");
 
@@ -255,7 +268,7 @@ async function main() {
     const mobileOverflow = await evaluate(`({width:document.documentElement.scrollWidth,client:document.documentElement.clientWidth,inner:innerWidth,visual:visualViewport.width,small:matchMedia('(max-width:560px)').matches,widths:['#dashboard-app','.main-content','#home-view','.home-bento','.attention-card','#category-grid','.category-card'].map(s=>[s,Math.round(document.querySelector(s).getBoundingClientRect().width),document.querySelector(s).scrollWidth]),categories:getComputedStyle(document.querySelector('#category-grid')).gridTemplateColumns})`);
     const overflowElements = await evaluate(`[...document.querySelectorAll('body *')].map(el=>({tag:el.tagName,id:el.id,class:typeof el.className==='string'?el.className:'',parent:el.parentElement?.className,text:el.textContent.trim().slice(0,65),left:Math.round(el.getBoundingClientRect().left),right:Math.round(el.getBoundingClientRect().right),width:Math.round(el.getBoundingClientRect().width),min:getComputedStyle(el).minWidth})).filter(el=>el.width>document.documentElement.clientWidth+1&&el.width<480).sort((a,b)=>a.width-b.width).slice(0,12)`);
     assert(mobileOverflow.width <= mobileOverflow.client, `Horizontal overflow at mobile: ${JSON.stringify(mobileOverflow)} ${JSON.stringify(overflowElements)}`);
-    assert.equal(mobileOverflow.categories.split(' ').length, 2, "Mobile category cards should use two readable columns.");
+    assert.equal(mobileOverflow.categories.split(' ').length, 1, "Mobile category cards should retain their existing single-column layout.");
     await click("#orgi-launcher");
     await delay(250);
     const mobileSidebar = await evaluate(`({expanded:document.querySelector('#orgi-launcher').getAttribute('aria-expanded'),sidebar:document.querySelector('.sidebar').getBoundingClientRect().toJSON(),main:document.querySelector('.main-content').getBoundingClientRect().toJSON(),width:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth})`);
@@ -269,6 +282,7 @@ async function main() {
     await waitUntil(`document.querySelector('#open-control-center') && document.querySelector('#source-indicator')?.getAttribute('aria-label')`, "Dashboard demo did not reload.");
     await click("#open-control-center");
     await waitUntil(`!document.querySelector('#dashboard-app').classList.contains('hidden')`, "Dashboard did not reopen after reload.");
+    assert.equal(await evaluate(`document.querySelector('#dashboard-app').classList.contains('sidebar-collapsed') && document.querySelector('#orgi-launcher').getAttribute('aria-expanded') === 'false'`), true, "Reload should restore the collapsed sidebar.");
     const persistedHome = await evaluate(`document.querySelector('#summary-grid').textContent`);
     assert.match(persistedHome, /Relevantes para vos1/);
     assert.match(persistedHome, /Compromisos activos0/);

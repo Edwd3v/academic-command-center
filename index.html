@@ -591,6 +591,7 @@
     function openDashboardForMail(mail) {
       $("#orgi-panel").classList.remove("open"); $("#orgi-backdrop").classList.remove("open");
       $("#orgi-panel").setAttribute("aria-hidden", "true"); $("#orgi-launcher").setAttribute("aria-expanded", "false");
+      setSidebarCollapsed(true);
       $("#outlook-view").classList.add("hidden"); $("#dashboard-app").classList.remove("hidden");
       setAvatarContext(true);
       if (mail) { openCommunications(); showMail(mail); } else $("#back-to-inbox").focus();
