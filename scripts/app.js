@@ -5,6 +5,7 @@
       toggleOrgi(opening);
     }
     function handleLauncherClick() {
+      if (!$("#orgi-transition").classList.contains("hidden")) return;
       if (!dashboardApp.classList.contains("hidden")) {
         setSidebarCollapsed(!dashboardApp.classList.contains("sidebar-collapsed"));
         return;
@@ -37,12 +38,16 @@
       resetTransition();
       toggleOrgi(false);
       $("#outlook-view").classList.add("hidden");
+      $("#transition-portrait").append(orgiLauncher);
+      orgiLauncher.tabIndex = -1;
       transition.classList.remove("hidden");
       transitionStart.focus();
     }
     function returnFromTransition() {
       resetTransition();
       transition.classList.add("hidden");
+      orgiLauncher.removeAttribute("tabindex");
+      setAvatarContext(false);
       $("#outlook-view").classList.remove("hidden");
       $("#orgi-launcher").focus();
     }
@@ -57,6 +62,7 @@
         if (index + 1 < transitionScenes.length) playTransitionScene(index + 1, reducedMotion);
         else {
           transition.classList.add("hidden");
+          orgiLauncher.removeAttribute("tabindex");
           openDashboardForMail(null);
           resetTransition();
         }
