@@ -3,8 +3,11 @@ const vm = require("node:vm");
 const assert = require("node:assert/strict");
 
 const html = fs.readFileSync(process.argv[2] || "index.html", "utf8");
-const source = html.match(/    function initOrgiPersonality\(\) \{[\s\S]*?\n    \}/)?.[0];
-if (!source) throw new Error("Could not find initOrgiPersonality in the supplied HTML.");
+const avatarScript = fs.readFileSync("scripts/orgi-avatar.js", "utf8");
+const appScript = fs.readFileSync("scripts/app.js", "utf8");
+const css = fs.readFileSync("styles/app.css", "utf8");
+const source = avatarScript.match(/    function initOrgiPersonality\(\) \{[\s\S]*?\n    \}/)?.[0];
+if (!source) throw new Error("Could not find initOrgiPersonality in the avatar script.");
 
 function setup(random = 0.9) {
   let now = 0;
@@ -212,9 +215,9 @@ test("pagehide cancels timers and aborts listeners", () => {
 
 test("repeated avatar clicks toggle Orgi while only opening refreshes its content", () => {
   const calls = [];
-  const registrations = [...html.matchAll(/\$\("#(orgi-launcher|orgi-cta)"\)\.addEventListener\("click", handleLauncherClick\)/g)].map(match => match[1]);
+  const registrations = [...appScript.matchAll(/\$\("#(orgi-launcher|orgi-cta)"\)\.addEventListener\("click", handleLauncherClick\)/g)].map(match => match[1]);
   assert.deepEqual(registrations, ["orgi-launcher"]);
-  const open = html.match(/function openOrgi\(\) \{[^}]+\}/)?.[0];
+  const open = appScript.match(/function openOrgi\(\) \{[^}]+\}/)?.[0];
   assert(open);
   const panelClasses = new Set();
   vm.runInNewContext(`${open}; openOrgi(); openOrgi();`, {
@@ -235,13 +238,13 @@ test("Orgi panel uses the supplied dark palette", () => {
     success: "#34D5A0", warning: "#FFBF69", danger: "#FF6B81", "avatar-body": "#0B1020", "avatar-eyes": "#F5FAFF", "avatar-outline": "#22D3EE", "avatar-glow": "#A78BFA",
   };
   for (const [name, value] of Object.entries(palette)) {
-    assert.ok(new RegExp(`--orgi-${name}\\s*:\\s*${value}`).test(html), `missing --orgi-${name}: ${value}`);
+    assert.ok(new RegExp(`--orgi-${name}\\s*:\\s*${value}`).test(css), `missing --orgi-${name}: ${value}`);
   }
-  assert.match(html, /\.orgi-avatar\s*\{[^}]*border:1px solid var\(--orgi-avatar-outline\)/);
-  assert.match(html, /\.orgi-avatar-art stop:first-child\s*\{[^}]*stop-color:\s*var\(--orgi-avatar-outline\)[^}]*stop-opacity:\s*\.32/);
-  assert.match(html, /\.orgi-avatar-art stop:last-child\s*\{[^}]*stop-color:\s*var\(--orgi-avatar-body\)/);
-  assert.match(html, /\.orgi-launcher:hover \.orgi-avatar\s*\{[^}]*var\(--orgi-avatar-outline\)[^}]*var\(--orgi-avatar-glow\)/);
-  assert.match(html, /\.orgi-panel\s*\{[^}]*background:var\(--orgi-bg\)[^}]*color:var\(--orgi-text\)/);
+  assert.match(css, /\.orgi-avatar\s*\{[^}]*border:1px solid var\(--orgi-avatar-outline\)/);
+  assert.match(css, /\.orgi-avatar-art stop:first-child\s*\{[^}]*stop-color:\s*var\(--orgi-avatar-outline\)[^}]*stop-opacity:\s*\.32/);
+  assert.match(css, /\.orgi-avatar-art stop:last-child\s*\{[^}]*stop-color:\s*var\(--orgi-avatar-body\)/);
+  assert.match(css, /\.orgi-launcher:hover \.orgi-avatar\s*\{[^}]*var\(--orgi-avatar-outline\)[^}]*var\(--orgi-avatar-glow\)/);
+  assert.match(css, /\.orgi-panel\s*\{[^}]*background:var\(--orgi-bg\)[^}]*color:var\(--orgi-text\)/);
 });
 
 test("context CTA is informational, not a button, and has a right-pointing Fluent arrow", () => {
@@ -250,7 +253,7 @@ test("context CTA is informational, not a button, and has a right-pointing Fluen
   assert.match(html, /Mejoremos tu experiencia/);
   assert.match(html, /orgi-cta-arrow[^>]*>[\s\S]*?icons\/fluent\.svg#arrow-right-16-regular/);
   assert.match(html, /id="orgi-launcher" type="button"[^>]*aria-label="Abrir Orgi"/);
-  assert.ok(/@media\(max-width:760px\)[\s\S]*?\.orgi-cta-wrap\s*\{\s*display:none/.test(html), "CTA should hide at narrow widths");
+  assert.ok(/@media\(max-width:760px\)[\s\S]*?\.orgi-cta-wrap\s*\{\s*display:none/.test(css), "CTA should hide at narrow widths");
 });
 
 test("CTA appears with an eye-first curious glance and returns to idle", () => {

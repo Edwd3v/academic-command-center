@@ -3,6 +3,7 @@
 ## Stack
 
 - Static app: HTML5, CSS, and browser-native JavaScript; no framework, build step, package manager, backend, or runtime API dependency.
+- `index.html` holds the markup; `styles/app.css` holds the styles. The classic scripts in `scripts/` share page-level bindings and must load in the order declared by `index.html`: core, outlook, dashboard, dashboard-events, orgi-avatar, app.
 - Demo communications: `data/comunicaciones_demo_v01.json`, loaded by the browser with `fetch`.
 - Icons: local Fluent SVG sprite at `icons/fluent.svg`. `icons/build_sprite.py` is a manual asset-maintenance script, not part of app startup.
 - Tests: Node.js built-in test utilities; test files use CommonJS.
@@ -21,6 +22,7 @@ Open `http://localhost:8000`. Run the existing checks with:
 ```sh
 node tests/orgi-dashboard.cjs
 node tests/orgi-avatar.cjs
+node tests/module-structure.cjs
 ```
 
 There is no `npm install`, build, or production-server command in the current project.

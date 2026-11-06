@@ -12,7 +12,7 @@ const server = http.createServer((request, response) => {
   if (!file.startsWith(`${root}${path.sep}`) && file !== path.join(root, "index.html")) { response.writeHead(403).end(); return; }
   fs.readFile(file, (error, data) => {
     if (error) { response.writeHead(404).end(); return; }
-    response.setHeader("Content-Type", file.endsWith(".json") ? "application/json" : file.endsWith(".svg") ? "image/svg+xml" : "text/html; charset=utf-8");
+    response.setHeader("Content-Type", file.endsWith(".json") ? "application/json" : file.endsWith(".svg") ? "image/svg+xml" : file.endsWith(".css") ? "text/css; charset=utf-8" : file.endsWith(".js") ? "text/javascript; charset=utf-8" : "text/html; charset=utf-8");
     response.end(data);
   });
 });
@@ -272,7 +272,7 @@ async function main() {
     assert.equal(categories.cards[5].icon, "icons/fluent.svg#checkmark-20-regular");
     assert.deepEqual([categories.cards[5].background,categories.cards[5].border,categories.cards[5].iconColor,categories.cards[5].countColor,categories.cards[5].textColor], ["rgb(33, 30, 60)","rgb(117, 101, 180)","rgb(181, 160, 250)","rgb(213, 200, 255)","rgb(245, 250, 255)"], "The commitments tile should use the requested violet palette.");
     assert.notEqual(categories.cards[5].background, categories.cards[0].background, "The commitments shortcut should be visually differentiated.");
-    assert.match(await evaluate(`document.querySelector('style').textContent`), /\.commitment-category-card:hover\s*\{[^}]*background:\s*#2B274A[^}]*border-color:\s*#8A7BC8[^}]*transform:\s*translateY\(-1px\)/, "Hover should subtly brighten the violet surface and border.");
+    assert.match(fs.readFileSync(path.join(root, "styles/app.css"), "utf8"), /\.commitment-category-card:hover\s*\{[^}]*background:\s*#2B274A[^}]*border-color:\s*#8A7BC8[^}]*transform:\s*translateY\(-1px\)/, "Hover should subtly brighten the violet surface and border.");
     assert.equal(await evaluate(`document.querySelector('#home-view').children[1].id`), "category-grid");
     assert.equal(await evaluate(`document.querySelector('#home-view').children[2].className`), "home-priority-grid");
     const desktopColumns = await evaluate(`getComputedStyle(document.querySelector('#category-grid')).gridTemplateColumns.split(' ').length`);
