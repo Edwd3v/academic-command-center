@@ -123,8 +123,8 @@ async function main() {
     const rearranging = await evaluate("({position:document.querySelector('.transition-card-a').getBoundingClientRect().left,transition:getComputedStyle(document.querySelector('.transition-card-a')).transitionDuration})");
     assert.notEqual(rearranging.position, motion.position, "Cards must move continuously instead of being swapped for a static image");
     assert.notEqual(rearranging.transition, "0s", "Card movement should be animated when motion is allowed");
+    assert(Math.abs(entered.top - await evaluate("document.querySelector('.transition-visual').getBoundingClientRect().top")) < 3, "Earlier message changes should not move the visual stage");
     await until(() => evaluate("document.querySelector('#orgi-transition').dataset.phase === 'ready'"), "Confirmation never appeared");
-    assert(Math.abs(entered.top - await evaluate("document.querySelector('.transition-visual').getBoundingClientRect().top")) < 3, "Changing text should not move the visual stage");
     assert.equal(await visible("#dashboard-app"), false, "Confirmation must appear before arrival");
     assert.equal(await evaluate("document.querySelector('#transition-title').textContent"), "Tu espacio está listo.");
     assert.equal(await evaluate("document.querySelector('#transition-description').textContent"), "", "Ready scene must not repeat the demo disclosure");
@@ -133,7 +133,9 @@ async function main() {
     await until(() => evaluate("document.activeElement.id === 'transition-finish'"), "Ready action should receive keyboard focus");
     await delay(500);
     assert.equal(await evaluate("getComputedStyle(document.querySelector('#transition-finish')).opacity"), "1", "Final action should ease into view");
-    assert.equal(await evaluate("Math.round(document.querySelector('#transition-finish').getBoundingClientRect().top - document.querySelector('.transition-actions').getBoundingClientRect().top)"), -12, "Ready action should sit slightly above its reserved row");
+    await delay(200);
+    const readyGap = await evaluate("document.querySelector('#transition-finish').getBoundingClientRect().top - document.querySelector('#transition-title').getBoundingClientRect().bottom");
+    assert(readyGap >= 12 && readyGap <= 32, `Ready action should sit just below the title, not the empty description: ${readyGap}`);
     await delay(1250);
     assert.equal(await visible("#orgi-transition"), true, "Final scene should remain until the user decides to proceed");
     assert.equal(await visible("#dashboard-app"), false, "No timer may enter the dashboard from the final scene");
@@ -180,6 +182,12 @@ async function main() {
     assert.equal(mobileStory.visual, "visible");
     assert.equal(mobileStory.disclosure, "visible");
     assert.equal(mobileStory.cardMotion, "1e-05s", "Reduced-motion preference must suppress card movement");
+    await until(() => evaluate("document.querySelector('#orgi-transition').dataset.phase === 'ready'"), "Mobile story should reach confirmation");
+    await delay(700);
+    const mobileReady = await evaluate("({gap:document.querySelector('#transition-finish').getBoundingClientRect().top-document.querySelector('#transition-title').getBoundingClientRect().bottom,disclosure:getComputedStyle(document.querySelector('.transition-disclaimer')).visibility,page:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth})");
+    assert(mobileReady.gap >= 12 && mobileReady.gap <= 32, `Mobile action should sit just below the title: ${mobileReady.gap}`);
+    assert.equal(mobileReady.disclosure, "visible");
+    assert(mobileReady.page <= mobileReady.viewport + 1, `Ready scene overflows mobile viewport: ${JSON.stringify(mobileReady)}`);
     console.log("Orgi transition browser journey passed.");
   } finally {
     socket?.close(); browser.kill(); server.close(); fs.rmSync(profile, { recursive: true, force: true });
