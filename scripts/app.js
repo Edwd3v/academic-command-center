@@ -32,7 +32,6 @@
       transitionDescription.textContent = "Soy Orgi. Te muestro cómo pasar de comunicaciones dispersas a un centro de control más claro.";
       transitionCaption.textContent = "Un lugar para ver lo que importa";
       transitionStart.disabled = false;
-      transitionStart.classList.remove("hidden");
     }
     function showTransition() {
       resetTransition();
@@ -73,7 +72,6 @@
     transitionStart.addEventListener("click", () => {
       if (transitionStart.disabled) return;
       transitionStart.disabled = true;
-      transitionStart.classList.add("hidden");
       playTransitionScene(0, window.matchMedia("(prefers-reduced-motion: reduce)").matches);
     });
     $("#back-to-inbox").addEventListener("click", () => { setAvatarContext(false); $("#dashboard-app").classList.add("hidden"); $("#outlook-view").classList.remove("hidden"); $("#orgi-launcher").focus(); });

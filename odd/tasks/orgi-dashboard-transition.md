@@ -11,10 +11,13 @@ Objective: demonstrate an honest, accessible journey from Orgi's panel to the ex
 - S6: “El encabezado superior que contiene la esfera de color, el texto «Orgi | OGL» y el mensaje «Tu espacio, más claro».” “La etiqueta «UN MOMENTO CON ORGI» que aparece sobre el avatar.” “Los textos secundarios de carácter decorativo o promocional ubicados en los extremos de la pantalla.” “Los elementos de pie de página que hacen referencia a la demostración de OGL o utilizan mensajes como «Menos ruido, más dirección».” Remove these; keep explanatory disclosure and useful narrative labels.
 - S7: “No desarrolles un avatar nuevo ni crees una representación alternativa.” “No necesitamos modificar ni ampliar sus expresiones faciales”. Reuse the original animated avatar DOM node and personality unchanged; move it into the scene and return it to Outlook/dashboard without duplicating or changing its normal behavior. Verify DOM identity, states, CSS sizing and restoration.
 - S8: “Conserva las funcionalidades, rutas y comportamientos que ya funcionan correctamente.” Keep arrival, cancellation, replay, reduced-motion, direct contextual mail access, and demo disclosure.
+- S9: “Debe incluir únicamente: - Orgi como protagonista visual principal - El título: "Hagamos espacio para lo importante." - Un botón principal: "Organizar mi espacio" - Un elemento mínimo para volver a la bandeja, preferiblemente como un ícono o acción secundaria muy discreta”. Hide cards, description and demo copy in the introduction; keep the existing animated node and functional return control.
+- S10: “Una vez el usuario haga clic en "Organizar mi espacio", debe comenzar la experiencia de transformación.” “No quiero una sensación de ‘pantalla cambia por otra pantalla’ ni de ‘foto reemplazada por otra foto’.” Reveal the existing cards within the same scene with smooth progressive motion and continuous card rearrangement; retain the honest demo disclosure during the sequence and ready confirmation, with reduced-motion fallback.
 
 ## Tasks
 - T1 (S1-S5): inline; complete; commit `8ad56a1`. One coherent transition with focused browser tests and existing suite. No writer trigger: one coupled behavior across shared markup/styles/events.
 - T2 (S6-S8): inline; complete; commit `d7803fa`. Refined markup, scoped layout and existing launcher placement in one coupled unit. No writer trigger; shared launcher context and tests moved together.
+- T3 (S9-S10): inline; verified; commit pending. Minimal invitation and continuous story motion in existing transition CSS/markup/JS plus browser checks. No writer trigger: one coupled behavior.
 
 ## Log
 - L1 (2026-11-06): Cremos una rama desde main  adicional para introducir esta funcionalidad: ## Nueva experiencia de transición: Orgi → Dashboard
@@ -150,3 +153,109 @@ No reconstruyas la pantalla desde cero si los cambios pueden resolverse refinand
 - L7: T2 RED: `node tests/orgi-transition.cjs` failed because the launcher remained in `orgi-launcher-slot`. GREEN: focused browser journey passed with same-node identity, active gaze, enlarged vector, return and sidebar restoration; existing `orgi-dashboard`, `orgi-avatar`, `module-structure` suites and `git diff --check` passed. Existing demo disclosure remains. Adding T2 to the previously committed ~347-line feature range exceeds the `ask-on-risk` ~400 authored-line review budget. The user chose a feature-branch chain: first slice `8ad56a1` + `b7d6f86` (base), second slice T2 (refinement). These are local review boundaries; no push or PR implied by this choice.
 - L8: T2 rollback boundary is `index.html`, `styles/app.css`, `scripts/app.js`, `tests/orgi-transition.cjs` and this task document; reverting T2 restores the base invitation. No dependency, avatar personality logic, localStorage key or dashboard source changed. Risk: none. S6-S8 browser and structural checks observed as in L7.
 - L9: T2 work unit committed as `d7803fa`. Native committed-only assessment against the last reviewed boundary `e65e4c6`: medium, 418 changed lines, `review_due=false`, `review_due_reason=under_budget`; no candidate review launched. Local review slices: base `8ad56a1`–`b7d6f86`, refinement `d7803fa`. Future feature-branch-chain PR work requires a separate request for publishing.
+- L10 (2026-11-06): Quiero refinar la experiencia de transición entre Orgi y el dashboard existente de OGL.
+
+La implementación actual va en una dirección interesante, pero necesito simplificarla y mejorar la fluidez de la transición.
+
+## Objetivo general
+
+La experiencia debe dividirse en dos momentos claramente diferenciados:
+
+1. Una pantalla inicial muy simple, enfocada en Orgi.
+2. Una segunda etapa donde comienza visualmente la organización del espacio antes de abrir el dashboard.
+
+La intención es que el usuario primero reciba un mensaje claro y limpio, y luego viva una transición suave donde Orgi organiza el contenido de manera visual y natural.
+
+---
+
+## 1. Pantalla inicial: simplificar al máximo
+
+Quiero que la primera pantalla sea mucho más minimalista que la actual.
+
+Debe incluir únicamente:
+
+- Orgi como protagonista visual principal
+- El título: "Hagamos espacio para lo importante."
+- Un botón principal: "Organizar mi espacio"
+- Un elemento mínimo para volver a la bandeja, preferiblemente como un ícono o acción secundaria muy discreta
+
+Quiero eliminar de esta primera pantalla cualquier otro elemento que genere ruido visual o compita con el foco principal.
+
+Eso incluye:
+
+- Tarjetas como "Comunicaciones", "Por revisar", "Compromisos"
+- Textos descriptivos adicionales innecesarios
+- Etiquetas o bloques decorativos
+- Mensajes largos de apoyo
+- Cualquier composición que haga sentir esta pantalla recargada
+
+Esta primera vista debe sentirse limpia, clara y centrada en la promesa de valor de Orgi.
+
+Orgi debe reutilizar el avatar existente que ya está implementado en otras partes del proyecto, especialmente en el simulador de Ublik y en el dashboard original. No quiero una versión nueva del avatar. Quiero reutilizar el componente existente, dándole más protagonismo visual y un tamaño mayor dentro de esta pantalla.
+
+No es necesario modificar por ahora sus expresiones faciales. Solo reutilizar el avatar actual.
+
+---
+
+## 2. Segunda etapa: transición hacia la organización
+
+Una vez el usuario haga clic en "Organizar mi espacio", debe comenzar la experiencia de transformación.
+
+Aquí sí pueden aparecer los elementos que representan el contenido desorganizado y su reorganización, pero necesito que esta transición se sienta mucho más fluida que en la versión actual.
+
+Actualmente el cambio visual se siente rígido, como si se mostraran imágenes estáticas o capturas. No quiero ese efecto.
+
+Quiero que la organización del contenido se perciba como una transformación viva, continua e integrada dentro de la misma experiencia.
+
+La sensación debe ser la de un espacio que cambia progresivamente: Orgi toma el contexto disperso y lo convierte en algo más claro, estructurado y útil.
+
+No quiero una sensación de “pantalla cambia por otra pantalla” ni de “foto reemplazada por otra foto”.
+
+Quiero una transición suave entre estados, donde los elementos visuales entren, salgan, se reubiquen o evolucionen de forma natural.
+
+---
+
+## 3. Criterio visual y de experiencia
+
+La pantalla inicial debe ser simple.
+La segunda etapa puede ser más rica visualmente, pero sin verse cargada ni artificial.
+
+La narrativa debe ser:
+
+- primero: enfoque y claridad
+- después: transformación y organización
+- finalmente: acceso al dashboard existente
+
+No quiero reconstruir el dashboard.
+No quiero rediseñar todo el flujo.
+Quiero refinar la transición para que se sienta más limpia, moderna y coherente.
+
+---
+
+## 4. Criterio técnico
+
+Antes de cambiar la estructura, revisa lo que ya está implementado y reutiliza al máximo los recursos existentes.
+
+Prioriza:
+
+- reutilización del avatar actual de Orgi
+- consistencia con la identidad visual ya construida
+- transiciones suaves entre estados
+- evitar efectos que parezcan imágenes estáticas
+- no introducir complejidad innecesaria
+
+Si puedes resolverlo refinando la implementación existente, prefiero eso antes que reconstruir la experiencia desde cero.
+
+---
+
+## Resultado esperado
+
+Quiero una experiencia de transición más clara y elegante:
+
+- una primera pantalla muy simple con Orgi, el título y el botón
+- una segunda etapa donde la organización comienza de forma más viva y fluida
+- una sensación de continuidad visual real antes de entrar al dashboard
+
+El resultado debe sentirse natural, limpio, integrado con la aplicación y suficientemente pulido para una demostración del producto.
+- L11: T3 reuses one original avatar, existing cards, four-phase timer and honest-demo text. Initial state will visually expose only the requested four elements; secondary copy appears only on action. Animate the existing nodes, not images or duplicated views. Existing browser test expects intro disclosure, so it must be updated to assert disclosure in the active story instead. Risk: none; no shared launcher, dashboard or storage contract changes planned.
+- L12: T3 RED: `TMPDIR=/tmp/opencode node tests/orgi-transition.cjs` failed on extra button content in the initial scene (after default `/tmp` Chromium profile failed to start in this environment). GREEN: the focused test passed after refinement. `TMPDIR=/tmp/opencode node tests/orgi-dashboard.cjs`, `TMPDIR=/tmp/opencode node tests/orgi-avatar.cjs`, `TMPDIR=/tmp/opencode node tests/module-structure.cjs`, and `git diff --check` passed. Browser checks confirm intro hides cards and explanatory copy, back icon has an accessible name, portrait centered, progressive card opacity/position changes, visible active-stage demo disclosure, reduced-motion CSS, mobile intro and story widths, cancellation/replay, persistent data unchanged, contextual mail entry unchanged. Rollback T3 alone: revert its changes in `index.html`, `styles/app.css`, `scripts/app.js`, `tests/orgi-transition.cjs`, and this logbook. Risk: none; review slice T3 is independent from earlier base and avatar-refinement slices.
