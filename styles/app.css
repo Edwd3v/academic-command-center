@@ -249,7 +249,7 @@
     .transition-start:hover:not(:disabled) { transform:translateY(-2px); background:#d0edff; }
     .transition-start:disabled { opacity:.55; cursor:default; }
     .transition-finish { position:absolute; display:flex; align-items:center; justify-content:center; min-height:52px; padding:0 22px; border:0; border-radius:12px; background:#a8dbff; color:#0b1c32; font-weight:750; box-shadow:0 12px 32px #4285f43d; opacity:0; visibility:hidden; transform:translateY(10px); pointer-events:none; transition:opacity .45s ease,transform .45s ease,visibility 0s; }
-    .transition[data-phase="ready"] .transition-finish { position:relative; opacity:1; visibility:visible; transform:translateY(0); pointer-events:auto; }
+    .transition[data-phase="ready"] .transition-finish { position:relative; top:-12px; opacity:1; visibility:visible; transform:translateY(0); pointer-events:auto; }
     .transition-finish:hover { background:#d0edff; }
     .transition-back { position:fixed; z-index:2; top:20px; left:clamp(16px,3vw,40px); display:grid; place-items:center; width:42px; height:42px; padding:0; border:1px solid #a1b9d44d; border-radius:50%; background:#19263c; color:#c0cce0; }
     .transition-back:hover { background:#263b56; color:white; }

@@ -127,10 +127,13 @@ async function main() {
     assert(Math.abs(entered.top - await evaluate("document.querySelector('.transition-visual').getBoundingClientRect().top")) < 3, "Changing text should not move the visual stage");
     assert.equal(await visible("#dashboard-app"), false, "Confirmation must appear before arrival");
     assert.equal(await evaluate("document.querySelector('#transition-title').textContent"), "Tu espacio está listo.");
+    assert.equal(await evaluate("document.querySelector('#transition-description').textContent"), "", "Ready scene must not repeat the demo disclosure");
+    assert.equal(await evaluate("document.querySelector('.transition-disclaimer').textContent"), "Vista demostrativa · Esta secuencia ilustra el valor de Orgi; no analiza ni modifica tus datos.");
     assert.equal(await evaluate("document.querySelector('#transition-finish')?.textContent.trim()"), "Ir a mi centro de control");
     await until(() => evaluate("document.activeElement.id === 'transition-finish'"), "Ready action should receive keyboard focus");
     await delay(500);
     assert.equal(await evaluate("getComputedStyle(document.querySelector('#transition-finish')).opacity"), "1", "Final action should ease into view");
+    assert.equal(await evaluate("Math.round(document.querySelector('#transition-finish').getBoundingClientRect().top - document.querySelector('.transition-actions').getBoundingClientRect().top)"), -12, "Ready action should sit slightly above its reserved row");
     await delay(1250);
     assert.equal(await visible("#orgi-transition"), true, "Final scene should remain until the user decides to proceed");
     assert.equal(await visible("#dashboard-app"), false, "No timer may enter the dashboard from the final scene");

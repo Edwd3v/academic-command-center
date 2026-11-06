@@ -22,7 +22,7 @@
       { phase: "collecting", title: "Todo comienza en tu bandeja.", description: "Distintas comunicaciones llegan a un mismo lugar. Visualicemos cómo darles espacio sin perder el contexto.", caption: "01 / Reunir lo disperso" },
       { phase: "finding", title: "Ahora, lo que merece atención.", description: "Entre tantos mensajes, hay asuntos que conviene revisar con calma. La decisión siempre es tuya.", caption: "02 / Reconocer lo importante" },
       { phase: "arranging", title: "Cada cosa encuentra su lugar.", description: "Comunicaciones, asuntos por revisar y compromisos: una vista más clara para decidir qué sigue.", caption: "03 / Darle forma al espacio" },
-      { phase: "ready", title: "Tu espacio está listo.", description: "Ya podés explorar tu centro de control. Esta fue una representación de la experiencia, no un análisis de tus datos.", caption: "Listo para explorar" }
+      { phase: "ready", title: "Tu espacio está listo.", description: "", caption: "Listo para explorar" }
     ];
     let transitionTimer = 0, transitionFrame = 0;
     function resetTransition() {
