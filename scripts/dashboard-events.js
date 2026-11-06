@@ -19,11 +19,11 @@
         return;
       }
       orgiLauncherSlot.append(sidebarToggle);
-      sidebarToggle.setAttribute("aria-label", "Abrir Orgi");
+      sidebarToggle.setAttribute("aria-label", "Abrir Ory");
       sidebarToggle.setAttribute("aria-expanded", String($("#orgi-panel").classList.contains("open")));
       sidebarToggle.setAttribute("aria-controls", "orgi-panel");
-      sidebarToggle.title = "Abrir el panel de Orgi";
-      sidebarToggle.setAttribute("data-tooltip", "Orgi");
+      sidebarToggle.title = "Abrir el panel de Ory";
+      sidebarToggle.setAttribute("data-tooltip", "Ory");
     }
     $("#explore-messages").addEventListener("click", () => openCommunications());
     $("#global-search-form").addEventListener("submit", event => { event.preventDefault(); $("#communications-title").textContent = search.value.trim() ? "Resultados de búsqueda" : "Comunicaciones"; setView("communications"); });

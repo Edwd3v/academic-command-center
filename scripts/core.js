@@ -6,7 +6,7 @@
     const orgiLauncher = $("#orgi-launcher"), orgiLauncherSlot = document.createElement("span");
     orgiLauncherSlot.id = "orgi-launcher-slot";
     orgiLauncherSlot.className = "orgi-launcher-slot";
-    orgiLauncher.setAttribute("data-tooltip", "Orgi");
+    orgiLauncher.setAttribute("data-tooltip", "Ory");
     orgiLauncher.before(orgiLauncherSlot);
     orgiLauncherSlot.append(orgiLauncher);
     const list = $("#mail-list"), detailDialog = $("#detail-dialog"), detailContent = $("#detail-content");

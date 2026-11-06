@@ -94,7 +94,7 @@ async function main() {
      await evaluate(`tasks=[]; localStorage.setItem('academic-followup.tasks.v1','[]'); renderHome(); renderTasks()`);
 
      const sidebar = await evaluate(`({brand:document.querySelector('.sidebar .brand')?.textContent.trim(),brandMark:document.querySelector('.sidebar .brand-mark'),toggle:document.querySelector('#orgi-launcher')?.getAttribute('aria-expanded'),tooltip:document.querySelector('#orgi-launcher')?.title,controls:document.querySelector('#orgi-launcher')?.getAttribute('aria-controls'),launcherSame:document.querySelector('#orgi-launcher')===window.orgiLauncherReference,avatarSame:document.querySelector('#orgi-avatar')===window.orgiAvatarReference,avatarInstances:document.querySelectorAll('#orgi-avatar').length,parent:document.querySelector('#orgi-launcher')?.parentElement.className,labels:[...document.querySelectorAll('.sidebar nav .nav-label')].map(label=>label.textContent.trim()),palette:(()=>{const avatar=document.querySelector('#orgi-avatar'),eye=document.querySelector('.orgi-eye'),reflection=document.querySelector('#orgi-sphere stop');return {border:getComputedStyle(avatar).borderTopColor,glow:getComputedStyle(avatar).boxShadow,eye:getComputedStyle(eye).fill,eyeGlow:getComputedStyle(eye).filter,reflection:getComputedStyle(reflection).stopColor,body:getComputedStyle(document.querySelector('#orgi-sphere stop:last-child')).stopColor}})()})`);
-    assert.equal(sidebar.brand, "Orgi", "Sidebar should use Orgi as its only brand text.");
+    assert.equal(sidebar.brand, "Ory", "Sidebar should use Ory as its only brand text.");
     assert.equal(sidebar.brandMark, null, "Sidebar should not show the old letter mark.");
     assert.equal(sidebar.toggle, "false", "Sidebar should start collapsed with an accessible toggle.");
     assert.equal(sidebar.tooltip, "Expandir panel");
@@ -196,7 +196,7 @@ async function main() {
      assert.equal(orgiPrompt.icon, "icons/fluent.svg#sparkle-20-regular");
      assert.equal(orgiPrompt.iconColor, "rgb(34, 211, 238)");
      assert.notEqual(orgiPrompt.iconGlow, "none", "Sparkle icon should have a subtle glow.");
-     assert.equal(orgiPrompt.placeholder, "Conversa con Orgi...");
+      assert.equal(orgiPrompt.placeholder, "Conversa con Ory...");
      assert.equal(orgiPrompt.children, 3, "The compose row should contain only the sparkle, input, and send button.");
      assert.equal(orgiPrompt.buttons, 1);
      assert.equal(orgiPrompt.sendLabel, "Enviar mensaje");
@@ -457,8 +457,8 @@ async function main() {
     assert.equal(returnedAvatar.sameAvatar, true, "Returning to Outlook should restore the same animated avatar node.");
     assert.equal(returnedAvatar.parent, "orgi-launcher-slot");
     assert.equal(returnedAvatar.controls, "orgi-panel");
-    assert.equal(returnedAvatar.label, "Abrir Orgi");
-    assert.equal(returnedAvatar.tooltip, "Abrir el panel de Orgi");
+    assert.equal(returnedAvatar.label, "Abrir Ory");
+    assert.equal(returnedAvatar.tooltip, "Abrir el panel de Ory");
     assert.equal(returnedAvatar.avatarInstances, 1);
     await click("#orgi-launcher");
     await waitUntil(`document.querySelector('#orgi-panel').classList.contains('open')`, "Avatar should retain its original Outlook panel action after returning.");

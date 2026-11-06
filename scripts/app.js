@@ -37,7 +37,7 @@
       transitionCaptionWrap.classList.remove("is-changing");
       transition.dataset.phase = "intro";
       transitionTitle.textContent = "Hagamos espacio para lo importante.";
-      transitionDescription.textContent = "Soy Orgi. Te muestro cómo pasar de comunicaciones dispersas a un centro de control más claro.";
+      transitionDescription.textContent = "Soy Ory. Te muestro cómo pasar de comunicaciones dispersas a un centro de control más claro.";
       transitionCaption.textContent = "Un lugar para ver lo que importa";
       transitionStart.disabled = false;
       transitionFinish.disabled = false;

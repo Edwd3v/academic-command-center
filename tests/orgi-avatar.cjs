@@ -252,7 +252,7 @@ test("context CTA is informational, not a button, and has a right-pointing Fluen
   assert.doesNotMatch(html, /<button[^>]*id="orgi-cta"|orgi-cta-dismiss|>×</);
   assert.match(html, /Mejoremos tu experiencia/);
   assert.match(html, /orgi-cta-arrow[^>]*>[\s\S]*?icons\/fluent\.svg#arrow-right-16-regular/);
-  assert.match(html, /id="orgi-launcher" type="button"[^>]*aria-label="Abrir Orgi"/);
+  assert.match(html, /id="orgi-launcher" type="button"[^>]*aria-label="Abrir Ory"/);
   assert.ok(/@media\(max-width:760px\)[\s\S]*?\.orgi-cta-wrap\s*\{\s*display:none/.test(css), "CTA should hide at narrow widths");
 });
 
