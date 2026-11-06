@@ -49,6 +49,7 @@
     .sidebar-collapsed .sidebar nav button { justify-content: center; gap: 0; padding: 11px 8px; }
     .sidebar-collapsed .nav-label { max-width: 0; opacity: 0; }
     .main-content { min-width: 0; padding: 0 10px 28px 0; }
+    #dashboard-app.home-view-active .main-content { padding-bottom: 0; }
     .main-content > section { width: 100%; min-width: 0; }
     h1 { margin: 0; font-family: var(--font-display); font-size: var(--text-title); font-weight: 700; letter-spacing: -.035em; }
     .subtitle { margin: 2px 0 0; color: var(--muted); font-size: .875rem; line-height: 1.25; }
@@ -62,17 +63,19 @@
     .global-search { width: 100%; }
     .text-link { border: 0; padding: 4px 0; background: transparent; color: #8fc5ff; text-decoration: underline; text-underline-offset: 3px; }
     .communication-status { margin: 0; }
-    .home-priority-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 52px); margin: var(--space-6) 0 0; align-items: start; }
+    .home-priority-grid { display: grid; grid-template-columns: minmax(0, 2.25fr) minmax(0, 1fr); gap: clamp(20px, 3vw, 36px); margin: var(--space-6) 0 0; align-items: start; }
     .home-priority-grid > * { min-width: 0; margin: 0; }
     .requires-attention h2, .communication-status > h2 { margin-bottom: var(--space-4); }
     .communication-status > h2 { text-align:center; }
     .priority-list { display: grid; gap: 5px; }
+    .priority-list.aligned { height: var(--priority-list-height); grid-template-rows: repeat(4, minmax(0, 1fr)); }
     .priority-item { display: grid; gap: 5px; width: 100%; min-width: 0; padding: 10px 12px; border: 1px solid transparent; border-radius: 9px; background: #ffffff08; color: var(--text); text-align: left; cursor: pointer; }
     .priority-item:hover, .priority-item:focus-visible { border-color: #ffffff18; background: #ffffff0d; }
     .priority-item strong { overflow-wrap: anywhere; font-size: .9rem; font-weight: 600; }
     .priority-item small { color: var(--muted); font-size: .78rem; }
     .priority-empty { margin: 0; color: var(--muted); font-size: var(--text-sm); }
-    .priority-footer { margin-top: var(--space-3); }
+    .priority-footer { margin: -8px 0 var(--space-3); }
+    .priority-footer .button { min-height:34px;padding:6px 10px;font-size:.84rem; }
     @media (max-width: 820px) { .home-priority-grid { grid-template-columns: minmax(0, 1fr); } }
     .review-visual { display:grid;grid-template-columns:minmax(0,1fr);justify-items:center;gap:12px; }
     .review-donut { display: grid; place-items: center; width: clamp(180px, 16vw, 212px); aspect-ratio: 1; border-radius: 50%; background: conic-gradient(var(--cyan) var(--reviewed-percent, 0%), var(--line) 0); }
@@ -387,9 +390,9 @@
       <div class="home-priority-grid">
       <section class="requires-attention" id="requires-attention" aria-labelledby="requires-attention-title">
         <h2 id="requires-attention-title">Por revisar</h2>
+        <div class="priority-footer"><button class="button" id="explore-messages" type="button"><span aria-hidden="true">+</span> Ver más</button></div>
         <div id="priority-list" class="priority-list" aria-live="polite"></div>
         <p id="priority-empty" class="priority-empty hidden">No hay comunicaciones pendientes de revisión.</p>
-        <div class="priority-footer"><button class="text-link" id="explore-messages" type="button">Explorar mensajes</button></div>
       </section>
       <section class="communication-status" id="communication-status" aria-labelledby="status-title">
         <h2 id="status-title">Estado de tus comunicaciones</h2>
@@ -641,6 +644,7 @@
       }
     }
     function setView(view) {
+      $("#dashboard-app").classList.toggle("home-view-active", view === "home");
       ["home", "communications", "tasks"].forEach(name => $(`#${name}-view`).classList.toggle("hidden", name !== view));
       document.querySelectorAll("nav [data-view]").forEach(button => { if (button.dataset.view === view) button.setAttribute("aria-current", "page"); else button.removeAttribute("aria-current"); });
       if (view === "home") renderHome();
@@ -659,7 +663,7 @@
     }
     function renderHome() {
       const pendingMails = emails.filter(mail => !mailState(mail.id).reviewed);
-      const pendingSorted = pendingMails.slice().sort((a, b) => mailDate(b).localeCompare(mailDate(a)) || String(a.id).localeCompare(String(b.id))).slice(0, 3);
+      const pendingSorted = pendingMails.slice().sort((a, b) => mailDate(b).localeCompare(mailDate(a)) || String(a.id).localeCompare(String(b.id))).slice(0, 4);
       const priorityList = $("#priority-list"); priorityList.replaceChildren();
       $("#priority-empty").classList.toggle("hidden", pendingSorted.length !== 0);
       pendingSorted.forEach(mail => {
@@ -710,7 +714,21 @@
         const link = node("button", "unclassified-link", `Sin clasificar: ${unclassifiedCount} comunicación${unclassifiedCount === 1 ? "" : "es"}`);
         link.type = "button"; link.addEventListener("click", () => openCommunications(UNCLASSIFIED_CATEGORY)); grid.after(link);
       }
+      alignPriorityCards();
     }
+    function alignPriorityCards() {
+      const list = $("#priority-list");
+      list.classList.remove("aligned"); list.style.removeProperty("--priority-list-height");
+      if (list.children.length !== 4 || !matchMedia("(min-width: 821px)").matches) return;
+      const availableHeight = $(".sidebar").getBoundingClientRect().bottom - list.getBoundingClientRect().top;
+      if (availableHeight > 0) {
+        list.style.setProperty("--priority-list-height", `${availableHeight}px`);
+        list.classList.add("aligned");
+      }
+    }
+    const priorityLayoutObserver = new ResizeObserver(() => alignPriorityCards());
+    priorityLayoutObserver.observe($(".sidebar"));
+    priorityLayoutObserver.observe($("#category-grid"));
     function localDateString() { const date = new Date(); return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`; }
     function populate(select, values, format = label) { [...new Set(values.filter(Boolean))].sort((a, b) => a.localeCompare(b, "es")).forEach(value => { const option = node("option", "", format(value)); option.value = value; select.append(option); }); }
     function filteredEmails() {
