@@ -25,7 +25,7 @@ Objective: demonstrate an honest, accessible journey from Orgi's panel to the ex
 - T4 (S11): inline; complete; commit `8179d8f`. Text-only scene handoff with browser regression for dwell, fade, layout and reduced motion. No writer trigger: one contained behavior.
 - T5 (S3, S12): inline; complete; commit `396c796`. Final-state action in existing markup/CSS/JS with browser checks. No writer trigger: one coupled behavior.
 - T6 (S13): inline; complete; commit `d3f8956`. Remove ready-only description and lift the ready-only action 12px with focused browser check; no writer trigger, one small understood refinement.
-- T7 (S14): inline; verified; commit pending. Close ready-only reserved copy space and measure the title-to-button gap on desktop and mobile; no writer trigger, one contained layout correction.
+- T7 (S14): inline; complete; commit `0682c4f`. Close ready-only reserved copy space and measure the title-to-button gap on desktop and mobile; no writer trigger, one contained layout correction.
 
 ## Log
 - L1 (2026-11-06): Cremos una rama desde main  adicional para introducir esta funcionalidad: ## Nueva experiencia de transición: Orgi → Dashboard
@@ -374,3 +374,4 @@ Quiero que la experiencia termine con un momento de satisfacción y confirmació
 - L27 (2026-11-06): Si, subelo mas, que quede lo suficientemente cerca de la parte inferior del titulo "Tu espacio está listo."
 - L28: The earlier `top:-12px` adjustment moved only the button, but an empty ready description still reserves `min-height:6.8em` (`8.5em` on mobile) and the title reserves `2.25em`. T7 will remove these empty ready-only spaces and position the button directly below the heading. Risk: none; other phases and dashboard behavior stay untouched.
 - L29: T7 RED: `TMPDIR=/tmp/opencode node tests/orgi-transition.cjs` measured a 141px title-to-button gap. GREEN: the same journey passed with a 12–32px title-to-button gap on desktop and mobile, visible independent disclosure, and click-only navigation. The ready-only compact composition changes the ready scene's visual-stage position; the earlier collecting/finding/arranging stages retain the stable-position check. `TMPDIR=/tmp/opencode node tests/orgi-dashboard.cjs`, `TMPDIR=/tmp/opencode node tests/orgi-avatar.cjs`, `TMPDIR=/tmp/opencode node tests/module-structure.cjs`, and `git diff --check` passed. Risk: none; ready-only presentation, no shared parser, public contract, or stored data changed.
+- L30: T7 work-unit commit `0682c4f` extends the selected feature-branch chain. Native committed-only assessment against boundary `e65e4c6`: medium, 765 changed lines, `review_due=false`, `review_due_reason=under_budget`; no review started. No push or PR requested.
