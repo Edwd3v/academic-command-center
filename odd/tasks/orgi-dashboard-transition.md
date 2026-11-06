@@ -10,7 +10,7 @@ Objective: demonstrate an honest, accessible journey from Orgi's panel to the ex
 - S5: “Conserva la identidad visual y la coherencia con la aplicación actual.” “Integra la transición dentro del flujo de navegación existente, sin afectar las funcionalidades actuales.” “El nombre correcto del asistente es **Orgi**.” Verify existing suites and no new dependency.
 
 ## Tasks
-- T1 (S1-S5): inline; verified; commit pending. One coherent transition with focused browser tests and existing suite. No writer trigger: one coupled behavior across shared markup/styles/events.
+- T1 (S1-S5): inline; complete; commit `8ad56a1`. One coherent transition with focused browser tests and existing suite. No writer trigger: one coupled behavior across shared markup/styles/events.
 
 ## Log
 - L1 (2026-11-06): Cremos una rama desde main  adicional para introducir esta funcionalidad: ## Nueva experiencia de transición: Orgi → Dashboard
@@ -70,3 +70,4 @@ El resultado debe ser una experiencia integrada, funcional, visualmente consiste
 
 - L2: Current panel button enters dashboard via `openDashboardForMail(null)` in `scripts/app.js`; mail entry uses `openDashboardForMail(mail)` and must stay direct. Shared launcher must remain a single node. CSS already has reduced-motion rules. T1 route inline: one coupled feature; no high-risk shared contract change intended.
 - L3: RED: `node tests/orgi-transition.cjs` failed because the intermediate scene did not exist. GREEN: focused test passed after implementation. Final checks: `node tests/orgi-transition.cjs`, `node tests/orgi-dashboard.cjs`, `node tests/orgi-avatar.cjs`, `node tests/module-structure.cjs`, `git diff --check` all passed. Browser test covers data keys, repeated journey, cancellation, reduced motion, contextual mail entry and mobile overflow. No dependencies or persistence writes added. Risk: none. Forecast and final authored line count below 400, so no chained-delivery decision needed.
+- L4: Work-unit commit `8ad56a1` contains behavior, tests, and feature spec. Native committed-only assessment against `e65e4c6`: medium, `review_due=false`, `review_due_reason=under_budget`; no candidate review launched. Reviewed boundary remains `e65e4c6` pending a later slice. No push or PR requested.
