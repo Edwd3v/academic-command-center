@@ -23,7 +23,7 @@ Objective: demonstrate an honest, accessible journey from Orgi's panel to the ex
 - T3 (S9-S10): inline; complete; commit `624db4e`. Minimal invitation and continuous story motion in existing transition CSS/markup/JS plus browser checks. No writer trigger: one coupled behavior.
 - T4 (S11): inline; complete; commit `8179d8f`. Text-only scene handoff with browser regression for dwell, fade, layout and reduced motion. No writer trigger: one contained behavior.
 - T5 (S3, S12): inline; complete; commit `396c796`. Final-state action in existing markup/CSS/JS with browser checks. No writer trigger: one coupled behavior.
-- T6 (S13): inline; verified; commit pending. Remove ready-only description and lift the ready-only action 12px with focused browser check; no writer trigger, one small understood refinement.
+- T6 (S13): inline; complete; commit `d3f8956`. Remove ready-only description and lift the ready-only action 12px with focused browser check; no writer trigger, one small understood refinement.
 
 ## Log
 - L1 (2026-11-06): Cremos una rama desde main  adicional para introducir esta funcionalidad: ## Nueva experiencia de transición: Orgi → Dashboard
@@ -367,3 +367,4 @@ Quiero que la experiencia termine con un momento de satisfacción y confirmació
 - L22 (2026-11-06): Omite este texto "Ya podés explorar tu centro de control. Esta fue una representación de la experiencia, no un análisis de tus datos." y sube un poco la posicion del boton.
 - L23: The requested text is the `ready` scene's `description` in `scripts/app.js`; the separate `.transition-disclaimer` remains visible during the sequence. T6 will shorten only ready-state description spacing to lift the button slightly, leaving earlier phases, messages and dashboard untouched. Risk: none.
 - L24: T6 RED: `TMPDIR=/tmp/opencode node tests/orgi-transition.cjs` failed because the ready scene still contained the removed sentence. GREEN: the same browser journey passed after clearing only the ready description and moving only the ready action 12px upward without changing the reserved action row; it asserts the independent demonstration disclosure remains. `TMPDIR=/tmp/opencode node tests/orgi-dashboard.cjs`, `TMPDIR=/tmp/opencode node tests/orgi-avatar.cjs`, `TMPDIR=/tmp/opencode node tests/module-structure.cjs`, and `git diff --check` passed. Risk: none; previous phases and click-only navigation remain unchanged.
+- L25: T6 work-unit commit `d3f8956` extends the feature branch. Native committed-only assessment against boundary `e65e4c6`: medium, 747 changed lines, `review_due=false`, `review_due_reason=under_budget`; no review started. No push or PR requested.
