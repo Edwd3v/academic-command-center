@@ -61,6 +61,16 @@
     .message { border-color: #76504d; background: #2b1e20; color: #ffd0cc; }
     .hidden { display: none !important; }
     .global-search { width: 100%; }
+    .communication-search { position:relative; margin: 0 0 18px; }
+    .communication-search .fluent-icon { position:absolute;left:14px;top:50%;width:19px;height:19px;transform:translateY(-50%);color:var(--muted);pointer-events:none; }
+    .communication-search input { width:100%;height:46px;padding-left:44px;border-color:#3b4b62;border-radius:10px;background:#111b2a; }
+    .filter-fields { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px; }
+    .filter-field { display:grid;min-width:0;gap:6px;color:var(--muted);font-size:var(--text-xs);font-weight:600; }
+    .filter-field select { width:100%;min-width:0;height:42px;padding:8px 11px;border-radius:9px;color:var(--text); }
+    .filter-actions { display:flex;justify-content:flex-end;margin-top:12px; }
+    .filter-clear { min-height:36px;padding:6px 10px;border-color:transparent;background:transparent;color:#a9cfff; }
+    .filter-clear:hover:not(:disabled) { border-color:#354964;background:#17263a; }
+    .filter-clear:disabled { cursor:not-allowed;opacity:.48; }
     .text-link { border: 0; padding: 4px 0; background: transparent; color: #8fc5ff; text-decoration: underline; text-underline-offset: 3px; }
     .communication-status { margin: 0; }
     .home-priority-grid { display: grid; grid-template-columns: minmax(0, 2.25fr) minmax(0, 1fr); gap: clamp(20px, 3vw, 36px); margin: var(--space-6) 0 0; align-items: start; }
@@ -119,7 +129,7 @@
     .upcoming-item strong, .task-card h3 { display: block; overflow-wrap: anywhere; }
     .upcoming-item p, .task-card p { margin: 7px 0 0; white-space: pre-wrap; line-height: 1.45; }
     .muted, .meta { color: var(--muted); font-size: .82rem; }
-    .toolbar { display: grid; grid-template-columns: minmax(160px, 1fr) minmax(150px, .9fr) minmax(160px, 1fr) auto; gap: 8px; margin-bottom: 12px; }
+    .toolbar { display:block;margin:0 0 18px; }
     input, select, textarea, .button { min-height: 40px; padding: 8px 11px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
     textarea { min-height: 88px; resize: vertical; }
     .button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; transition: background-color 180ms ease, border-color 180ms ease; }
@@ -131,6 +141,12 @@
     .panel-heading { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--line); }
     .sort { border: 0; background: transparent; color: var(--accent); padding: 5px; }
     .scroll { overflow: auto; padding: 5px; }
+    .mail-pagination { display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;border-top:1px solid var(--line); }
+    .pagination-summary { margin:0;color:var(--muted);font-size:var(--text-sm); }
+    .pagination-controls { display:flex;align-items:center;gap:5px; }
+    .pagination-controls button { min-width:34px;height:34px;padding:4px 8px;border:1px solid #35465d;border-radius:7px;background:#172335;color:var(--text); }
+    .pagination-controls button[aria-current="page"] { border-color:#5799d5;background:#1d3b59;color:#fff;font-weight:700; }
+    .pagination-controls button:disabled { cursor:not-allowed;opacity:.45; }
     .mail-row { width: 100%; display: grid; gap: 8px; padding: 14px 16px; margin-bottom: 8px; border: 1px solid #2e4057; border-left: 3px solid #6d8ba8; border-radius: 10px; background: #172335; color: var(--text); text-align: left; transition: background-color 160ms ease, border-color 160ms ease; }
     .mail-row[data-reviewed="false"] { border-left-color: var(--amber); }
     .mail-row:hover { background: #203149; border-color: #6888a8; }
@@ -187,8 +203,8 @@
     .field label { color: #d8e2ed; font-size: .88rem; }
     .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; }
     @media (max-width: 1100px) { .app { grid-template-columns: 184px minmax(0, 1fr); gap: 16px; } .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 820px) { .app { grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 12px 16px; } .app.sidebar-collapsed { grid-template-columns: minmax(0, 1fr); } .sidebar { position: static; width: 100%; height: auto; padding: 0; border: 0; } .sidebar-heading { padding: 0 0 8px; } .sidebar-collapsed .sidebar-heading { justify-content: center; padding: 0 0 8px; } .sidebar-collapsed .brand { display: none; } .sidebar nav { display: flex; overflow-x: auto; border-bottom: 1px solid var(--line); } .sidebar nav button { justify-content: center; white-space: nowrap; } .sidebar-collapsed .sidebar nav button { flex: 1 1 0; } .main-content { padding: 16px 0 24px; } .toolbar { grid-template-columns: repeat(2, minmax(0, 1fr)); } .comm-layout { min-height: 0; } .list-panel { min-height: 55vh; } }
-    @media (max-width: 560px) { .app { padding: 8px 12px; } .category-grid, .upcoming-list, .task-grid { grid-template-columns: minmax(0, 1fr); } .toolbar { grid-template-columns: minmax(0, 1fr); } .toolbar select:last-of-type { grid-column: auto; } .field-grid { grid-template-columns: minmax(0, 1fr); } .detail-dl { grid-template-columns: minmax(0, 1fr); gap: 3px; } dialog { width: 100vw; border-radius: 0; padding: 18px; } }
+    @media (max-width: 820px) { .app { grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 12px 16px; } .app.sidebar-collapsed { grid-template-columns: minmax(0, 1fr); } .sidebar { position: static; width: 100%; height: auto; padding: 0; border: 0; } .sidebar-heading { padding: 0 0 8px; } .sidebar-collapsed .sidebar-heading { justify-content: center; padding: 0 0 8px; } .sidebar-collapsed .brand { display: none; } .sidebar nav { display: flex; overflow-x: auto; border-bottom: 1px solid var(--line); } .sidebar nav button { justify-content: center; white-space: nowrap; } .sidebar-collapsed .sidebar nav button { flex: 1 1 0; } .main-content { padding: 16px 0 24px; } .comm-layout { min-height: 0; } .list-panel { min-height: 55vh; } }
+    @media (max-width: 560px) { .app { padding: 8px 12px; } .category-grid, .upcoming-list, .task-grid { grid-template-columns: minmax(0, 1fr); } .filter-fields { grid-template-columns: minmax(0, 1fr);gap:12px; } .field-grid { grid-template-columns: minmax(0, 1fr); } .detail-dl { grid-template-columns: minmax(0, 1fr); gap: 3px; } dialog { width: 100vw; border-radius: 0; padding: 18px; } }
      @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
     /* The mail shell is a local conceptual simulation, not an Outlook connection. */
     .orgi-backdrop { position:fixed;inset:46px 0 0;background:#18263838;opacity:0;pointer-events:none;transition:opacity .2s ease;z-index:5; }
@@ -422,15 +438,17 @@
 
     <section id="communications-view" class="hidden" aria-labelledby="communications-title">
       <div class="panel-heading" style="padding:0 0 10px;border:0"><h2 id="communications-title">Comunicaciones</h2><span id="communications-count" class="muted"></span></div>
-      <form id="global-search-form" role="search"><input class="global-search" id="global-search" type="search" aria-label="Buscar comunicaciones por asunto, remitente, contenido disponible o categoría" placeholder="Buscar comunicaciones…"></form>
+      <form class="communication-search" id="global-search-form" role="search"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#search-20-regular"></use></svg><input class="global-search" id="global-search" type="search" aria-label="Buscar comunicaciones por asunto, remitente, contenido disponible o categoría" placeholder="Buscar comunicaciones…"></form>
       <form class="toolbar" id="filters" role="search">
-        <select id="category-filter" aria-label="Filtrar por categoría"><option value="">Todas las categorías</option></select>
-        <select id="review-filter" aria-label="Filtrar por estado de revisión"><option value="">Todas las revisiones</option><option value="unreviewed">Sin revisar</option><option value="reviewed">Revisadas</option></select>
-        <select id="relevance-filter" aria-label="Filtrar por relevancia marcada por vos"><option value="">Toda relevancia</option><option value="relevant">Relevantes para vos</option><option value="not-relevant">Sin marcar como relevantes</option></select>
-        <button class="button" id="reset" type="button">Reiniciar</button>
+        <div class="filter-fields">
+          <label class="filter-field" for="category-filter">Categoría<select id="category-filter" aria-label="Filtrar por categoría"><option value="">Todas las categorías</option></select></label>
+          <label class="filter-field" for="review-filter">Estado de revisión<select id="review-filter" aria-label="Filtrar por estado de revisión"><option value="">Todas las revisiones</option><option value="unreviewed">Sin revisar</option><option value="reviewed">Revisadas</option></select></label>
+          <label class="filter-field" for="relevance-filter">Relevancia<select id="relevance-filter" aria-label="Filtrar por relevancia marcada por vos"><option value="">Toda relevancia</option><option value="relevant">Relevantes para vos</option><option value="not-relevant">Sin marcar como relevantes</option></select></label>
+        </div>
+        <div class="filter-actions"><button class="button filter-clear" id="reset" type="button" disabled><svg class="fluent-icon" aria-hidden="true" viewBox="0 0 20 20"><path d="M4.2 5.8A6.5 6.5 0 1 1 3.5 10H5a5 5 0 1 0 .7-3.3L8 9H2V3l2.2 2.8Z"/></svg>Limpiar filtros</button></div>
       </form>
       <div class="comm-layout">
-          <section class="panel list-panel" aria-labelledby="mail-list-title"><div class="panel-heading"><h2 id="mail-list-title">Resultados</h2><button class="sort" id="sort" type="button" aria-label="Ordenar por fecha descendente">Fecha <svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#arrow-down-16-regular"></use></svg></button></div><div class="scroll" id="mail-list" aria-live="polite"><p class="empty">Cargando muestra…</p></div></section>
+          <section class="panel list-panel" aria-labelledby="mail-list-title"><div class="panel-heading"><h2 id="mail-list-title">Resultados</h2><button class="sort" id="sort" type="button" aria-label="Ordenar por fecha descendente">Fecha <svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#arrow-down-16-regular"></use></svg></button></div><div class="scroll" id="mail-list" aria-live="polite"><p class="empty">Cargando muestra…</p></div><nav class="mail-pagination" id="mail-pagination" aria-label="Paginación de comunicaciones"><p class="pagination-summary" id="pagination-summary" aria-live="polite"></p><div class="pagination-controls" id="pagination-controls"></div></nav></section>
       </div>
     </section>
 
@@ -758,11 +776,26 @@
           && (!relevanceFilter.value || (relevanceFilter.value === "relevant" ? state.relevant : !state.relevant));
       }).sort((a, b) => mailDate(a).localeCompare(mailDate(b)) * (newestFirst ? -1 : 1));
     }
+    const COMMUNICATIONS_PER_PAGE = 4;
+    let currentMailPage = 1;
     function renderMailList() {
-      const filtered = filteredEmails(); list.replaceChildren();
+      const filtered = filteredEmails(), totalPages = Math.ceil(filtered.length / COMMUNICATIONS_PER_PAGE);
+      currentMailPage = Math.min(Math.max(currentMailPage, 1), Math.max(totalPages, 1));
+      list.replaceChildren();
       $("#communications-count").textContent = `${filtered.length} de ${emails.length}`;
+      const firstIndex = filtered.length ? (currentMailPage - 1) * COMMUNICATIONS_PER_PAGE : 0;
+      const pageItems = filtered.slice(firstIndex, firstIndex + COMMUNICATIONS_PER_PAGE);
+      $("#pagination-summary").textContent = filtered.length ? `Mostrando ${firstIndex + 1}–${firstIndex + pageItems.length} de ${filtered.length} comunicaciones` : "Mostrando 0–0 de 0 comunicaciones";
+      const controls = $("#pagination-controls"); controls.replaceChildren();
+      const previous = node("button", "", "Anterior"); previous.type = "button"; previous.disabled = currentMailPage <= 1; previous.addEventListener("click", () => { currentMailPage--; renderMailList(); }); controls.append(previous);
+      for (let page = 1; page <= totalPages; page++) {
+        const button = node("button", "", String(page)); button.type = "button"; button.setAttribute("aria-label", `Página ${page}`);
+        if (page === currentMailPage) button.setAttribute("aria-current", "page");
+        button.addEventListener("click", () => { currentMailPage = page; renderMailList(); }); controls.append(button);
+      }
+      const next = node("button", "", "Siguiente"); next.type = "button"; next.disabled = currentMailPage >= totalPages; next.addEventListener("click", () => { currentMailPage++; renderMailList(); }); controls.append(next);
       if (!filtered.length) { list.append(node("p", "empty", "No hay comunicaciones que coincidan con la búsqueda y los filtros.")); return; }
-      filtered.forEach(mail => {
+      pageItems.forEach(mail => {
         const observed = mail.observado ?? {}, hypothesis = mail.hipotesis_diseno ?? {}, state = mailState(mail.id);
         const button = node("button", "mail-row"); button.type = "button"; button.setAttribute("aria-pressed", String(selectedId === mail.id));
         button.dataset.reviewed = String(state.reviewed);
@@ -870,9 +903,10 @@
     $("#global-search-form").addEventListener("submit", event => { event.preventDefault(); $("#communications-title").textContent = search.value.trim() ? "Resultados de búsqueda" : "Comunicaciones"; setView("communications"); });
     $("#close-detail").addEventListener("click", () => detailDialog.close());
     $("#filters").addEventListener("submit", event => event.preventDefault());
-    [search, categoryFilter, reviewFilter, relevanceFilter].forEach(control => control.addEventListener(control === search ? "input" : "change", () => { activeCategory = categoryFilter.value; $("#communications-title").textContent = search.value.trim() ? "Resultados de búsqueda" : activeCategory === UNCLASSIFIED_CATEGORY ? "Sin clasificar" : activeCategory ? categoryName(activeCategory) : "Todos los correos"; renderMailList(); }));
-    $("#reset").addEventListener("click", () => { search.value = ""; categoryFilter.value = ""; reviewFilter.value = ""; relevanceFilter.value = ""; activeCategory = ""; $("#communications-title").textContent = "Todos los correos"; renderMailList(); search.focus(); });
-    $("#sort").addEventListener("click", event => { newestFirst = !newestFirst; event.currentTarget.querySelector("use").setAttribute("href", `icons/fluent.svg#arrow-${newestFirst ? "down" : "up"}-16-regular`); event.currentTarget.setAttribute("aria-label", `Ordenar por fecha ${newestFirst ? "descendente" : "ascendente"}`); renderMailList(); });
+    const updateFilterControls = () => { $("#reset").disabled = !search.value.trim() && !categoryFilter.value && !reviewFilter.value && !relevanceFilter.value; };
+    [search, categoryFilter, reviewFilter, relevanceFilter].forEach(control => control.addEventListener(control === search ? "input" : "change", () => { currentMailPage = 1; activeCategory = categoryFilter.value; $("#communications-title").textContent = search.value.trim() ? "Resultados de búsqueda" : activeCategory === UNCLASSIFIED_CATEGORY ? "Sin clasificar" : activeCategory ? categoryName(activeCategory) : "Todos los correos"; updateFilterControls(); renderMailList(); }));
+    $("#reset").addEventListener("click", () => { search.value = ""; categoryFilter.value = ""; reviewFilter.value = ""; relevanceFilter.value = ""; activeCategory = ""; updateFilterControls(); $("#communications-title").textContent = "Todos los correos"; renderMailList(); search.focus(); });
+    $("#sort").addEventListener("click", event => { newestFirst = !newestFirst; event.currentTarget.querySelector("use").setAttribute("href", `icons/fluent.svg#arrow-${newestFirst ? "down" : "up"}-16-regular`); event.currentTarget.setAttribute("aria-label", `Ordenar por fecha ${newestFirst ? "descendente" : "ascendente"}`); currentMailPage = 1; renderMailList(); });
     $("#task-grouping").addEventListener("change", renderTasks);
     $("#cancel-task").addEventListener("click", () => taskDialog.close());
     taskForm.addEventListener("submit", event => {

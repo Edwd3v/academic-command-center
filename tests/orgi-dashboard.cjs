@@ -290,7 +290,7 @@ async function main() {
     await cdp("Emulation.setDeviceMetricsOverride", { width: 1365, height: 900, deviceScaleFactor: 1, mobile: false });
     await click('#category-grid .category-card');
     assert.equal(await evaluate(`document.querySelector('#category-filter').value`), 'academico');
-    assert.equal(await evaluate(`document.querySelectorAll('#mail-list .mail-row').length`), categories.data.filter(mail => mail.key === 'academico').length);
+    assert.equal(await evaluate(`document.querySelectorAll('#mail-list .mail-row').length`), Math.min(4,categories.data.filter(mail => mail.key === 'academico').length));
     await click('[data-view="home"]');
     await evaluate(`window.originalCategory=emails[0].hipotesis_diseno.categoria; emails[0].hipotesis_diseno.categoria=undefined; renderHome()`);
     assert.match(await evaluate(`document.querySelector('.unclassified-link').textContent`), /Sin clasificar: 1 comunicación/);
@@ -357,7 +357,9 @@ async function main() {
     await click("#close-detail");
     await evaluate(`document.querySelector('#category-filter').value='academico'; document.querySelector('#category-filter').dispatchEvent(new Event('change',{bubbles:true})); document.querySelector('#review-filter').value='reviewed'; document.querySelector('#review-filter').dispatchEvent(new Event('change',{bubbles:true})); document.querySelector('#relevance-filter').value='relevant'; document.querySelector('#relevance-filter').dispatchEvent(new Event('change',{bubbles:true}))`);
     await waitUntil(`document.querySelectorAll('#mail-list .mail-row').length === 1`, "Combined category, review, and relevance filters did not match the selected communication.");
+    assert.equal(await evaluate(`document.querySelector('#reset').disabled`), false, "Clear filters should be enabled when a filter is active.");
     await click("#reset");
+    assert.deepEqual(await evaluate(`({disabled:document.querySelector('#reset').disabled,search:document.querySelector('#global-search').value,category:document.querySelector('#category-filter').value,review:document.querySelector('#review-filter').value,relevance:document.querySelector('#relevance-filter').value})`), {disabled:true,search:"",category:"",review:"",relevance:""}, "Clear filters should reset search and all filters, then disable itself.");
     await evaluate(`document.querySelector('#global-search').value='Guía de ejercicios'; document.querySelector('#global-search').dispatchEvent(new Event('input',{bubbles:true}))`);
     await waitUntil(`document.querySelectorAll('#mail-list .mail-row').length===1`, "Communication search did not restore the selected message.");
     await click("#mail-list .mail-row");
@@ -444,6 +446,13 @@ async function main() {
     await click("#orgi-close");
     await click("#open-control-center");
     await waitUntil(`!document.querySelector('#dashboard-app').classList.contains('hidden')`, "Dashboard should reopen after checking the Outlook avatar behavior.");
+
+    const pagination = await evaluate(`(()=>{const original=emails,template=original[0];search.value='';categoryFilter.value='';reviewFilter.value='';relevanceFilter.value='';emails=Array.from({length:25},(_,i)=>({...structuredClone(template),id:'pagination-'+i,observado:{...template.observado,asunto:'Pagination '+i}}));currentMailPage=1;renderMailList();const pageCount=[...document.querySelectorAll('#pagination-controls button')].filter(button=>/^\\d+$/.test(button.textContent)).length;const firstCount=document.querySelectorAll('#mail-list .mail-row').length,collected=[];for(let page=1;page<=pageCount;page++){document.querySelectorAll('#pagination-controls button')[page].click();collected.push(...[...document.querySelectorAll('#mail-list .mail-row .mail-subject')].map(node=>node.textContent));}const pageSizes={};for(const count of [0,1,4,5]){emails=Array.from({length:count},(_,i)=>({...structuredClone(template),id:'size-'+count+'-'+i,observado:{...template.observado,asunto:'Size '+count+' '+i}}));currentMailPage=1;renderMailList();pageSizes[count]=document.querySelectorAll('#mail-list .mail-row').length;}emails=original;currentMailPage=1;renderMailList();return {firstCount,pageCount,collected:collected.length,unique:new Set(collected).size,pageSizes,summary:document.querySelector('#pagination-summary').textContent}})()`);
+    assert.equal(pagination.firstCount, 4, "A page should show no more than four communications.");
+    assert.equal(pagination.pageCount, 7, "Twenty-five communications should produce seven pages.");
+    assert.equal(pagination.collected, 25);
+    assert.equal(pagination.unique, 25, "Pagination should neither duplicate nor omit communications.");
+    assert.deepEqual(pagination.pageSizes, {0:0,1:1,4:4,5:4});
 
     await cdp("Page.addScriptToEvaluateOnNewDocument", { source: "window.fetch=()=>Promise.reject(new Error('offline smoke test'));" });
     await cdp("Page.reload");
