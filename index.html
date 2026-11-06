@@ -48,19 +48,10 @@
     .sidebar-collapsed .brand { display: none; }
     .sidebar-collapsed .sidebar nav button { justify-content: center; gap: 0; padding: 11px 8px; }
     .sidebar-collapsed .nav-label { max-width: 0; opacity: 0; }
-    .main-content { min-width: 0; padding: 8px 10px 28px 0; }
+    .main-content { min-width: 0; padding: 0 10px 28px 0; }
     .main-content > section { width: 100%; min-width: 0; }
-    .main-content > header { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 16px; row-gap: 8px; margin-bottom: 14px; }
-    .dashboard-heading { min-width: 0; }
-    .main-content > header #global-search-form { grid-column: 1; grid-row: 2; width: min(360px, 100%); }
     h1 { margin: 0; font-family: var(--font-display); font-size: var(--text-title); font-weight: 700; letter-spacing: -.035em; }
     .subtitle { margin: 2px 0 0; color: var(--muted); font-size: .875rem; line-height: 1.25; }
-    .demo-indicator { white-space: nowrap; padding: 4px 8px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font-size: var(--text-xs); }
-    .demo-disclosure { position: relative; grid-column: 2; grid-row: 2; justify-self: end; }
-    .demo-disclosure summary { cursor: pointer; list-style: none; }
-    .demo-disclosure summary::-webkit-details-marker { display: none; }
-    .demo-disclosure summary::before { content: "ⓘ "; color: var(--muted); }
-    .demo-disclosure p { position: absolute; z-index: 4; right: 0; top: 100%; width: min(320px, 80vw); margin: 8px 0; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--raised); color: var(--text); font-size: .82rem; line-height: 1.5; box-shadow: 0 10px 24px #0005; }
     h2 { margin: 0 0 12px; font-family: var(--font-display); font-size: 1.125rem; font-weight: 600; letter-spacing: -.015em; }
     h3 { margin: 0; font-family: var(--font-display); font-size: var(--text-card); font-weight: 600; }
     .attention-count { font-family: var(--font-display); font-weight: 700; }
@@ -69,24 +60,12 @@
     .message { border-color: #76504d; background: #2b1e20; color: #ffd0cc; }
     .hidden { display: none !important; }
     .global-search { width: 100%; }
-    .home-bento { display: grid; min-width: 0; grid-template-columns: minmax(0, 65fr) minmax(0, 35fr); gap: var(--space-4); margin-top: var(--space-6); align-items: start; }
-    .attention-card, .commitment-panel { min-width: 0; padding: 18px; border: 1px solid var(--line); border-radius: var(--radius-card); background: #172a40; }
-    .attention-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
-    .home-bento h2 { margin-bottom: 0; font-family: var(--font-display); font-size: 1.125rem; font-weight: 600; }
-    .attention-count { min-width: 52px; text-align: right; font-size: 2.6rem; line-height: 1; font-weight: 750; color: var(--text); }
-    .attention-list { display: grid; gap: 4px; margin: 14px 0; }
-    .attention-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; width: 100%; padding: 11px 12px; border: 1px solid #34485f; border-radius: 10px; background: #1c3148; color: var(--text); text-align: left; transition: background-color 160ms ease, border-color 160ms ease; }
-    .attention-item:hover { background: #25415d; border-color: #6a94bd; }
-    .attention-item strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .92rem; font-weight: 570; }
-    .attention-item small { display: block; margin-top: 3px; color: var(--muted); font-size: .78rem; }
-    .attention-actions { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-top: 13px; }
     .text-link { border: 0; padding: 4px 0; background: transparent; color: #8fc5ff; text-decoration: underline; text-underline-offset: 3px; }
-    #tasks-link { display:inline-flex;align-items:center;gap:4px; }
-    #tasks-link .fluent-icon { width:16px;height:16px; }
     .communication-status { margin: 0; }
-    .home-priority-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 52px); margin: var(--space-6) 0; align-items: start; }
+    .home-priority-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 52px); margin: var(--space-6) 0 0; align-items: start; }
     .home-priority-grid > * { min-width: 0; margin: 0; }
     .requires-attention h2, .communication-status > h2 { margin-bottom: var(--space-4); }
+    .communication-status > h2 { text-align:center; }
     .priority-list { display: grid; gap: 5px; }
     .priority-item { display: grid; gap: 5px; width: 100%; min-width: 0; padding: 10px 12px; border: 1px solid transparent; border-radius: 9px; background: #ffffff08; color: var(--text); text-align: left; cursor: pointer; }
     .priority-item:hover, .priority-item:focus-visible { border-color: #ffffff18; background: #ffffff0d; }
@@ -95,29 +74,27 @@
     .priority-empty { margin: 0; color: var(--muted); font-size: var(--text-sm); }
     .priority-footer { margin-top: var(--space-3); }
     @media (max-width: 820px) { .home-priority-grid { grid-template-columns: minmax(0, 1fr); } }
-    .review-visual { display: grid; grid-template-columns: clamp(148px, 16vw, 212px) max-content; justify-content: center; align-items: center; gap: 12px 16px; }
-    .review-donut { display: grid; place-items: center; width: clamp(148px, 16vw, 212px); aspect-ratio: 1; border-radius: 50%; background: conic-gradient(var(--cyan) var(--reviewed-percent, 0%), var(--line) 0); }
+    .review-visual { display:grid;grid-template-columns:minmax(0,1fr);justify-items:center;gap:12px; }
+    .review-donut { display: grid; place-items: center; width: clamp(180px, 16vw, 212px); aspect-ratio: 1; border-radius: 50%; background: conic-gradient(var(--cyan) var(--reviewed-percent, 0%), var(--line) 0); }
     .review-center { display: grid; place-items: center; width: calc(100% - 44px); aspect-ratio: 1; border-radius: 50%; background: var(--bg); }
     .review-percent { font-family: var(--font-display); font-size: clamp(2.25rem, 3vw, 2.5rem); font-weight: 700; }
-    .review-legend { display: grid; gap: var(--space-2); color: var(--muted); }
-    .review-legend span { display: flex; align-items: center; gap: var(--space-2); }
-    .review-legend strong { margin-left: auto; color: var(--text); font-family: var(--font-display); font-weight: 600; }
+    .review-legend { display:flex;flex-wrap:wrap;justify-content:center;gap:8px 22px;color:var(--muted); }
+    .review-legend span { display:flex;align-items:center;gap:var(--space-2); }
+    .review-legend strong { margin-left:4px;color:var(--text);font-family:var(--font-display);font-weight:600; }
     .review-legend .reviewed-dot::before, .review-legend .unreviewed-dot::before { content: ""; flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--cyan); }
     .review-legend .unreviewed-dot::before { background: var(--line); }
     .review-support { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: var(--text-sm); text-align: center; }
     .review-empty { margin: var(--space-3) 0 0; color: var(--muted); font-size: var(--text-sm); }
-    @media (max-width: 1100px) { .review-visual { grid-template-columns: clamp(140px, 16vw, 184px) max-content; gap: 12px; } .review-donut { width: clamp(140px, 16vw, 184px); } }
-    .commitment-panel { background: #172132; }
-    .commitment-list { display: grid; gap: 8px; margin: 14px 0; }
-    .commitment-item { display: block; width: 100%; padding: 10px 11px; border: 1px solid #283549; border-radius: 10px; background: #151e2c; color: var(--text); text-align: left; }
-    .commitment-item:hover { background: var(--raised); }
-    .commitment-item strong { display: block; overflow-wrap: anywhere; font-size: .88rem; font-weight: 570; }
-    .commitment-item small { display: block; margin-top: 4px; color: var(--muted); }
-    .commitment-empty { padding: 14px 0; color: var(--muted); line-height: 1.5; font-size: .88rem; }
-    .section-heading { margin: 20px 0 10px; }
+    @media (max-width: 1100px) { .review-donut { width: clamp(160px, 20vw, 200px); } }
     .category-grid { display: grid; min-width: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
     .category-card { width: 100%; min-width: 0; min-height: 64px; display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 9px; align-items: center; text-align: left; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease; }
     .category-card:hover { background: var(--raised); border-color: #44556d; transform: translateY(-2px); }
+    .commitment-category-card { grid-template-columns:38px minmax(0,1fr) auto;background:#211E3C;border-color:#7565B4;color:#F5FAFF; }
+    .commitment-category-card:hover { background:#2B274A;border-color:#8A7BC8;transform:translateY(-1px); }
+    .commitment-category-card .category-icon { width:38px;height:38px;background:#302A52;color:#B5A0FA; }
+    .commitment-category-card .category-icon .fluent-icon { width:24px;height:24px; }
+    .commitment-category-card small { display:block; }
+    .commitment-category-card .count,.commitment-category-card .category-arrow { color:#D5C8FF; }
     .category-icon { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 10px; background: #1a2a3d; color: var(--cyan); }
     .category-card strong { display: block; margin-bottom: 5px; font-size: 1rem; }
     .category-card small { display: none; color: var(--muted); line-height: 1.4; }
@@ -199,9 +176,9 @@
     .field { display: grid; gap: 6px; margin: 10px 0; }
     .field label { color: #d8e2ed; font-size: .88rem; }
     .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; }
-    @media (max-width: 1100px) { .app { grid-template-columns: 184px minmax(0, 1fr); gap: 16px; } .home-bento { grid-template-columns: minmax(0, 65fr) minmax(250px, 35fr); } .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 820px) { .app { grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 12px 16px; } .app.sidebar-collapsed { grid-template-columns: minmax(0, 1fr); } .sidebar { position: static; width: 100%; height: auto; padding: 0; border: 0; } .sidebar-heading { padding: 0 0 8px; } .sidebar-collapsed .sidebar-heading { justify-content: center; padding: 0 0 8px; } .sidebar-collapsed .brand { display: none; } .sidebar nav { display: flex; overflow-x: auto; border-bottom: 1px solid var(--line); } .sidebar nav button { justify-content: center; white-space: nowrap; } .sidebar-collapsed .sidebar nav button { flex: 1 1 0; } .main-content { padding: 8px 0 24px; } .home-bento { grid-template-columns: minmax(0, 1fr); } .commitment-panel { display: grid; grid-template-columns: minmax(0, 1fr); } .toolbar { grid-template-columns: repeat(2, minmax(0, 1fr)); } .comm-layout { min-height: 0; } .list-panel { min-height: 55vh; } }
-    @media (max-width: 560px) { .app { padding: 8px 12px; } .main-content > header { column-gap: 8px; } .main-content > header #global-search-form { grid-column: 1 / -1; } .demo-disclosure { grid-column: 1 / -1; grid-row: 3; justify-self: start; } .dashboard-heading h1 { font-size: 1.25rem; } .category-grid, .upcoming-list, .task-grid { grid-template-columns: minmax(0, 1fr); } .toolbar { grid-template-columns: minmax(0, 1fr); } .toolbar select:last-of-type { grid-column: auto; } .field-grid { grid-template-columns: minmax(0, 1fr); } .detail-dl { grid-template-columns: minmax(0, 1fr); gap: 3px; } dialog { width: 100vw; border-radius: 0; padding: 18px; } }
+    @media (max-width: 1100px) { .app { grid-template-columns: 184px minmax(0, 1fr); gap: 16px; } .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 820px) { .app { grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 12px 16px; } .app.sidebar-collapsed { grid-template-columns: minmax(0, 1fr); } .sidebar { position: static; width: 100%; height: auto; padding: 0; border: 0; } .sidebar-heading { padding: 0 0 8px; } .sidebar-collapsed .sidebar-heading { justify-content: center; padding: 0 0 8px; } .sidebar-collapsed .brand { display: none; } .sidebar nav { display: flex; overflow-x: auto; border-bottom: 1px solid var(--line); } .sidebar nav button { justify-content: center; white-space: nowrap; } .sidebar-collapsed .sidebar nav button { flex: 1 1 0; } .main-content { padding: 16px 0 24px; } .toolbar { grid-template-columns: repeat(2, minmax(0, 1fr)); } .comm-layout { min-height: 0; } .list-panel { min-height: 55vh; } }
+    @media (max-width: 560px) { .app { padding: 8px 12px; } .category-grid, .upcoming-list, .task-grid { grid-template-columns: minmax(0, 1fr); } .toolbar { grid-template-columns: minmax(0, 1fr); } .toolbar select:last-of-type { grid-column: auto; } .field-grid { grid-template-columns: minmax(0, 1fr); } .detail-dl { grid-template-columns: minmax(0, 1fr); gap: 3px; } dialog { width: 100vw; border-radius: 0; padding: 18px; } }
      @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
     /* The mail shell is a local conceptual simulation, not an Outlook connection. */
     .orgi-backdrop { position:fixed;inset:46px 0 0;background:#18263838;opacity:0;pointer-events:none;transition:opacity .2s ease;z-index:5; }
@@ -224,8 +201,12 @@
      .orgi-tip { padding:11px 12px;border:1px solid var(--orgi-border);border-left:3px solid var(--orgi-purple);border-radius:8px;background:var(--orgi-surface);color:var(--orgi-text-muted);font-size:.84rem;line-height:1.45; }
      .orgi-primary { width:100%;min-height:46px;margin-top:22px;border:0;border-radius:8px;background:var(--orgi-blue);color:#081321;font-weight:700; }
      .orgi-primary:hover { background:var(--orgi-lavender); }
-    .dashboard-return { grid-column:2;grid-row:1;justify-self:end;white-space:nowrap;padding:7px 10px;border:1px solid var(--line);border-radius:var(--radius-control);background:var(--surface);color:var(--text); }
-    .dashboard-return:hover { background:var(--raised);border-color:#526985; }
+    .dashboard-return { display:flex;align-items:center;gap:12px;width:100%;min-width:0;margin-top:16px;padding:10px 12px;border:1px solid transparent;border-radius:var(--radius-control);background:transparent;color:var(--muted);text-align:left; }
+    .dashboard-return:hover { background:var(--surface);color:var(--text); }
+    .dashboard-return .fluent-icon { width:20px;height:20px;flex:none; }
+    .sidebar-return-label { min-width:0;overflow:hidden;white-space:nowrap; }
+    .sidebar-collapsed .dashboard-return { justify-content:center;gap:0;padding:11px 8px; }
+    .sidebar-collapsed .sidebar-return-label { display:none; }
     /* Outlook-inspired mail shell; the academic dashboard above retains its own theme. */
     .outlook-view {
       --mail-bg:#171717; --mail-panel:#242424; --mail-row:#252525; --mail-separator:#3b3b3b;
@@ -329,8 +310,8 @@
     .folder-icon .fluent-icon { width:16px;height:16px; }
     .folder-icon .chevron-icon { width:12px;height:12px; }
     .category-icon .fluent-icon { width:20px;height:20px; }
-    .category-arrow .fluent-icon,.dashboard-return .fluent-icon,.sort .fluent-icon { width:16px;height:16px; }
-    .dashboard-return,.sort { display:inline-flex;align-items:center;gap:4px; }
+    .category-arrow .fluent-icon,.sort .fluent-icon { width:16px;height:16px; }
+    .sort { display:inline-flex;align-items:center;gap:4px; }
     .date-input { position:relative;display:inline-flex;align-items:center;flex:none; }
     .date-input .fluent-icon { position:absolute;right:8px;width:16px;height:16px;pointer-events:none; }
     .date-input input::-webkit-calendar-picker-indicator { opacity:0; }
@@ -395,25 +376,19 @@
         <button type="button" data-view="communications"><span class="nav-icon" aria-hidden="true"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#mail-20-regular"></use></svg></span><span class="nav-label">Comunicaciones</span></button>
         <button type="button" data-view="tasks"><span class="nav-icon" aria-hidden="true"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#checkmark-20-regular"></use></svg></span><span class="nav-label">Mis compromisos</span></button>
       </nav>
+      <button class="dashboard-return" id="back-to-inbox" type="button" title="Volver a bandeja demo" aria-label="Volver a bandeja demo"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#arrow-left-16-regular"></use></svg><span class="sidebar-return-label">Bandeja demo</span></button>
     </aside>
     <div class="main-content">
-    <header>
-      <div class="dashboard-heading"><h1>Mi espacio académico</h1><p class="subtitle">Todo lo importante, en un solo lugar.</p></div>
-      <button class="dashboard-return" id="back-to-inbox" type="button"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#mail-20-regular"></use></svg>Bandeja demo</button>
-      <form id="global-search-form" role="search"><input class="global-search" id="global-search" type="search" aria-label="Buscar comunicaciones por asunto, remitente, contenido disponible o categoría" placeholder="Buscar comunicaciones…"></form>
-      <details class="demo-disclosure"><summary class="demo-indicator" id="source-indicator">Modo demostración · Datos de ejemplo</summary><p>Los mensajes pueden ser ficticios o parciales. Las categorías y acciones son propuestas; no representan obligaciones confirmadas. Algunos mensajes no incluyen el cuerpo completo.</p></details>
-    </header>
     <p id="app-error" class="message hidden" role="alert"></p>
 
     <section id="home-view" aria-labelledby="home-title">
       <h2 id="home-title" class="hidden">Inicio</h2>
-      <h2 class="section-heading" id="category-heading">Explorar por categoría</h2>
       <div id="category-grid" class="category-grid" aria-label="Categorías de comunicaciones"></div>
       <div class="home-priority-grid">
       <section class="requires-attention" id="requires-attention" aria-labelledby="requires-attention-title">
-        <h2 id="requires-attention-title">Requieren tu atención</h2>
+        <h2 id="requires-attention-title">Por revisar</h2>
         <div id="priority-list" class="priority-list" aria-live="polite"></div>
-        <p id="priority-empty" class="priority-empty hidden">No hay comunicaciones sin revisar clasificadas para atención.</p>
+        <p id="priority-empty" class="priority-empty hidden">No hay comunicaciones pendientes de revisión.</p>
         <div class="priority-footer"><button class="text-link" id="explore-messages" type="button">Explorar mensajes</button></div>
       </section>
       <section class="communication-status" id="communication-status" aria-labelledby="status-title">
@@ -426,25 +401,11 @@
         <p class="review-empty hidden">No hay comunicaciones para revisar.</p>
       </section>
       </div>
-      <div class="home-bento">
-        <section class="attention-card" aria-labelledby="attention-title">
-          <div class="attention-top">
-            <div><h2 id="attention-title">Comunicaciones recientes</h2></div>
-          </div>
-          <div id="attention-list" class="attention-list" aria-live="polite"></div>
-          <div class="attention-actions"><button class="text-link" id="review-summary" type="button">Ver todas las comunicaciones</button></div>
-        </section>
-        <aside class="commitment-panel" aria-labelledby="commitment-title">
-            <div class="attention-top"><div><h2 id="commitment-title">Compromisos activos</h2></div><span class="nav-icon" aria-hidden="true"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#checkmark-20-regular"></use></svg></span></div>
-           <div id="commitment-list" class="commitment-list" aria-live="polite"></div>
-           <div id="undated-count" class="meta"></div>
-            <button class="text-link" id="tasks-link" type="button">Ir a Mis compromisos <svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#arrow-right-16-regular"></use></svg></button>
-        </aside>
-      </div>
     </section>
 
     <section id="communications-view" class="hidden" aria-labelledby="communications-title">
       <div class="panel-heading" style="padding:0 0 10px;border:0"><h2 id="communications-title">Comunicaciones</h2><span id="communications-count" class="muted"></span></div>
+      <form id="global-search-form" role="search"><input class="global-search" id="global-search" type="search" aria-label="Buscar comunicaciones por asunto, remitente, contenido disponible o categoría" placeholder="Buscar comunicaciones…"></form>
       <form class="toolbar" id="filters" role="search">
         <select id="category-filter" aria-label="Filtrar por categoría"><option value="">Todas las categorías</option></select>
         <select id="review-filter" aria-label="Filtrar por estado de revisión"><option value="">Todas las revisiones</option><option value="unreviewed">Sin revisar</option><option value="reviewed">Revisadas</option></select>
@@ -584,7 +545,7 @@
         container.append(button);
       });
       if (!visibleEmails.length) container.append(node("p", "empty", "No hay correos que coincidan con la búsqueda."));
-      const pendingEmails = emails.filter(mail => !decisions[mail.id] || decisions[mail.id] === "pendiente").slice(0, 3);
+      const pendingEmails = emails.filter(mail => !mailState(mail.id).reviewed).slice(0, 3);
       pendingEmails.forEach(mail => {
         const item = node("button", "orgi-attention-item"); item.type = "button"; item.dataset.emailId = mail.id;
         item.append(node("strong", "", text(mail.observado?.asunto)), node("small", "", `${text(mail.observado?.remitente)} · ${categoryName(mail.hipotesis_diseno?.categoria)}`)); attention.append(item);
@@ -650,8 +611,7 @@
       const previousDecision = decisions[mail.id], wasRelevant = relevanceIds.has(mail.id), current = mailState(mail.id);
       const next = { ...current, ...changes };
       if (next.relevant) relevanceIds.add(mail.id); else relevanceIds.delete(mail.id);
-      if (next.reviewed) decisions[mail.id] = next.relevant ? "relevante" : "no_relevante";
-      else decisions[mail.id] = "pendiente";
+      decisions[mail.id] = { reviewed: next.reviewed };
       if (saveLocal()) {
         renderMailList(); renderHome(); renderOutlook(); showMail(mail);
         return true;
@@ -699,25 +659,15 @@
     }
     function renderHome() {
       const pendingMails = emails.filter(mail => !mailState(mail.id).reviewed);
-      const priorityMails = pendingMails.filter(mail => {
-        const hypothesis = mail.hipotesis_diseno ?? {};
-        return hypothesis.estado_atencion === "revisar"
-          || (mail.accion_verificada === true && typeof hypothesis.accion_sugerida === "string" && hypothesis.accion_sugerida.trim());
-      }).sort((a, b) => {
-        const attentionRank = mail => mail.hipotesis_diseno?.estado_atencion === "revisar" ? 0 : 1;
-        return attentionRank(a) - attentionRank(b)
-          || mailDate(b).localeCompare(mailDate(a))
-          || String(a.id).localeCompare(String(b.id));
-      }).slice(0, 3);
+      const pendingSorted = pendingMails.slice().sort((a, b) => mailDate(b).localeCompare(mailDate(a)) || String(a.id).localeCompare(String(b.id))).slice(0, 3);
       const priorityList = $("#priority-list"); priorityList.replaceChildren();
-      $("#priority-empty").classList.toggle("hidden", priorityMails.length !== 0);
-      priorityMails.forEach(mail => {
+      $("#priority-empty").classList.toggle("hidden", pendingSorted.length !== 0);
+      pendingSorted.forEach(mail => {
         const hypothesis = mail.hipotesis_diseno ?? {};
         const card = node("button", "priority-item"); card.type = "button";
-        card.setAttribute("aria-label", `${text(mail.observado?.asunto)}. ${categoryName(hypothesis.categoria)}. Clasificación: ${hypothesis.estado_atencion === "revisar" ? "revisar" : "acción indicada en los datos"}. Abrir comunicación.`);
+        card.setAttribute("aria-label", `${text(mail.observado?.asunto)}. ${categoryName(hypothesis.categoria)}. Sin revisar. Abrir comunicación.`);
         card.append(node("strong", "", text(mail.observado?.asunto)), node("small", "", categoryName(hypothesis.categoria)));
-        if (hypothesis.estado_atencion === "revisar") card.append(node("small", "", "Clasificación de la muestra: revisar"));
-        else card.append(node("small", "", hypothesis.accion_sugerida.trim()));
+        card.append(node("small", "", "Sin revisar"));
         card.addEventListener("click", () => { openCommunications(); showMail(mail); });
         priorityList.append(card);
       });
@@ -730,33 +680,7 @@
       $(".review-donut").style.setProperty("--reviewed-percent", `${reviewedPercent}%`);
       $(".review-donut").setAttribute("aria-label", `Revisadas: ${reviewedCount}; sin revisar: ${pendingMails.length}`);
       $(".review-empty").classList.toggle("hidden", emails.length !== 0);
-      const attentionList = $("#attention-list"); attentionList.replaceChildren();
-      const recentMails = [...pendingMails.sort((a, b) => mailDate(b).localeCompare(mailDate(a))), ...emails.filter(mail => mailState(mail.id).reviewed).sort((a, b) => mailDate(b).localeCompare(mailDate(a)))].slice(0, 5);
-      if (!recentMails.length) attentionList.append(node("p", "commitment-empty", "Todavía no hay comunicaciones en esta muestra. Podés explorar las categorías cuando estén disponibles."));
-      recentMails.forEach(mail => {
-        const row = node("button", "attention-item"); row.type = "button";
-        const state = mailState(mail.id), content = node("span");
-        content.append(node("strong", "", text(mail.observado?.asunto)), node("small", "", `${text(mail.observado?.remitente)} · ${formatMailDate(mail)} · Categoría propuesta: ${categoryName(mail.hipotesis_diseno?.categoria)} · ${state.reviewed ? "Revisado" : "Sin revisar"}`));
-        const badges = node("span", "home-row-badges");
-        badges.append(node("span", `tag ${state.reviewed ? "task-state-finalizada" : "task-state-pendiente"}`, state.reviewed ? "Revisado" : "Sin revisar"));
-        if (state.relevant) badges.append(node("span", "tag", "Relevante"));
-        row.append(content, badges); row.addEventListener("click", () => { openCommunications(); showMail(mail); }); attentionList.append(row);
-      });
-      $("#review-summary").setAttribute("aria-label", `Ver las ${emails.length} comunicaciones de la muestra`);
-      const dueToday = localDateString();
-      const pending = tasks.filter(task => task.status !== "finalizada");
-      const dated = pending.filter(task => task.dueDate).sort((a, b) => a.dueDate.localeCompare(b.dueDate)).slice(0, 3);
-      const commitments = $("#commitment-list"); commitments.replaceChildren();
-      if (!dated.length && !pending.length) commitments.append(node("p", "commitment-empty", "Todavía no tenés compromisos activos. Revisá las comunicaciones y convertí en tarea lo que decidas hacer."));
-      dated.forEach(task => {
-        const item = node("button", "commitment-item"); item.type = "button";
-        const overdue = task.dueDate < dueToday;
-        item.append(node("strong", "", task.title), node("small", overdue ? "task-overdue" : "", `${overdue ? "Vencido · " : "Fecha confirmada · "}${task.dueDate} · ${label(task.status)}`));
-        item.addEventListener("click", () => setView("tasks")); commitments.append(item);
-      });
-      const undated = pending.filter(task => !task.dueDate);
-      if (!dated.length) undated.slice(0, 3).forEach(task => { const item = node("button", "commitment-item"); item.type = "button"; item.append(node("strong", "", task.title), node("small", "", `${label(task.status)} · Sin fecha confirmada`)); item.addEventListener("click", () => setView("tasks")); commitments.append(item); });
-      $("#undated-count").textContent = undated.length ? `${undated.length} compromiso${undated.length === 1 ? "" : "s"} sin fecha confirmada` : "";
+      const activeCommitments = tasks.filter(task => task.status !== "finalizada").length;
       const grid = $("#category-grid"); grid.replaceChildren();
       const counts = new Map(); emails.forEach(mail => { const key = mail.hipotesis_diseno?.categoria; if (key) counts.set(key, (counts.get(key) ?? 0) + 1); });
       ["academico", "institucional", "administrativo", "bienestar", "oportunidad", ...[...counts.keys()].filter(key => !CATEGORY_META[key])].forEach(key => {
@@ -771,12 +695,14 @@
         button.replaceChildren(categoryIcon, description, tail);
         button.addEventListener("click", () => openCommunications(key)); grid.append(button);
       });
-      const all = node("button", "category-card"); all.type = "button"; all.dataset.category = "all"; all.setAttribute("aria-label", `Todos los correos: ${emails.length} comunicaciones`);
-      const allText = node("span"); allText.append(node("strong", "", "Todos los correos"), node("small", "", "Explorá la muestra completa."));
-      const allTail = node("span", "category-tail"), allArrow = node("span", "category-arrow"), allIcon = node("span", "category-icon");
-      allArrow.append(icon("arrow-right-16-regular")); allIcon.append(icon("mail-20-regular"));
-      allTail.append(node("span", "count", String(emails.length)), allArrow);
-      all.append(allIcon, allText, allTail); all.addEventListener("click", () => openCommunications()); grid.append(all);
+      const commitmentCard = node("button", "category-card commitment-category-card"); commitmentCard.type = "button"; commitmentCard.dataset.action = "tasks";
+      commitmentCard.setAttribute("aria-label", `Mis compromisos: ${activeCommitments} activos. Abrir Mis compromisos.`);
+      const commitmentText = node("span"); commitmentText.append(node("strong", "", "Mis compromisos"), node("small", "", activeCommitments ? "Seguimiento activo" : "Sin compromisos activos"));
+      const commitmentTail = node("span", "category-tail"), commitmentArrow = node("span", "category-arrow"), commitmentIcon = node("span", "category-icon");
+      commitmentIcon.append(icon("checkmark-20-regular")); commitmentArrow.append(icon("arrow-right-16-regular"));
+      commitmentTail.append(node("span", "count", String(activeCommitments)), commitmentArrow);
+      commitmentCard.append(commitmentIcon, commitmentText, commitmentTail);
+      commitmentCard.addEventListener("click", () => setView("tasks")); grid.append(commitmentCard);
       const unclassifiedCount = emails.filter(mail => !CATEGORY_META[mail.hipotesis_diseno?.categoria]).length;
       const previousUnclassified = grid.nextElementSibling?.classList.contains("unclassified-link") ? grid.nextElementSibling : null;
       previousUnclassified?.remove();
@@ -908,13 +834,11 @@
       sidebarToggle.title = "Abrir el panel de Orgi";
       sidebarToggle.setAttribute("data-tooltip", "Orgi");
     }
-    $("#review-summary").addEventListener("click", () => openCommunications());
     $("#explore-messages").addEventListener("click", () => openCommunications());
-    $("#tasks-link").addEventListener("click", () => setView("tasks"));
-    $("#global-search-form").addEventListener("submit", event => { event.preventDefault(); categoryFilter.value = ""; reviewFilter.value = ""; relevanceFilter.value = ""; $("#communications-title").textContent = search.value.trim() ? "Resultados de búsqueda" : "Comunicaciones"; setView("communications"); });
+    $("#global-search-form").addEventListener("submit", event => { event.preventDefault(); $("#communications-title").textContent = search.value.trim() ? "Resultados de búsqueda" : "Comunicaciones"; setView("communications"); });
     $("#close-detail").addEventListener("click", () => detailDialog.close());
     $("#filters").addEventListener("submit", event => event.preventDefault());
-    [search, categoryFilter, reviewFilter, relevanceFilter].forEach(control => control.addEventListener(control === search ? "input" : "change", () => { activeCategory = categoryFilter.value; $("#communications-title").textContent = activeCategory === UNCLASSIFIED_CATEGORY ? "Sin clasificar" : activeCategory ? categoryName(activeCategory) : "Todos los correos"; renderMailList(); }));
+    [search, categoryFilter, reviewFilter, relevanceFilter].forEach(control => control.addEventListener(control === search ? "input" : "change", () => { activeCategory = categoryFilter.value; $("#communications-title").textContent = search.value.trim() ? "Resultados de búsqueda" : activeCategory === UNCLASSIFIED_CATEGORY ? "Sin clasificar" : activeCategory ? categoryName(activeCategory) : "Todos los correos"; renderMailList(); }));
     $("#reset").addEventListener("click", () => { search.value = ""; categoryFilter.value = ""; reviewFilter.value = ""; relevanceFilter.value = ""; activeCategory = ""; $("#communications-title").textContent = "Todos los correos"; renderMailList(); search.focus(); });
     $("#sort").addEventListener("click", event => { newestFirst = !newestFirst; event.currentTarget.querySelector("use").setAttribute("href", `icons/fluent.svg#arrow-${newestFirst ? "down" : "up"}-16-regular`); event.currentTarget.setAttribute("aria-label", `Ordenar por fecha ${newestFirst ? "descendente" : "ascendente"}`); renderMailList(); });
     $("#task-grouping").addEventListener("change", renderTasks);
@@ -946,7 +870,6 @@
         renderOutlook();
         populate(categoryFilter, emails.map(mail => mail.hipotesis_diseno?.categoria).filter(key => CATEGORY_META[key]), categoryName);
         const unclassifiedOption = node("option", "", "Sin clasificar"); unclassifiedOption.value = UNCLASSIFIED_CATEGORY; categoryFilter.append(unclassifiedOption);
-        $("#source-indicator").setAttribute("aria-label", `Modo demostración · Datos de ejemplo · ${emails.length} comunicaciones disponibles`);
         renderHome(); renderMailList();
       } catch (error) { $("#outlook-view").classList.add("hidden"); $("#dashboard-app").classList.remove("hidden"); showError(`No se pudo cargar la demostración. Ejecutá el sitio desde un servidor local y verificá ${DATA_SOURCE}. ${error.message}`); }
     }
