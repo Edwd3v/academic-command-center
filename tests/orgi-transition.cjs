@@ -63,11 +63,11 @@ async function main() {
     assert(invitation.size >= 110, `Orgi should be visually prominent: ${invitation.size}px`);
     assert.equal(invitation.header || invitation.footer || invitation.eyebrow || invitation.staticFace, false, "Remove promotional chrome and the separate static face");
     assert.doesNotMatch(invitation.copy, /UN MOMENTO CON ORGI|Menos ruido|Tu espacio, más claro/i);
-    const intro = await evaluate("({title:document.querySelector('#transition-title').innerText,cta:document.querySelector('#transition-start').innerText.trim(),description:getComputedStyle(document.querySelector('#transition-description')).visibility,disclaimer:getComputedStyle(document.querySelector('.transition-disclaimer')).visibility,visual:getComputedStyle(document.querySelector('.transition-visual')).visibility,back:document.querySelector('#transition-back').getAttribute('aria-label'),backText:document.querySelector('#transition-back').innerText.trim(),layout:document.querySelector('.transition-layout').getBoundingClientRect().toJSON(),portrait:document.querySelector('#transition-portrait').getBoundingClientRect().toJSON()})");
+    assert.equal(await evaluate("document.querySelector('.transition-disclaimer')"), null, "Removed disclosure should leave no empty element");
+    const intro = await evaluate("({title:document.querySelector('#transition-title').innerText,cta:document.querySelector('#transition-start').innerText.trim(),description:getComputedStyle(document.querySelector('#transition-description')).visibility,visual:getComputedStyle(document.querySelector('.transition-visual')).visibility,back:document.querySelector('#transition-back').getAttribute('aria-label'),backText:document.querySelector('#transition-back').innerText.trim(),layout:document.querySelector('.transition-layout').getBoundingClientRect().toJSON(),portrait:document.querySelector('#transition-portrait').getBoundingClientRect().toJSON()})");
     assert.equal(intro.title, "Hagamos espacio para lo importante.");
     assert.equal(intro.cta, "Organizar mi espacio");
     assert.equal(intro.description, "hidden", "No extra explanation should compete with the welcome");
-    assert.equal(intro.disclaimer, "hidden", "Demo disclosure belongs to the active story, not the welcome");
     assert.equal(intro.visual, "hidden", "Organization cards must not appear before the action");
     assert.equal(intro.back, "Volver a la bandeja");
     assert.equal(await evaluate("document.querySelector('#transition-finish')?.getAttribute('tabindex')"), "-1", "Dashboard action should not be available on the welcome screen");
@@ -99,7 +99,6 @@ async function main() {
     await click("#transition-start");
     assert.equal(await evaluate("document.querySelector('#transition-start').disabled"), true, "Start must not restart an active sequence");
     await until(() => evaluate("document.querySelector('#orgi-transition').dataset.phase === 'collecting'"), "First message never appeared");
-    assert.match(await evaluate("document.querySelector('#orgi-transition').innerText"), /Vista demostrativa/i, "The active story must disclose it is illustrative");
     await delay(250);
     const motion = await evaluate("({visual:getComputedStyle(document.querySelector('.transition-visual')).opacity,card:getComputedStyle(document.querySelector('.transition-card-a')).opacity,position:document.querySelector('.transition-card-a').getBoundingClientRect().left})");
     assert(Number(motion.visual) > 0 && Number(motion.card) > 0, "Existing cards should enter progressively in the same scene");
@@ -128,7 +127,6 @@ async function main() {
     assert.equal(await visible("#dashboard-app"), false, "Confirmation must appear before arrival");
     assert.equal(await evaluate("document.querySelector('#transition-title').textContent"), "Tu espacio está listo.");
     assert.equal(await evaluate("document.querySelector('#transition-description').textContent"), "", "Ready scene must not repeat the demo disclosure");
-    assert.equal(await evaluate("document.querySelector('.transition-disclaimer').textContent"), "Vista demostrativa · Esta secuencia ilustra el valor de Orgi; no analiza ni modifica tus datos.");
     assert.equal(await evaluate("document.querySelector('#transition-finish')?.textContent.trim()"), "Ir a mi centro de control");
     await until(() => evaluate("document.activeElement.id === 'transition-finish'"), "Ready action should receive keyboard focus");
     await delay(500);
@@ -177,16 +175,14 @@ async function main() {
     assert(widths.page <= widths.viewport + 1, `Invitation overflows mobile viewport: ${JSON.stringify(widths)}`);
     await click("#transition-start");
     await delay(220);
-    const mobileStory = await evaluate("({page:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth,visual:getComputedStyle(document.querySelector('.transition-visual')).visibility,disclosure:getComputedStyle(document.querySelector('.transition-disclaimer')).visibility,cardMotion:getComputedStyle(document.querySelector('.transition-card-a')).transitionDuration})");
+    const mobileStory = await evaluate("({page:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth,visual:getComputedStyle(document.querySelector('.transition-visual')).visibility,cardMotion:getComputedStyle(document.querySelector('.transition-card-a')).transitionDuration})");
     assert(mobileStory.page <= mobileStory.viewport + 1, `Story overflows mobile viewport: ${JSON.stringify(mobileStory)}`);
     assert.equal(mobileStory.visual, "visible");
-    assert.equal(mobileStory.disclosure, "visible");
     assert.equal(mobileStory.cardMotion, "1e-05s", "Reduced-motion preference must suppress card movement");
     await until(() => evaluate("document.querySelector('#orgi-transition').dataset.phase === 'ready'"), "Mobile story should reach confirmation");
     await delay(700);
-    const mobileReady = await evaluate("({gap:document.querySelector('#transition-finish').getBoundingClientRect().top-document.querySelector('#transition-title').getBoundingClientRect().bottom,disclosure:getComputedStyle(document.querySelector('.transition-disclaimer')).visibility,page:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth})");
+    const mobileReady = await evaluate("({gap:document.querySelector('#transition-finish').getBoundingClientRect().top-document.querySelector('#transition-title').getBoundingClientRect().bottom,page:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth})");
     assert(mobileReady.gap >= 12 && mobileReady.gap <= 32, `Mobile action should sit just below the title: ${mobileReady.gap}`);
-    assert.equal(mobileReady.disclosure, "visible");
     assert(mobileReady.page <= mobileReady.viewport + 1, `Ready scene overflows mobile viewport: ${JSON.stringify(mobileReady)}`);
     console.log("Orgi transition browser journey passed.");
   } finally {
