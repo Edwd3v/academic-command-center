@@ -15,7 +15,7 @@
     $("#orgi-launcher").addEventListener("click", handleLauncherClick);
     $("#orgi-close").addEventListener("click", () => toggleOrgi(false));
     $("#orgi-backdrop").addEventListener("click", () => toggleOrgi(false));
-    const transition = $("#orgi-transition"), transitionStart = $("#transition-start");
+    const transition = $("#orgi-transition"), transitionStart = $("#transition-start"), transitionFinish = $("#transition-finish");
     const transitionTitle = $("#transition-title"), transitionDescription = $("#transition-description"), transitionCaption = $("#transition-caption");
     const transitionCopy = $(".transition-copy"), transitionCaptionWrap = $(".transition-visual-bottom");
     const transitionScenes = [
@@ -37,6 +37,7 @@
       transitionDescription.textContent = "Soy Orgi. Te muestro cómo pasar de comunicaciones dispersas a un centro de control más claro.";
       transitionCaption.textContent = "Un lugar para ver lo que importa";
       transitionStart.disabled = false;
+      transitionFinish.tabIndex = -1;
     }
     function showTransition() {
       resetTransition();
@@ -61,16 +62,12 @@
       transitionTitle.textContent = scene.title;
       transitionDescription.textContent = scene.description;
       transitionCaption.textContent = scene.caption;
-      const delay = reducedMotion ? (index === transitionScenes.length - 1 ? 400 : 160) : (index === transitionScenes.length - 1 ? 1300 : 2050);
-      transitionTimer = window.setTimeout(() => {
-        if (index + 1 < transitionScenes.length) advanceTransitionScene(index + 1, reducedMotion);
-        else {
-          transition.classList.add("hidden");
-          orgiLauncher.removeAttribute("tabindex");
-          openDashboardForMail(null);
-          resetTransition();
-        }
-      }, delay);
+      if (index === transitionScenes.length - 1) {
+        transitionFinish.removeAttribute("tabindex");
+        if (reducedMotion) transitionFinish.focus({ preventScroll:true });
+        return;
+      }
+      transitionTimer = window.setTimeout(() => advanceTransitionScene(index + 1, reducedMotion), reducedMotion ? 160 : 2050);
     }
     function advanceTransitionScene(index, reducedMotion) {
       if (reducedMotion) { playTransitionScene(index, true); return; }
@@ -81,12 +78,20 @@
         transitionFrame = requestAnimationFrame(() => {
           transitionCopy.classList.remove("is-changing");
           transitionCaptionWrap.classList.remove("is-changing");
+          if (index === transitionScenes.length - 1) transitionFinish.focus({ preventScroll:true });
           transitionFrame = 0;
         });
       }, 260);
     }
     $("#open-control-center").addEventListener("click", showTransition);
     $("#transition-back").addEventListener("click", returnFromTransition);
+    transitionFinish.addEventListener("click", () => {
+      if (transition.dataset.phase !== "ready" || transition.classList.contains("hidden")) return;
+      transition.classList.add("hidden");
+      orgiLauncher.removeAttribute("tabindex");
+      openDashboardForMail(null);
+      resetTransition();
+    });
     transitionStart.addEventListener("click", () => {
       if (transitionStart.disabled) return;
       transitionStart.disabled = true;

@@ -67,7 +67,10 @@ async function main() {
      await waitUntil(`!document.querySelector('#orgi-transition').classList.contains('hidden')`, "Orgi invitation did not open.");
      assert.equal(await evaluate(`document.querySelector('#dashboard-app').classList.contains('hidden')`), true);
      await click("#transition-start");
-     await waitUntil(`!document.querySelector('#dashboard-app').classList.contains('hidden')`, "Dashboard did not open after Orgi's story.");
+     await waitUntil(`document.querySelector('#orgi-transition').dataset.phase === 'ready'`, "Orgi's story did not reach its final state.");
+     assert.equal(await evaluate(`document.querySelector('#dashboard-app').classList.contains('hidden')`), true);
+     await click("#transition-finish");
+     await waitUntil(`!document.querySelector('#dashboard-app').classList.contains('hidden')`, "Dashboard did not open after the final action.");
    }
     await cdp("Page.enable");
     await cdp("Page.navigate", { url: `http://127.0.0.1:${server.address().port}/index.html` });

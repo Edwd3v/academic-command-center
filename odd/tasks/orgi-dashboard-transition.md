@@ -5,7 +5,7 @@ Objective: demonstrate an honest, accessible journey from Orgi's panel to the ex
 ## Specs
 - S1: “en lugar de acceder inmediatamente al dashboard, debería encontrarse con una pantalla intermedia dedicada al asistente.” Enter from “Abrir centro de control”; keep direct mail-to-dashboard navigation and existing dashboard intact. Verify browser navigation.
 - S2: “Orgi debe ser el protagonista visual” and “un mensaje breve que lo invite a comenzar la organización de su espacio de trabajo, acompañado de un botón principal de llamado a la acción.” Verify responsive screen, keyboard focus and return action.
-- S3: “No quiero que se perciba como una pantalla de carga convencional.” Illustrate “cómo Orgi toma la información inicialmente desorganizada de OGL, la analiza, identifica lo importante y la transforma en un espacio más claro, estructurado y fácil de gestionar.” Verify sequential states, final confirmation, dashboard arrival, reduced-motion behavior and replay.
+- S3: “No quiero que se perciba como una pantalla de carga convencional.” Illustrate “cómo Orgi toma la información inicialmente desorganizada de OGL, la analiza, identifica lo importante y la transforma en un espacio más claro, estructurado y fácil de gestionar.” Verify sequential states, persistent final confirmation, dashboard arrival only on explicit action, reduced-motion behavior and replay (revised by L18).
 - S4: “Si la organización real de información todavía no está implementada, puedes utilizar una secuencia demostrativa claramente diferenciada de un procesamiento real. No presentes operaciones simuladas como si hubieran sido ejecutadas.” Verify explicit demo disclosure and unchanged persisted records.
 - S5: “Conserva la identidad visual y la coherencia con la aplicación actual.” “Integra la transición dentro del flujo de navegación existente, sin afectar las funcionalidades actuales.” “El nombre correcto del asistente es **Orgi**.” Verify existing suites and no new dependency.
 - S6: “El encabezado superior que contiene la esfera de color, el texto «Orgi | OGL» y el mensaje «Tu espacio, más claro».” “La etiqueta «UN MOMENTO CON ORGI» que aparece sobre el avatar.” “Los textos secundarios de carácter decorativo o promocional ubicados en los extremos de la pantalla.” “Los elementos de pie de página que hacen referencia a la demostración de OGL o utilizan mensajes como «Menos ruido, más dirección».” Remove these; keep explanatory disclosure and useful narrative labels.
@@ -14,12 +14,14 @@ Objective: demonstrate an honest, accessible journey from Orgi's panel to the ex
 - S9: “Debe incluir únicamente: - Orgi como protagonista visual principal - El título: "Hagamos espacio para lo importante." - Un botón principal: "Organizar mi espacio" - Un elemento mínimo para volver a la bandeja, preferiblemente como un ícono o acción secundaria muy discreta”. Hide cards, description and demo copy in the introduction; keep the existing animated node and functional return control.
 - S10: “Una vez el usuario haga clic en "Organizar mi espacio", debe comenzar la experiencia de transformación.” “No quiero una sensación de ‘pantalla cambia por otra pantalla’ ni de ‘foto reemplazada por otra foto’.” Reveal the existing cards within the same scene with smooth progressive motion and continuous card rearrangement; retain the honest demo disclosure during the sequence and ready confirmation, with reduced-motion fallback.
 - S11: “Los textos parecen sustituirse instantáneamente, en lugar de formar parte de una secuencia visual continua.” “Cada mensaje debe tener tiempo suficiente para ser leído y comprendido antes de dar paso al siguiente.” Animate outgoing and incoming title, description and caption as one ordered handoff, keep the layout stable between phases, and preserve existing text, scenes, avatar, cancellation, and reduced-motion behavior.
+- S12: “Cuando la secuencia de organización termine y aparezca el mensaje «Tu espacio está listo», la interfaz debe permanecer en ese estado de finalización.” “La navegación al dashboard debe ser una acción explícita del usuario y no un comportamiento automático.” Reveal a primary “Ir a mi centro de control” button in the final state; focus it once visible, keep it available without a timer, enter the existing dashboard only on click, and preserve cancel/replay and reduced motion.
 
 ## Tasks
 - T1 (S1-S5): inline; complete; commit `8ad56a1`. One coherent transition with focused browser tests and existing suite. No writer trigger: one coupled behavior across shared markup/styles/events.
 - T2 (S6-S8): inline; complete; commit `d7803fa`. Refined markup, scoped layout and existing launcher placement in one coupled unit. No writer trigger; shared launcher context and tests moved together.
 - T3 (S9-S10): inline; complete; commit `624db4e`. Minimal invitation and continuous story motion in existing transition CSS/markup/JS plus browser checks. No writer trigger: one coupled behavior.
 - T4 (S11): inline; complete; commit `8179d8f`. Text-only scene handoff with browser regression for dwell, fade, layout and reduced motion. No writer trigger: one contained behavior.
+- T5 (S3, S12): inline; verified; commit pending. Final-state action in existing markup/CSS/JS with browser checks. No writer trigger: one coupled behavior.
 
 ## Log
 - L1 (2026-11-06): Cremos una rama desde main  adicional para introducir esta funcionalidad: ## Nueva experiencia de transición: Orgi → Dashboard
@@ -316,3 +318,46 @@ Los mensajes deben aparecer, permanecer y retirarse de forma natural, como si Or
 - L15: T4 touches only `scripts/app.js`, scoped transition text CSS in `styles/app.css`, browser checks and this log. Current `playTransitionScene` mutates title, description and caption synchronously every 850 ms, causing abrupt replacement. Keep one DOM instance per text field, use a fade-out/swap/fade-in handoff and a reading pause; stage visual changes start with incoming copy. Risk: none; no shared API or storage code changed.
 - L16: T4 RED: `TMPDIR=/tmp/opencode node tests/orgi-transition.cjs` failed because the first title was already replaced after 900 ms. GREEN: the same browser journey passed after the staged text handoff. `TMPDIR=/tmp/opencode node tests/orgi-dashboard.cjs`, `TMPDIR=/tmp/opencode node tests/orgi-avatar.cjs`, `TMPDIR=/tmp/opencode node tests/module-structure.cjs`, and `git diff --check` passed. Tests check held copy, outgoing fade before mutation, same-node incoming copy, stable graphic position, cancellation during fade, reduced-motion bypass, dashboard arrival and storage invariants. Existing texts, avatar, visual cards and dashboard untouched. T4 rollback boundary: `scripts/app.js`, `styles/app.css`, `tests/orgi-transition.cjs` and this logbook. Risk: none.
 - L17: T4 work-unit commit `8179d8f` follows the selected feature-branch-chain slices. Native committed-only assessment against `e65e4c6`: medium, 659 changed lines, `review_due=false`, `review_due_reason=under_budget`; no candidate review launched. No push or PR requested.
+- L18 (2026-11-06): ## Refinamiento del estado final — Orgi → Dashboard
+
+Quiero realizar un último ajuste en la experiencia de transición de Orgi hacia el dashboard.
+
+Actualmente, cuando finaliza la secuencia de organización y aparece el mensaje **«Tu espacio está listo»**, el sistema redirige automáticamente al usuario hacia el dashboard.
+
+Quiero cambiar este comportamiento.
+
+### Comportamiento deseado
+
+Cuando la secuencia de organización termine y aparezca el mensaje «Tu espacio está listo», la interfaz debe permanecer en ese estado de finalización.
+
+En ese momento, debe aparecer un botón principal que invite al usuario a acceder a su centro de control.
+
+Podría utilizar un texto como **«Ir a mi centro de control»** o **«Explorar mi dashboard»**, aunque tienes libertad para elegir el llamado a la acción que mejor encaje con la experiencia.
+
+El botón debe integrarse naturalmente con la estética existente y aparecer mediante una transición suave, coherente con las animaciones que ya implementamos.
+
+### Interacción
+
+- La secuencia de organización se ejecuta normalmente.
+- Al finalizar, aparece el mensaje «Tu espacio está listo».
+- Se presenta el botón para ingresar al dashboard.
+- La interfaz permanece en este estado hasta que el usuario decida continuar.
+- Únicamente cuando el usuario presione el botón, se realiza la navegación hacia el dashboard existente.
+
+### Consideraciones
+
+No quiero modificar las animaciones, mensajes ni transiciones anteriores, ya que ahora funcionan correctamente.
+
+Conserva el avatar de Orgi y la composición visual actual.
+
+El nuevo botón debe sentirse como la conclusión natural del proceso, no como un elemento añadido de manera improvisada.
+
+Evita temporizadores o redirecciones automáticas después de mostrar el mensaje final.
+
+### Resultado esperado
+
+Quiero que la experiencia termine con un momento de satisfacción y confirmación, donde Orgi comunique que el espacio está preparado y el usuario pueda decidir cuándo ingresar.
+
+**La navegación al dashboard debe ser una acción explícita del usuario y no un comportamiento automático.**
+- L19: T5 changes the final branch of `playTransitionScene` only; the existing final text and cards remain unchanged. Add a ready-only CTA adjacent to the existing story actions, make it tabbable only on ready and restore intro on cancel/replay. No auto-navigation after ready. Risk: none; existing dashboard function stays unchanged.
+- L20: T5 RED: `TMPDIR=/tmp/opencode node tests/orgi-transition.cjs` failed because the final action did not exist. GREEN: the focused browser journey passed with final-state wait, visible/focused CTA, explicit-only navigation, reduced-motion wait and ready-state cancellation/replay. `TMPDIR=/tmp/opencode node tests/orgi-dashboard.cjs` initially failed on the old automatic-navigation assumption; after updating its public journey to click the final action, it passed. `TMPDIR=/tmp/opencode node tests/orgi-avatar.cjs`, `TMPDIR=/tmp/opencode node tests/module-structure.cjs` and `git diff --check` passed. An initial ready-state layout shift was corrected by reserving the existing action row throughout the narrative; visual-stage position remains stable. T5 rollback boundary: `index.html`, `styles/app.css`, `scripts/app.js`, `tests/orgi-transition.cjs`, `tests/orgi-dashboard.cjs`, and this document. Risk: none; shared dashboard API and persisted data are unchanged.
