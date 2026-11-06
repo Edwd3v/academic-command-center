@@ -65,6 +65,13 @@
     .communication-status { margin: 0; }
     .home-priority-grid { display: grid; grid-template-columns: minmax(0, 2.25fr) minmax(0, 1fr); gap: clamp(20px, 3vw, 36px); margin: var(--space-6) 0 0; align-items: start; }
     .home-priority-grid > * { min-width: 0; margin: 0; }
+    .home-status-column { display: grid; align-content: start; gap: clamp(16px, 2vw, 24px); min-width: 0; }
+    .orgi-chat-compose { display: grid; grid-template-columns: 22px minmax(0, 1fr) 40px; align-items: center; gap: 10px; }
+    .orgi-chat-icon { width: 22px; height: 22px; flex: none; color: var(--cyan); filter: drop-shadow(0 0 5px #22d3ee88); }
+    .orgi-chat-compose input { width: 100%; min-width: 0; }
+    .orgi-send-button { display: grid; place-items: center; width: 40px; height: 40px; min-height: 40px; padding: 0; border: 1px solid #2d7291; border-radius: 10px; background: #123944; color: var(--cyan); }
+    .orgi-send-button:hover { border-color: #3d93b1; background: #174859; }
+    .orgi-send-button .fluent-icon { width: 18px; height: 18px; }
     .requires-attention h2, .communication-status > h2 { margin-bottom: var(--space-4); }
     .communication-status > h2 { text-align:center; }
     .priority-list { display: grid; gap: 5px; }
@@ -394,6 +401,7 @@
         <div id="priority-list" class="priority-list" aria-live="polite"></div>
         <p id="priority-empty" class="priority-empty hidden">No hay comunicaciones pendientes de revisión.</p>
       </section>
+      <div class="home-status-column">
       <section class="communication-status" id="communication-status" aria-labelledby="status-title">
         <h2 id="status-title">Estado de tus comunicaciones</h2>
         <div class="review-visual" aria-live="polite">
@@ -403,6 +411,12 @@
         </div>
         <p class="review-empty hidden">No hay comunicaciones para revisar.</p>
       </section>
+        <div class="orgi-chat-compose" aria-label="Conversa con Orgi">
+          <svg class="fluent-icon orgi-chat-icon" aria-hidden="true"><use href="icons/fluent.svg#sparkle-20-regular"></use></svg>
+          <input type="text" aria-label="Conversa con Orgi" placeholder="Conversa con Orgi...">
+          <button class="orgi-send-button" type="button" aria-label="Enviar mensaje"><svg class="fluent-icon" aria-hidden="true"><use href="icons/fluent.svg#send-16-regular"></use></svg></button>
+        </div>
+      </div>
       </div>
     </section>
 
