@@ -13,11 +13,13 @@ Objective: demonstrate an honest, accessible journey from Orgi's panel to the ex
 - S8: “Conserva las funcionalidades, rutas y comportamientos que ya funcionan correctamente.” Keep arrival, cancellation, replay, reduced-motion, direct contextual mail access, and demo disclosure.
 - S9: “Debe incluir únicamente: - Orgi como protagonista visual principal - El título: "Hagamos espacio para lo importante." - Un botón principal: "Organizar mi espacio" - Un elemento mínimo para volver a la bandeja, preferiblemente como un ícono o acción secundaria muy discreta”. Hide cards, description and demo copy in the introduction; keep the existing animated node and functional return control.
 - S10: “Una vez el usuario haga clic en "Organizar mi espacio", debe comenzar la experiencia de transformación.” “No quiero una sensación de ‘pantalla cambia por otra pantalla’ ni de ‘foto reemplazada por otra foto’.” Reveal the existing cards within the same scene with smooth progressive motion and continuous card rearrangement; retain the honest demo disclosure during the sequence and ready confirmation, with reduced-motion fallback.
+- S11: “Los textos parecen sustituirse instantáneamente, en lugar de formar parte de una secuencia visual continua.” “Cada mensaje debe tener tiempo suficiente para ser leído y comprendido antes de dar paso al siguiente.” Animate outgoing and incoming title, description and caption as one ordered handoff, keep the layout stable between phases, and preserve existing text, scenes, avatar, cancellation, and reduced-motion behavior.
 
 ## Tasks
 - T1 (S1-S5): inline; complete; commit `8ad56a1`. One coherent transition with focused browser tests and existing suite. No writer trigger: one coupled behavior across shared markup/styles/events.
 - T2 (S6-S8): inline; complete; commit `d7803fa`. Refined markup, scoped layout and existing launcher placement in one coupled unit. No writer trigger; shared launcher context and tests moved together.
 - T3 (S9-S10): inline; complete; commit `624db4e`. Minimal invitation and continuous story motion in existing transition CSS/markup/JS plus browser checks. No writer trigger: one coupled behavior.
+- T4 (S11): inline; verified; commit pending. Text-only scene handoff with browser regression for dwell, fade, layout and reduced motion. No writer trigger: one contained behavior.
 
 ## Log
 - L1 (2026-11-06): Cremos una rama desde main  adicional para introducir esta funcionalidad: ## Nueva experiencia de transición: Orgi → Dashboard
@@ -260,3 +262,56 @@ El resultado debe sentirse natural, limpio, integrado con la aplicación y sufic
 - L11: T3 reuses one original avatar, existing cards, four-phase timer and honest-demo text. Initial state will visually expose only the requested four elements; secondary copy appears only on action. Animate the existing nodes, not images or duplicated views. Existing browser test expects intro disclosure, so it must be updated to assert disclosure in the active story instead. Risk: none; no shared launcher, dashboard or storage contract changes planned.
 - L12: T3 RED: `TMPDIR=/tmp/opencode node tests/orgi-transition.cjs` failed on extra button content in the initial scene (after default `/tmp` Chromium profile failed to start in this environment). GREEN: the focused test passed after refinement. `TMPDIR=/tmp/opencode node tests/orgi-dashboard.cjs`, `TMPDIR=/tmp/opencode node tests/orgi-avatar.cjs`, `TMPDIR=/tmp/opencode node tests/module-structure.cjs`, and `git diff --check` passed. Browser checks confirm intro hides cards and explanatory copy, back icon has an accessible name, portrait centered, progressive card opacity/position changes, visible active-stage demo disclosure, reduced-motion CSS, mobile intro and story widths, cancellation/replay, persistent data unchanged, contextual mail entry unchanged. Rollback T3 alone: revert its changes in `index.html`, `styles/app.css`, `scripts/app.js`, `tests/orgi-transition.cjs`, and this logbook. Risk: none; review slice T3 is independent from earlier base and avatar-refinement slices.
 - L13: T3 work-unit commit `624db4e` extends the selected local feature-branch chain after `d7803fa` and `70c3267`. Native committed-only assessment against `e65e4c6`: medium, 563 changed lines, `review_due=false`, `review_due_reason=under_budget`. No native review triggered; no remote operations requested. The source/behavior unit remains reviewable separately from its two predecessors.
+- L14 (2026-11-06): ## Refinamiento de las transiciones de texto — Orgi
+
+Quiero realizar un ajuste específico en la experiencia de transición de Orgi hacia el dashboard.
+
+La estructura actual ya está funcionando correctamente y quiero conservarla. El problema que debemos corregir está en la forma en que cambian los textos durante la secuencia de organización.
+
+### Problema identificado
+
+Después de presionar «Organizar mi espacio», comienza la experiencia de organización. Sin embargo, cuando el sistema pasa de un mensaje a otro, el cambio se percibe demasiado repentino.
+
+Los textos parecen sustituirse instantáneamente, en lugar de formar parte de una secuencia visual continua.
+
+Esto rompe un poco la naturalidad de la experiencia y hace que la animación se sienta menos pulida.
+
+### Comportamiento deseado
+
+Quiero que los cambios entre mensajes sean más suaves, orgánicos y visualmente agradables.
+
+Cada mensaje debe tener tiempo suficiente para ser leído y comprendido antes de dar paso al siguiente.
+
+Me gustaría que existiera una transición perceptible entre el mensaje saliente y el entrante, evitando que un texto desaparezca bruscamente y otro aparezca de inmediato.
+
+Puedes explorar recursos como transiciones de opacidad, desplazamientos sutiles, movimientos naturales o combinaciones de estos efectos, según lo que mejor funcione con la estética actual.
+
+Lo importante no es añadir animaciones llamativas, sino conseguir una sensación de continuidad y fluidez.
+
+### Consideraciones de implementación
+
+- Revisa cómo se gestionan actualmente los cambios de estado y de texto.
+- Evita reemplazos instantáneos que provoquen saltos visuales.
+- Mantén una posición y distribución visual estables durante las transiciones, evitando movimientos innecesarios del contenido circundante.
+- Cuida la sincronización entre los textos y el resto de las animaciones.
+- Asegúrate de que los mensajes no se superpongan ni desaparezcan antes de poder leerse.
+- Mantén una duración equilibrada: suficientemente suave para sentirse natural, pero sin ralentizar excesivamente la demostración.
+- Respeta las preferencias de movimiento reducido cuando corresponda.
+
+### Alcance
+
+No quiero rediseñar la interfaz, cambiar los mensajes existentes ni modificar el dashboard.
+
+Tampoco necesitamos alterar el avatar de Orgi ni reconstruir la secuencia de organización.
+
+**Concéntrate únicamente en perfeccionar las transiciones entre los textos y su sincronización con la experiencia actual.**
+
+Tienes libertad creativa para elegir la solución visual y técnica más adecuada, aprovechando las herramientas y componentes que ya utiliza el proyecto.
+
+### Resultado esperado
+
+Al presionar «Organizar mi espacio», toda la secuencia debe sentirse continua.
+
+Los mensajes deben aparecer, permanecer y retirarse de forma natural, como si Orgi estuviera acompañando al usuario durante un mismo proceso, y no como si la interfaz estuviera reemplazando textos independientes.
+- L15: T4 touches only `scripts/app.js`, scoped transition text CSS in `styles/app.css`, browser checks and this log. Current `playTransitionScene` mutates title, description and caption synchronously every 850 ms, causing abrupt replacement. Keep one DOM instance per text field, use a fade-out/swap/fade-in handoff and a reading pause; stage visual changes start with incoming copy. Risk: none; no shared API or storage code changed.
+- L16: T4 RED: `TMPDIR=/tmp/opencode node tests/orgi-transition.cjs` failed because the first title was already replaced after 900 ms. GREEN: the same browser journey passed after the staged text handoff. `TMPDIR=/tmp/opencode node tests/orgi-dashboard.cjs`, `TMPDIR=/tmp/opencode node tests/orgi-avatar.cjs`, `TMPDIR=/tmp/opencode node tests/module-structure.cjs`, and `git diff --check` passed. Tests check held copy, outgoing fade before mutation, same-node incoming copy, stable graphic position, cancellation during fade, reduced-motion bypass, dashboard arrival and storage invariants. Existing texts, avatar, visual cards and dashboard untouched. T4 rollback boundary: `scripts/app.js`, `styles/app.css`, `tests/orgi-transition.cjs` and this logbook. Risk: none.

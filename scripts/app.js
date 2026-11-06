@@ -17,16 +17,21 @@
     $("#orgi-backdrop").addEventListener("click", () => toggleOrgi(false));
     const transition = $("#orgi-transition"), transitionStart = $("#transition-start");
     const transitionTitle = $("#transition-title"), transitionDescription = $("#transition-description"), transitionCaption = $("#transition-caption");
+    const transitionCopy = $(".transition-copy"), transitionCaptionWrap = $(".transition-visual-bottom");
     const transitionScenes = [
       { phase: "collecting", title: "Todo comienza en tu bandeja.", description: "Distintas comunicaciones llegan a un mismo lugar. Visualicemos cómo darles espacio sin perder el contexto.", caption: "01 / Reunir lo disperso" },
       { phase: "finding", title: "Ahora, lo que merece atención.", description: "Entre tantos mensajes, hay asuntos que conviene revisar con calma. La decisión siempre es tuya.", caption: "02 / Reconocer lo importante" },
       { phase: "arranging", title: "Cada cosa encuentra su lugar.", description: "Comunicaciones, asuntos por revisar y compromisos: una vista más clara para decidir qué sigue.", caption: "03 / Darle forma al espacio" },
       { phase: "ready", title: "Tu espacio está listo.", description: "Ya podés explorar tu centro de control. Esta fue una representación de la experiencia, no un análisis de tus datos.", caption: "Listo para explorar" }
     ];
-    let transitionTimer = 0;
+    let transitionTimer = 0, transitionFrame = 0;
     function resetTransition() {
       clearTimeout(transitionTimer);
+      cancelAnimationFrame(transitionFrame);
       transitionTimer = 0;
+      transitionFrame = 0;
+      transitionCopy.classList.remove("is-changing");
+      transitionCaptionWrap.classList.remove("is-changing");
       transition.dataset.phase = "intro";
       transitionTitle.textContent = "Hagamos espacio para lo importante.";
       transitionDescription.textContent = "Soy Orgi. Te muestro cómo pasar de comunicaciones dispersas a un centro de control más claro.";
@@ -56,9 +61,9 @@
       transitionTitle.textContent = scene.title;
       transitionDescription.textContent = scene.description;
       transitionCaption.textContent = scene.caption;
-      const delay = reducedMotion ? (index === transitionScenes.length - 1 ? 400 : 160) : (index === transitionScenes.length - 1 ? 800 : 850);
+      const delay = reducedMotion ? (index === transitionScenes.length - 1 ? 400 : 160) : (index === transitionScenes.length - 1 ? 1300 : 2050);
       transitionTimer = window.setTimeout(() => {
-        if (index + 1 < transitionScenes.length) playTransitionScene(index + 1, reducedMotion);
+        if (index + 1 < transitionScenes.length) advanceTransitionScene(index + 1, reducedMotion);
         else {
           transition.classList.add("hidden");
           orgiLauncher.removeAttribute("tabindex");
@@ -67,12 +72,25 @@
         }
       }, delay);
     }
+    function advanceTransitionScene(index, reducedMotion) {
+      if (reducedMotion) { playTransitionScene(index, true); return; }
+      transitionCopy.classList.add("is-changing");
+      transitionCaptionWrap.classList.add("is-changing");
+      transitionTimer = window.setTimeout(() => {
+        playTransitionScene(index, false);
+        transitionFrame = requestAnimationFrame(() => {
+          transitionCopy.classList.remove("is-changing");
+          transitionCaptionWrap.classList.remove("is-changing");
+          transitionFrame = 0;
+        });
+      }, 260);
+    }
     $("#open-control-center").addEventListener("click", showTransition);
     $("#transition-back").addEventListener("click", returnFromTransition);
     transitionStart.addEventListener("click", () => {
       if (transitionStart.disabled) return;
       transitionStart.disabled = true;
-      playTransitionScene(0, window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+      advanceTransitionScene(0, window.matchMedia("(prefers-reduced-motion: reduce)").matches);
     });
     $("#back-to-inbox").addEventListener("click", () => { setAvatarContext(false); $("#dashboard-app").classList.add("hidden"); $("#outlook-view").classList.remove("hidden"); $("#orgi-launcher").focus(); });
     document.addEventListener("keydown", event => {
