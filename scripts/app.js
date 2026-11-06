@@ -24,12 +24,15 @@
       { phase: "arranging", title: "Cada cosa encuentra su lugar.", description: "Comunicaciones, asuntos por revisar y compromisos: una vista más clara para decidir qué sigue.", caption: "03 / Darle forma al espacio" },
       { phase: "ready", title: "Tu espacio está listo.", description: "", caption: "Listo para explorar" }
     ];
-    let transitionTimer = 0, transitionFrame = 0;
+    let transitionTimer = 0, transitionFrame = 0, portraitMotion = null, portraitStart = null;
     function resetTransition() {
       clearTimeout(transitionTimer);
       cancelAnimationFrame(transitionFrame);
+      portraitMotion?.cancel();
+      portraitMotion = portraitStart = null;
       transitionTimer = 0;
       transitionFrame = 0;
+      transition.classList.remove("is-entering", "is-finishing");
       transitionCopy.classList.remove("is-changing");
       transitionCaptionWrap.classList.remove("is-changing");
       transition.dataset.phase = "intro";
@@ -62,6 +65,27 @@
       transitionTitle.textContent = scene.title;
       transitionDescription.textContent = scene.description;
       transitionCaption.textContent = scene.caption;
+      if (portraitStart && (index === 0 || index === transitionScenes.length - 1)) {
+        const portrait = $("#transition-portrait"), destination = portrait.getBoundingClientRect();
+        const origin = portraitStart;
+        const isFinal = index === transitionScenes.length - 1;
+        portraitStart = null;
+        const motion = portrait.animate([
+          { transform: `translate(${origin.x - destination.x}px, ${origin.y - destination.y}px) scale(${origin.width / destination.width}, ${origin.height / destination.height})` },
+          { transform: "none" }
+        ], { duration:850, easing:"cubic-bezier(.4, 0, .2, 1)" });
+        portraitMotion = motion;
+        motion.onfinish = () => {
+          if (portraitMotion !== motion) return;
+          portraitMotion = null;
+          transition.classList.remove("is-entering", "is-finishing");
+          if (isFinal) {
+            transitionFinish.removeAttribute("tabindex");
+            transitionFinish.focus({ preventScroll:true });
+          } else transitionTimer = window.setTimeout(() => advanceTransitionScene(1, false), 2050);
+        };
+        return;
+      }
       if (index === transitionScenes.length - 1) {
         transitionFinish.removeAttribute("tabindex");
         if (reducedMotion) transitionFinish.focus({ preventScroll:true });
@@ -71,6 +95,10 @@
     }
     function advanceTransitionScene(index, reducedMotion) {
       if (reducedMotion) { playTransitionScene(index, true); return; }
+      if (index === transitionScenes.length - 1) {
+        portraitStart = $("#transition-portrait").getBoundingClientRect();
+        transition.classList.add("is-finishing");
+      }
       transitionCopy.classList.add("is-changing");
       transitionCaptionWrap.classList.add("is-changing");
       transitionTimer = window.setTimeout(() => {
@@ -78,10 +106,10 @@
         transitionFrame = requestAnimationFrame(() => {
           transitionCopy.classList.remove("is-changing");
           transitionCaptionWrap.classList.remove("is-changing");
-          if (index === transitionScenes.length - 1) transitionFinish.focus({ preventScroll:true });
+          if (index === transitionScenes.length - 1 && !transition.classList.contains("is-finishing")) transitionFinish.focus({ preventScroll:true });
           transitionFrame = 0;
         });
-      }, 260);
+      }, index === transitionScenes.length - 1 ? 470 : 260);
     }
     $("#open-control-center").addEventListener("click", showTransition);
     $("#transition-back").addEventListener("click", returnFromTransition);
@@ -95,7 +123,12 @@
     transitionStart.addEventListener("click", () => {
       if (transitionStart.disabled) return;
       transitionStart.disabled = true;
-      advanceTransitionScene(0, window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (!reducedMotion) {
+        portraitStart = $("#transition-portrait").getBoundingClientRect();
+        transition.classList.add("is-entering");
+      }
+      advanceTransitionScene(0, reducedMotion);
     });
     $("#back-to-inbox").addEventListener("click", () => { setAvatarContext(false); $("#dashboard-app").classList.add("hidden"); $("#outlook-view").classList.remove("hidden"); $("#orgi-launcher").focus(); });
     document.addEventListener("keydown", event => {

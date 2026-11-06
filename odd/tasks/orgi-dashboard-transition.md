@@ -18,6 +18,8 @@ Objective: demonstrate an honest, accessible journey from Orgi's panel to the ex
 - S13: “Omite este texto "Ya podés explorar tu centro de control. Esta fue una representación de la experiencia, no un análisis de tus datos." y sube un poco la posicion del boton.” Ready description must be empty, with a modest upward CTA adjustment; preserve earlier copy and explicit navigation. The separate demo disclosure is superseded by S15.
 - S14: “Bueno, no fui claro, lo que debiamos subir era el boton "Ir a mi centro de control"” “Si, subelo mas, que quede lo suficientemente cerca de la parte inferior del titulo "Tu espacio está listo."” Close the ready-only empty description gap so the button sits near the title; leave earlier phases and click-only navigation unchanged.
 - S15: “Omitamos este texto: Vista demostrativa · Esta secuencia ilustra el valor de Orgi; no analiza ni modifica tus datos.” Remove that disclosure from the transition without leaving an empty element, style, or test assumption; preserve non-assertive scene copy and explicit dashboard entry.
+- S16: “Quiero que Orgi se desplace de manera suave, continua y natural desde su posición inicial hasta su ubicación en la secuencia de organización.” “Los elementos de la pantalla inicial deberían retirarse con suavidad mientras Orgi comienza a desplazarse. Posteriormente, los elementos de la etapa de organización deberían aparecer de forma progresiva, acompañando la llegada de Orgi a su nueva posición.” “Prioriza mantener una única instancia visual de Orgi durante la transición, siempre que sea técnicamente conveniente, y conserva sus animaciones internas actuales.” Keep one avatar element, ease its position/size across the intro-to-collecting layout change, coordinate copy/cards, cancel/replay, responsiveness and reduced motion without changing prior scenes or dashboard.
+- S17: “En este estado final deben quedar únicamente tres elementos: - **Orgi**, ubicado en el centro como protagonista visual. - El título **«Tu espacio está listo»**, centrado debajo del avatar. - El botón principal para acceder al dashboard, centrado debajo del título.” “Los elementos visuales asociados al proceso de organización deben comenzar a retirarse mediante animaciones suaves.” “Orgi debe desplazarse suavemente desde su posición durante la organización hasta el centro de la pantalla.” “Una vez que la composición esté preparada, debe aparecer el título «Tu espacio está listo» con una transición natural. Finalmente, debe aparecer el botón principal para ingresar al dashboard.” Keep one avatar, stage process-content exit, centered return, title then CTA, stable no auto-navigation; preserve preceding scenes, reduced motion and dashboard.
 
 ## Tasks
 - T1 (S1-S5): inline; complete; commit `8ad56a1`. One coherent transition with focused browser tests and existing suite. No writer trigger: one coupled behavior across shared markup/styles/events.
@@ -28,6 +30,8 @@ Objective: demonstrate an honest, accessible journey from Orgi's panel to the ex
 - T6 (S13): inline; complete; commit `d3f8956`. Remove ready-only description and lift the ready-only action 12px with focused browser check; no writer trigger, one small understood refinement.
 - T7 (S14): inline; complete; commit `0682c4f`. Close ready-only reserved copy space and measure the title-to-button gap on desktop and mobile; no writer trigger, one contained layout correction.
 - T8 (S15): inline; complete; commit `04c6750`. Remove the disclosure element and its dedicated styling, update browser checks; no writer trigger, one contained copy removal.
+- T9 (S16): inline; verified; commit pending. Intro-to-collecting shared-element motion using the existing portrait; browser probes for midpoint, arrival, single DOM node, cancellation and reduced motion. No writer trigger: one coupled behavior; Risk: item 4 (animation lifecycle and cancellation ordering).
+- T10 (S17): inline; verified; commit pending. Arrangement-to-ready return to centered portrait with progressive exit, avatar movement and title/CTA entry; browser checks on desktop/mobile and reduced motion. No writer trigger: depends on the same portrait animation and tests as T9; Risk: item 4 (finish and cancel ordering). Commit with T9 as one coupled lifecycle unit.
 
 ## Log
 - L1 (2026-11-06): Cremos una rama desde main  adicional para introducir esta funcionalidad: ## Nueva experiencia de transición: Orgi → Dashboard
@@ -381,3 +385,159 @@ Quiero que la experiencia termine con un momento de satisfacción y confirmació
 - L32: T8 explicitly supersedes the earlier requirement to retain the separate disclosure. The scene still says “Visualicemos” and does not claim real processing; remove only the requested paragraph and CSS plus stale test assertions. Risk: none; no shared behaviors or stored data changed.
 - L33: T8 RED: `TMPDIR=/tmp/opencode node tests/orgi-transition.cjs` found the unwanted disclosure element. GREEN: the focused browser journey passed after its removal, including title-to-button spacing, mobile width, non-mutating data and explicit navigation. `TMPDIR=/tmp/opencode node tests/orgi-dashboard.cjs`, `TMPDIR=/tmp/opencode node tests/orgi-avatar.cjs`, `TMPDIR=/tmp/opencode node tests/module-structure.cjs`, and `git diff --check` passed. Risk: none; removing the disclaimer reduces explicit demo labeling as requested, while narrative copy remains non-assertive.
 - L34: T8 work-unit commit `04c6750` extends the selected feature-branch chain. Native committed-only assessment against boundary `e65e4c6`: medium, 765 changed lines, `review_due=false`, `review_due_reason=under_budget`; no review started. No push or PR requested.
+- L35 (2026-11-06): ## Refinamiento de la transición espacial de Orgi
+
+Quiero corregir un problema visual específico en la transición entre la pantalla de bienvenida de Orgi y la secuencia de organización.
+
+### Problema actual
+
+Cuando presiono «Organizar mi espacio», Orgi pasa de estar centrado en la pantalla a ubicarse en la parte izquierda, donde comienza la siguiente etapa.
+
+Actualmente este cambio de posición se percibe brusco y poco natural. Parece que el avatar desapareciera de un lugar y apareciera en otro, rompiendo la continuidad de la experiencia.
+
+### Comportamiento deseado
+
+Quiero que Orgi se desplace de manera suave, continua y natural desde su posición inicial hasta su ubicación en la secuencia de organización.
+
+La idea es que el usuario perciba que está siguiendo al mismo personaje durante toda la experiencia.
+
+Puedes explorar una transición de elemento compartido (*shared element transition*), animaciones de layout u otra técnica que permita conservar la continuidad visual del avatar.
+
+Me gustaría que el movimiento tuviera una aceleración y desaceleración naturales, evitando desplazamientos rígidos o cambios instantáneos.
+
+Si el tamaño de Orgi debe cambiar entre ambas secciones, ese ajuste también debería producirse progresivamente y en sincronía con su desplazamiento.
+
+### Coordinación con el resto de la interfaz
+
+Quiero que el movimiento de Orgi esté correctamente sincronizado con la transición entre las dos secciones.
+
+Los elementos de la pantalla inicial deberían retirarse con suavidad mientras Orgi comienza a desplazarse.
+
+Posteriormente, los elementos de la etapa de organización deberían aparecer de forma progresiva, acompañando la llegada de Orgi a su nueva posición.
+
+Evita que todos los cambios ocurran simultáneamente o que la interfaz parezca sustituir una pantalla por otra.
+
+La intención es generar una única transición visual continua.
+
+### Consideraciones técnicas
+
+Antes de modificar el código, revisa cómo se renderiza actualmente el avatar durante ambas etapas.
+
+Comprueba si el salto ocurre porque:
+
+- Se desmonta y vuelve a montar el componente.
+- Se renderizan dos instancias diferentes del avatar.
+- Cambia abruptamente la estructura del layout.
+- Se modifican propiedades de posicionamiento sin una transición adecuada.
+- Existe una desincronización entre los cambios de estado y las animaciones.
+
+Elige la solución más apropiada para la arquitectura existente.
+
+Prioriza mantener una única instancia visual de Orgi durante la transición, siempre que sea técnicamente conveniente, y conserva sus animaciones internas actuales.
+
+No quiero reemplazar el avatar ni modificar sus expresiones faciales.
+
+Asegúrate de que el desplazamiento funcione también en diferentes tamaños de pantalla y respete las preferencias de movimiento reducido.
+
+### Alcance
+
+No modifiques el diseño general de las pantallas, los mensajes, el dashboard ni las transiciones de texto que ya fueron corregidas.
+
+Concéntrate en mejorar el movimiento espacial de Orgi y la sincronización de los elementos que lo acompañan.
+
+### Resultado esperado
+
+Al presionar «Organizar mi espacio», quiero ver cómo Orgi abandona suavemente su posición central y se desplaza hacia la ubicación donde comienza la organización.
+
+El movimiento debe sentirse intencional, elegante y natural.
+
+**Orgi no debe parecer un elemento que cambia de pantalla, sino un personaje que se mueve dentro de una misma experiencia continua.**
+- L36: `showTransition` moves the existing `#orgi-launcher` into one `#transition-portrait`; no remount or duplicate. The jump arises when `data-phase` changes from `intro` to `collecting`: intro-specific grid, centering and portrait margins vanish while only grid columns/gap transition, not the avatar's own bounding position. Use a bounded FLIP animation on the existing portrait; stage other content after it lands, and cancel it on return/replay. Risk: item 4 (animation finish and cancellation ordering).
+- L37 (2026-11-06): ## Refinamiento final de la transición — Orgi → Dashboard
+
+Quiero realizar un último ajuste en la experiencia de transición de Orgi, específicamente en el momento en que termina la organización y aparece el mensaje **«Tu espacio está listo»**.
+
+La experiencia actual funciona correctamente y quiero conservar las mejoras que ya implementamos, especialmente la fluidez de los textos, el movimiento del avatar y el comportamiento del botón de acceso al dashboard.
+
+### 1. Recuperar la composición central al finalizar
+
+Actualmente, durante el proceso de organización, Orgi se encuentra desplazado hacia un lado de la pantalla y aparecen otros elementos visuales que representan la reorganización de la información.
+
+Quiero que, cuando el proceso esté por finalizar, la interfaz regrese progresivamente a una composición centrada, similar a la pantalla inicial de bienvenida.
+
+En este estado final deben quedar únicamente tres elementos:
+
+- **Orgi**, ubicado en el centro como protagonista visual.
+- El título **«Tu espacio está listo»**, centrado debajo del avatar.
+- El botón principal para acceder al dashboard, centrado debajo del título.
+
+No quiero subtítulos, tarjetas, indicadores de progreso, etiquetas ni elementos decorativos adicionales en este estado final.
+
+### 2. Transición progresiva hacia el estado final
+
+Este es el aspecto más importante.
+
+No quiero que la interfaz cambie repentinamente de la disposición de organización a la composición centrada.
+
+La transición debe sentirse como una continuación natural del proceso.
+
+Cuando la organización esté terminando:
+
+1. Los elementos visuales asociados al proceso de organización deben comenzar a retirarse mediante animaciones suaves.
+2. Los textos e indicadores que ya no sean necesarios deben desaparecer de manera progresiva, sin cortes abruptos.
+3. Orgi debe desplazarse suavemente desde su posición durante la organización hasta el centro de la pantalla.
+4. Si corresponde modificar el tamaño del avatar, el cambio debe realizarse progresivamente.
+5. Una vez que la composición esté preparada, debe aparecer el título «Tu espacio está listo» con una transición natural.
+6. Finalmente, debe aparecer el botón principal para ingresar al dashboard.
+
+La secuencia debe sentirse coordinada, sin pausas artificiales ni movimientos que compitan entre sí.
+
+### 3. Continuidad visual de Orgi
+
+Quiero conservar el mismo avatar animado que ya estamos reutilizando desde el simulador de Ublik y el dashboard original.
+
+No debe desaparecer de una posición y reaparecer en otra.
+
+El usuario debería poder seguir visualmente a Orgi mientras regresa al centro, manteniendo la sensación de que se trata del mismo personaje durante toda la experiencia.
+
+Revisa el comportamiento del componente y del layout para evitar desmontajes, reinicios de animación o saltos de posición innecesarios.
+
+### 4. Estado final limpio y estable
+
+Una vez finalizada la transición, la pantalla debe permanecer estable con esta estructura:
+
+**Orgi**
+
+**Tu espacio está listo**
+
+**Botón de acceso al dashboard**
+
+El botón debe conservar la navegación que ya funciona actualmente.
+
+No debe existir redirección automática. El usuario decide cuándo continuar.
+
+### 5. Alcance de los cambios
+
+No quiero rediseñar las pantallas anteriores ni modificar el dashboard.
+
+Conserva los estilos, las animaciones y las transiciones que ya funcionan correctamente.
+
+Enfócate únicamente en mejorar el cierre de la experiencia y la transición desde la etapa de organización hasta el estado final centrado.
+
+Tienes libertad para decidir la técnica de animación más adecuada, siempre que se integre con la arquitectura actual y mantenga la consistencia visual.
+
+### Resultado esperado
+
+Quiero que la experiencia tenga una narrativa visual completa:
+
+**Inicio:** Orgi está centrado e invita al usuario a organizar su espacio.
+
+**Proceso:** Orgi se desplaza y acompaña visualmente la organización de la información.
+
+**Finalización:** Los elementos secundarios desaparecen suavemente, Orgi regresa al centro y aparece el mensaje «Tu espacio está listo» junto al botón para acceder al dashboard.
+
+El resultado debe sentirse como una experiencia continua, no como tres pantallas independientes.
+
+La prioridad es lograr un cierre limpio, elegante y satisfactorio, donde Orgi vuelva a ser el único protagonista visual.
+- L38: S17 depends on T9's one-node FLIP and lifecycle reset. Extend it to arrangement-to-ready without replacing Orgi, reserve the phase change until cards/text fade; stage title/CTA after motion. Risk: item 4 (animation finish and cancellation ordering); correction-only verification for T9 previously found and cleared both pointer-cancel and CTA-fade blockers.
+- L39: T9 RED: focused browser journey failed because process cards appeared before the avatar moved; after a one-node FLIP with delayed scene entry, focused journey GREEN. Independent verifier found two change-caused regressions (Back was pointer-inaccessible during travel, initial CTA disappeared abruptly); one correction batch scoped fade to the disabled Start button, preserving Back. Limited independent recheck passed both real-pointer cancellation and progressive opacity. T10 RED: focused journey failed because no final withdrawal state existed. GREEN: arrival waits for process-card fade, portrait returns to a centered composition, title and button reveal in order; no extra visible controls in ready. `TMPDIR=/tmp/opencode node tests/orgi-transition.cjs` and the existing `orgi-dashboard`, `orgi-avatar`, `module-structure` Node suites plus `git diff --check` passed. Independent verifier then passed desktop/mobile movement, cancellation during both legs, replay, reduced motion, single avatar, localStorage hash and unchanged baseline outputs; no change-caused blockers. Existing advisory: CTA can receive focus at zero opacity, also reproduced on the base. Scratch roots `/tmp/opencode/orgi-verify-5RZAAd`, `/tmp/opencode/orgi-recheck-1rqd0Q`, `/tmp/opencode/orgi-verify-ar2SNm` removed by parent. Risk: item 4 (animation lifecycle and cancellation ordering). S16 and S17 form one coupled lifecycle work-unit commit.
