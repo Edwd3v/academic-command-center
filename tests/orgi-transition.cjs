@@ -47,14 +47,18 @@ async function main() {
       if (reply.exceptionDetails) throw new Error(reply.exceptionDetails.exception?.description ?? reply.exceptionDetails.text);
       return reply.result.value;
     }
-    const click = selector => evaluate(`document.querySelector(${JSON.stringify(selector)}).click()`);
     const visible = selector => evaluate(`!document.querySelector(${JSON.stringify(selector)}).classList.contains('hidden')`);
+    const click = async selector => {
+      await evaluate(`document.querySelector(${JSON.stringify(selector)}).click()`);
+      if (selector === "#open-control-center") await until(() => visible("#orgi-transition"), "Orgi invitation did not enter after Outlook faded.");
+    };
     await cdp("Page.enable");
     await cdp("Page.navigate", { url: `http://127.0.0.1:${server.address().port}/index.html` });
     await until(() => evaluate("document.querySelector('#orgi-launcher-slot') && emails.length === 25"), "Demo did not load");
     await evaluate("window.originalOrgiLauncher = document.querySelector('#orgi-launcher'); window.originalOrgiAvatar = document.querySelector('#orgi-avatar')");
     await click("#orgi-launcher");
     await click("#open-control-center");
+    await until(() => visible("#orgi-transition"), "Orgi invitation did not enter after Outlook faded.");
     assert.equal(await visible("#orgi-transition"), true, "Panel CTA should enter a dedicated scene");
     const invitation = await evaluate("({same:document.querySelector('#orgi-launcher')===window.originalOrgiLauncher,avatar:document.querySelector('#orgi-avatar')===window.originalOrgiAvatar,location:document.querySelector('#orgi-launcher').parentElement.id,avatars:document.querySelectorAll('#orgi-avatar').length,size:document.querySelector('#orgi-avatar').getBoundingClientRect().width,header:!!document.querySelector('.transition-header'),footer:!!document.querySelector('.transition-footer'),eyebrow:!!document.querySelector('.transition-eyebrow'),staticFace:!!document.querySelector('.transition-face'),copy:document.querySelector('#orgi-transition').textContent})");
     assert.equal(invitation.same && invitation.avatar, true, "The existing animated launcher and avatar must be reused");

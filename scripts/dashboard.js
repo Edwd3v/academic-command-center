@@ -48,6 +48,10 @@
     function setView(view) {
       $("#dashboard-app").classList.toggle("home-view-active", view === "home");
       ["home", "communications", "tasks"].forEach(name => $(`#${name}-view`).classList.toggle("hidden", name !== view));
+      const activeView = $(`#${view}-view`);
+      activeView.classList.remove("is-view-entering");
+      void activeView.offsetWidth;
+      activeView.classList.add("is-view-entering");
       document.querySelectorAll("nav [data-view]").forEach(button => { if (button.dataset.view === view) button.setAttribute("aria-current", "page"); else button.removeAttribute("aria-current"); });
       if (view === "home") renderHome();
       if (view === "communications") { renderMailList(); search.focus(); }

@@ -32,7 +32,7 @@
       portraitMotion = portraitStart = null;
       transitionTimer = 0;
       transitionFrame = 0;
-      transition.classList.remove("is-entering", "is-finishing");
+      transition.classList.remove("is-entering", "is-finishing", "is-arriving", "is-leaving");
       transitionCopy.classList.remove("is-changing");
       transitionCaptionWrap.classList.remove("is-changing");
       transition.dataset.phase = "intro";
@@ -40,16 +40,25 @@
       transitionDescription.textContent = "Soy Orgi. Te muestro cómo pasar de comunicaciones dispersas a un centro de control más claro.";
       transitionCaption.textContent = "Un lugar para ver lo que importa";
       transitionStart.disabled = false;
+      transitionFinish.disabled = false;
       transitionFinish.tabIndex = -1;
     }
     function showTransition() {
+      if (transition.classList.contains("is-arriving")) return;
       resetTransition();
       toggleOrgi(false);
-      $("#outlook-view").classList.add("hidden");
+      const outlook = $("#outlook-view");
+      outlook.classList.add("is-leaving");
+      window.setTimeout(() => {
+        outlook.classList.add("hidden");
+        outlook.classList.remove("is-leaving");
+        transition.classList.add("is-arriving");
+        transition.classList.remove("hidden");
+        requestAnimationFrame(() => transition.classList.remove("is-arriving"));
+        transitionStart.focus();
+      }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 180);
       $("#transition-portrait").append(orgiLauncher);
       orgiLauncher.tabIndex = -1;
-      transition.classList.remove("hidden");
-      transitionStart.focus();
     }
     function returnFromTransition() {
       resetTransition();
@@ -115,10 +124,19 @@
     $("#transition-back").addEventListener("click", returnFromTransition);
     transitionFinish.addEventListener("click", () => {
       if (transition.dataset.phase !== "ready" || transition.classList.contains("hidden")) return;
-      transition.classList.add("hidden");
+      if (transitionFinish.disabled) return;
+      transitionFinish.disabled = true;
+      transition.classList.add("is-leaving");
       orgiLauncher.removeAttribute("tabindex");
-      openDashboardForMail(null);
-      resetTransition();
+      const dashboard = $("#dashboard-app");
+      dashboard.classList.add("is-arriving");
+      window.setTimeout(() => {
+        transition.classList.add("hidden");
+        transition.classList.remove("is-leaving");
+        openDashboardForMail(null);
+        requestAnimationFrame(() => dashboard.classList.remove("is-arriving"));
+        resetTransition();
+      }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 180);
     });
     transitionStart.addEventListener("click", () => {
       if (transitionStart.disabled) return;

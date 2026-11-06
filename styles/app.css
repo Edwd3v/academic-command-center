@@ -49,6 +49,11 @@
     .notice, .message { margin: 0 0 14px; padding: 9px 12px; border: 1px solid #6c5328; border-radius: var(--radius-control); background: #211c14; color: #f7d795; font-size: .84rem; line-height: 1.5; }
     .message { border-color: #76504d; background: #2b1e20; color: #ffd0cc; }
     .hidden { display: none !important; }
+    .outlook-view,.transition,#dashboard-app { transition: opacity 180ms ease, transform 180ms ease; }
+    .outlook-view.is-leaving,.transition.is-leaving { opacity: 0; transform: translateY(-6px); pointer-events: none; }
+    .transition.is-arriving,#dashboard-app.is-arriving { opacity: 0; transform: translateY(8px); }
+    .main-content > section.is-view-entering { animation: dashboard-view-enter 200ms ease both; }
+    @keyframes dashboard-view-enter { from { opacity: 0; } to { opacity: 1; } }
     .global-search { width: 100%; }
     .communication-search { position:relative; margin: 0 0 18px; }
     .communication-search .fluent-icon { position:absolute;left:14px;top:50%;width:19px;height:19px;transform:translateY(-50%);color:var(--muted);pointer-events:none; }

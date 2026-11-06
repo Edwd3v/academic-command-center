@@ -121,8 +121,10 @@ async function main() {
     await waitUntil(`!document.querySelector('#outlook-view').classList.contains('hidden')`, "The collapsed return action did not open the demo inbox.");
      await openFromOrgiPanel();
     await waitUntil(`!document.querySelector('#dashboard-app').classList.contains('hidden')`, "Dashboard did not reopen after collapsed return.");
-    await click("nav [data-view='communications']");
-    assert.equal(await evaluate(`document.querySelector('#communications-view').classList.contains('hidden')`), false);
+     await click("nav [data-view='communications']");
+     assert.equal(await evaluate(`document.querySelector('#communications-view').classList.contains('hidden')`), false);
+     assert.equal(await evaluate(`document.querySelector('.sidebar').isConnected`), true, "Dashboard section changes should keep the sidebar mounted.");
+     assert.equal(await evaluate(`document.querySelector('#communications-view').classList.contains('is-view-entering')`), true, "The active section should enter without animating the whole dashboard.");
     await click("nav [data-view='tasks']");
     assert.equal(await evaluate(`document.querySelector('#dashboard-app').classList.contains('sidebar-collapsed')`), true);
     await click("nav [data-view='home']");
