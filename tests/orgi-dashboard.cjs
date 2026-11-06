@@ -59,9 +59,16 @@ async function main() {
     return result.result.value;
   }
   async function click(selector) { await evaluate(`document.querySelector(${JSON.stringify(selector)})?.click()`); }
-  async function waitUntil(expression, message) {
-    return waitFor(() => evaluate(expression), message);
-  }
+   async function waitUntil(expression, message) {
+     return waitFor(() => evaluate(expression), message);
+   }
+   async function openFromOrgiPanel() {
+     await click("#open-control-center");
+     await waitUntil(`!document.querySelector('#orgi-transition').classList.contains('hidden')`, "Orgi invitation did not open.");
+     assert.equal(await evaluate(`document.querySelector('#dashboard-app').classList.contains('hidden')`), true);
+     await click("#transition-start");
+     await waitUntil(`!document.querySelector('#dashboard-app').classList.contains('hidden')`, "Dashboard did not open after Orgi's story.");
+   }
     await cdp("Page.enable");
     await cdp("Page.navigate", { url: `http://127.0.0.1:${server.address().port}/index.html` });
     await waitUntil(`document.querySelector('#orgi-launcher-slot')`, "Orgi dashboard entry point did not load.");
@@ -73,7 +80,7 @@ async function main() {
     await waitUntil(`document.querySelector('#orgi-panel').classList.contains('open')`, "Avatar should still open the Orgi panel in Outlook.");
     await click("#orgi-close");
     await waitUntil(`!document.querySelector('#orgi-panel').classList.contains('open')`, "Orgi panel should close in Outlook.");
-     await click("#open-control-center");
+     await openFromOrgiPanel();
      await waitUntil(`!document.querySelector('#dashboard-app').classList.contains('hidden')`, "Dashboard did not open.");
      await waitUntil(`emails.length===25`, "Demo communications did not load.");
      assert.deepEqual(await evaluate(`tasks.map(task=>({id:task.id,sourceEmailId:task.sourceEmailId,status:task.status})).sort((a,b)=>a.id.localeCompare(b.id))`), [
@@ -109,7 +116,7 @@ async function main() {
     assert.equal(await evaluate(`getComputedStyle(document.querySelector('.sidebar-return-label')).display`), "none", "The collapsed return action should show only its icon.");
     await click("#back-to-inbox");
     await waitUntil(`!document.querySelector('#outlook-view').classList.contains('hidden')`, "The collapsed return action did not open the demo inbox.");
-    await click("#open-control-center");
+     await openFromOrgiPanel();
     await waitUntil(`!document.querySelector('#dashboard-app').classList.contains('hidden')`, "Dashboard did not reopen after collapsed return.");
     await click("nav [data-view='communications']");
     assert.equal(await evaluate(`document.querySelector('#communications-view').classList.contains('hidden')`), false);
@@ -122,7 +129,7 @@ async function main() {
     assert.equal(await evaluate(`document.querySelector('#dashboard-app').classList.contains('sidebar-collapsed')`), false);
     await click("nav [data-view='home']");
     await click("#back-to-inbox");
-    await click("#open-control-center");
+     await openFromOrgiPanel();
     assert.equal(await evaluate(`document.querySelector('#dashboard-app').classList.contains('sidebar-collapsed')`), true, "Re-entering the dashboard should reset the sidebar.");
     await click("#orgi-launcher");
     assert.equal(await evaluate(`document.querySelector('#orgi-launcher').getAttribute('aria-expanded')`), "true");
@@ -411,7 +418,7 @@ async function main() {
 
     await cdp("Page.reload");
     await waitUntil(`document.querySelector('#category-grid') && document.querySelector('.commitment-category-card .count')`, "Dashboard demo did not reload.");
-    await click("#open-control-center");
+     await openFromOrgiPanel();
     await waitUntil(`!document.querySelector('#dashboard-app').classList.contains('hidden')`, "Dashboard did not reopen after reload.");
     assert.equal(await evaluate(`document.querySelector('#dashboard-app').classList.contains('sidebar-collapsed') && document.querySelector('#orgi-launcher').getAttribute('aria-expanded') === 'false'`), true, "Reload should restore the collapsed sidebar.");
     assert.equal(await evaluate(`document.querySelector('.reviewed-count').textContent`), String(status.actual + 1));
@@ -430,7 +437,7 @@ async function main() {
     await cdp("Page.reload");
     await waitUntil(`document.querySelector('#category-grid') && document.querySelector('.commitment-category-card .count')`, "Legacy decision data did not reload.");
     await evaluate(`window.orgiLauncherReference=document.querySelector('#orgi-launcher'); window.orgiAvatarReference=document.querySelector('#orgi-avatar')`);
-    await click("#open-control-center");
+     await openFromOrgiPanel();
     await waitUntil(`!document.querySelector('#dashboard-app').classList.contains('hidden')`, "Dashboard did not reopen with legacy state.");
     const legacyStates = await evaluate(`({reviewed:mailState('demo-academico-informativo').reviewed,relevant:mailState('demo-academico-revisar').relevant,reviewedCount:document.querySelector('.reviewed-count').textContent,unreviewedCount:document.querySelector('.unreviewed-count').textContent})`);
     assert.equal(legacyStates.reviewed, true, "Legacy no_relevante must still mean reviewed.");
@@ -451,7 +458,7 @@ async function main() {
     await click("#orgi-launcher");
     await waitUntil(`document.querySelector('#orgi-panel').classList.contains('open')`, "Avatar should retain its original Outlook panel action after returning.");
     await click("#orgi-close");
-    await click("#open-control-center");
+     await openFromOrgiPanel();
     await waitUntil(`!document.querySelector('#dashboard-app').classList.contains('hidden')`, "Dashboard should reopen after checking the Outlook avatar behavior.");
 
     const pagination = await evaluate(`(()=>{const original=emails,template=original[0];search.value='';categoryFilter.value='';reviewFilter.value='';relevanceFilter.value='';emails=Array.from({length:25},(_,i)=>({...structuredClone(template),id:'pagination-'+i,observado:{...template.observado,asunto:'Pagination '+i}}));currentMailPage=1;renderMailList();const pageCount=[...document.querySelectorAll('#pagination-controls button')].filter(button=>/^\\d+$/.test(button.textContent)).length;const firstCount=document.querySelectorAll('#mail-list .mail-row').length,collected=[];for(let page=1;page<=pageCount;page++){document.querySelectorAll('#pagination-controls button')[page].click();collected.push(...[...document.querySelectorAll('#mail-list .mail-row .mail-subject')].map(node=>node.textContent));}const pageSizes={};for(const count of [0,1,4,5]){emails=Array.from({length:count},(_,i)=>({...structuredClone(template),id:'size-'+count+'-'+i,observado:{...template.observado,asunto:'Size '+count+' '+i}}));currentMailPage=1;renderMailList();pageSizes[count]=document.querySelectorAll('#mail-list .mail-row').length;}emails=original;currentMailPage=1;renderMailList();return {firstCount,pageCount,collected:collected.length,unique:new Set(collected).size,pageSizes,summary:document.querySelector('#pagination-summary').textContent}})()`);
