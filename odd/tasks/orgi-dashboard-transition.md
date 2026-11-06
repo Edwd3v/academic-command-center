@@ -27,7 +27,7 @@ Objective: demonstrate an honest, accessible journey from Orgi's panel to the ex
 - T5 (S3, S12): inline; complete; commit `396c796`. Final-state action in existing markup/CSS/JS with browser checks. No writer trigger: one coupled behavior.
 - T6 (S13): inline; complete; commit `d3f8956`. Remove ready-only description and lift the ready-only action 12px with focused browser check; no writer trigger, one small understood refinement.
 - T7 (S14): inline; complete; commit `0682c4f`. Close ready-only reserved copy space and measure the title-to-button gap on desktop and mobile; no writer trigger, one contained layout correction.
-- T8 (S15): inline; verified; commit pending. Remove the disclosure element and its dedicated styling, update browser checks; no writer trigger, one contained copy removal.
+- T8 (S15): inline; complete; commit `04c6750`. Remove the disclosure element and its dedicated styling, update browser checks; no writer trigger, one contained copy removal.
 
 ## Log
 - L1 (2026-11-06): Cremos una rama desde main  adicional para introducir esta funcionalidad: ## Nueva experiencia de transición: Orgi → Dashboard
@@ -380,3 +380,4 @@ Quiero que la experiencia termine con un momento de satisfacción y confirmació
 - L31 (2026-11-06): Omitamos este texto: Vista demostrativa · Esta secuencia ilustra el valor de Orgi; no analiza ni modifica tus datos.
 - L32: T8 explicitly supersedes the earlier requirement to retain the separate disclosure. The scene still says “Visualicemos” and does not claim real processing; remove only the requested paragraph and CSS plus stale test assertions. Risk: none; no shared behaviors or stored data changed.
 - L33: T8 RED: `TMPDIR=/tmp/opencode node tests/orgi-transition.cjs` found the unwanted disclosure element. GREEN: the focused browser journey passed after its removal, including title-to-button spacing, mobile width, non-mutating data and explicit navigation. `TMPDIR=/tmp/opencode node tests/orgi-dashboard.cjs`, `TMPDIR=/tmp/opencode node tests/orgi-avatar.cjs`, `TMPDIR=/tmp/opencode node tests/module-structure.cjs`, and `git diff --check` passed. Risk: none; removing the disclaimer reduces explicit demo labeling as requested, while narrative copy remains non-assertive.
+- L34: T8 work-unit commit `04c6750` extends the selected feature-branch chain. Native committed-only assessment against boundary `e65e4c6`: medium, 765 changed lines, `review_due=false`, `review_due_reason=under_budget`; no review started. No push or PR requested.
