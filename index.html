@@ -919,12 +919,17 @@
     });
     async function init() {
       const savedTasks = loadLocal(KEYS.tasks, []), savedDecisions = loadLocal(KEYS.decisions, {}), savedRelevance = loadLocal(KEYS.relevance, null);
+      const hasSavedTasks = (() => { try { return localStorage.getItem(KEYS.tasks) !== null; } catch { return true; } })();
       tasks = Array.isArray(savedTasks) ? savedTasks.filter(task => task && typeof task.id === "string" && typeof task.title === "string") : [];
       decisions = savedDecisions && typeof savedDecisions === "object" && !Array.isArray(savedDecisions) ? savedDecisions : {};
       try {
         const response = await fetch(DATA_SOURCE); if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json(); if (!Array.isArray(data.correos)) throw new Error("El archivo no contiene correos[].");
         emails = data.correos;
+        if (!hasSavedTasks && Array.isArray(data.compromisos_demo)) {
+          const validEmailIds = new Set(emails.map(mail => mail.id));
+          tasks = data.compromisos_demo.filter(task => task && typeof task.id === "string" && typeof task.title === "string" && validEmailIds.has(task.sourceEmailId));
+        }
         const storedReadIds = loadLocal(KEYS.readEmails, null);
         const validEmailIds = new Set(emails.map(mail => mail.id));
         relevanceIds = new Set(Array.isArray(savedRelevance)

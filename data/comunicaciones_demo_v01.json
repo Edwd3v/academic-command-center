@@ -17,6 +17,10 @@
     "regla": "Las acciones y categorías son provisionales. La fecha de recepción de ejemplo nunca es una fecha límite."
   },
   "total_correos_muestra": 25,
+  "compromisos_demo": [
+    {"id":"demo-task-guide","sourceEmailId":"demo-academico-revisar","title":"Consultar la guía de ecuaciones lineales","description":"Revisar el material de ejercicios de Álgebra I.","dueDate":"","course":"Álgebra I","status":"pendiente","createdAt":"2026-11-04T12:00:00.000Z"},
+    {"id":"demo-task-opportunity","sourceEmailId":"demo-oportunidad-revisar","title":"Revisar la convocatoria de apoyo","description":"Consultar los requisitos del ejemplo antes de decidir si participar.","dueDate":"","course":"Proyectos académicos","status":"pendiente","createdAt":"2026-11-04T12:05:00.000Z"}
+  ],
   "correos": [
     {"id":"demo-academico-revisar","observado":{"remitente":"Coordinación de Álgebra (ejemplo)","asunto":"Guía de ejercicios: ecuaciones lineales","asunto_abreviado_o_normalizado":false,"fecha_recibido":"2026-11-03","hora_recibido":"09:10","fecha_en_captura":"fecha ficticia de demostración","captura":null},"hipotesis_diseno":{"categoria":"academico","curso":"Álgebra I","estado_atencion":"revisar","accion_sugerida":"Consultar la guía de ejercicios del ejemplo","senal_asunto":"guía de ejercicios"},"cuerpo_disponible":false,"accion_verificada":false},
     {"id":"demo-academico-informativo","observado":{"remitente":"Equipo docente de Biología (ejemplo)","asunto":"Material de lectura: células y tejidos","asunto_abreviado_o_normalizado":false,"fecha_recibido":"2026-11-02","hora_recibido":"14:25","fecha_en_captura":"fecha ficticia de demostración","captura":null},"hipotesis_diseno":{"categoria":"academico","curso":"Biología General","estado_atencion":"informativo","accion_sugerida":"Revisar el material si resulta pertinente","senal_asunto":"material de lectura"},"cuerpo_disponible":false,"accion_verificada":false},
